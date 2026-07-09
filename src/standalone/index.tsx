@@ -35,7 +35,7 @@ import { Material } from "@mat3ra/made";
 // ---------------------------------------------------------------------------
 // Bootstrap — must run before any component renders
 // ---------------------------------------------------------------------------
-JSONSchemasInterface.setSchemas(esseSchemas);
+JSONSchemasInterface.setSchemas(esseSchemas as any);
 ApplicationRegistry.setDriver(new ApplicationDriver());
 
 // ---------------------------------------------------------------------------

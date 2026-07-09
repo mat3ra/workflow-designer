@@ -2,6 +2,14 @@
     "name": "@mat3ra/workflow-designer",
     "version": "0.0.0",
     "description": "Workflow Designer application",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/mat3ra/workflow-designer.git"
+    },
+    "bugs": {
+        "url": "https://github.com/mat3ra/workflow-designer/issues"
+    },
+    "homepage": "https://github.com/mat3ra/workflow-designer",
     "main": "dist/exports.js",
     "types": "dist/exports.d.ts",
     "files": [
@@ -14,6 +22,7 @@
         "copy-css": "mkdir -p dist/stylesheets && cp src/stylesheets/* dist/stylesheets/ 2>/dev/null || true",
         "transpile": "tsc",
         "test": "node --import tsx --test tests/*.tests.ts",
+        "lint": "eslint src tests && prettier --check src tests",
         "dev": "vite --port 3002",
         "test:e2e": "cd tests/e2e && npm run test:headless"
     },
@@ -30,7 +39,16 @@
         "swig": "^1.4.2"
     },
     "peerDependencies": {
-        "@mat3ra/wove": "file:../wove/mat3ra-wove-0.0.0.tgz",
+        "@mat3ra/ade": "*",
+        "@mat3ra/ave": "*",
+        "@mat3ra/code": "*",
+        "@mat3ra/esse": "*",
+        "@mat3ra/ive": "*",
+        "@mat3ra/mode": "*",
+        "@mat3ra/move": "*",
+        "@mat3ra/standata": "*",
+        "@mat3ra/utils": "*",
+        "@mat3ra/wove": "*",
         "react": "^17.0.0",
         "react-dom": "^17.0.0"
     },
@@ -39,16 +57,15 @@
         "@exabyte-io/cove.js": "2026.5.28-0",
         "@exabyte-io/wave.js": "2026.6.22-0",
         "@mat3ra/ade": "2026.5.29-0",
-        "@mat3ra/ave": "file:../ave/mat3ra-ave-0.0.0.tgz",
+        "@mat3ra/ave": "*",
         "@mat3ra/code": "2026.5.27-0",
         "@mat3ra/esse": "2026.6.16-0",
-        "@mat3ra/ive": "file:../ive/mat3ra-ive-0.0.0.tgz",
+        "@mat3ra/ive": "*",
         "@mat3ra/mode": "2026.5.28-0",
-        "@mat3ra/move": "file:../move/mat3ra-move-0.0.0.tgz",
+        "@mat3ra/move": "*",
         "@mat3ra/standata": "2026.6.12-1",
         "@mat3ra/tsconfig": "^2024.6.3-0",
-        "@mat3ra/wode": "2026.6.19-0",
-        "@mat3ra/wove": "file:../wove/mat3ra-wove-0.0.0.tgz",
+        "@mat3ra/wode": "2026.7.9-0",
         "@mui/icons-material": "^5.11.9",
         "@mui/lab": "^5.0.0-alpha.120",
         "@mui/material": "^5.11.9",
