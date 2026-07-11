@@ -1,0 +1,1 @@
+{"version":3,"file":"persistWorkflowDesigner.d.ts","sourceRoot":"","sources":["../../src/utils/persistWorkflowDesigner.ts"],"names":[],"mappings":"AACA,OAAO,KAAK,EAAE,QAAQ,EAAE,MAAM,cAAc,CAAC;AAE7C,MAAM,MAAM,wBAAwB,GAAG,CAAC,MAAM,EAAE;IAC5C,QAAQ,EAAE,QAAQ,CAAC;IACnB,YAAY,EAAE,OAAO,CAAC;CACzB,KAAK,OAAO,CAAC,IAAI,CAAC,CAAC;AAEpB,wBAAgB,uBAAuB,CAAC,GAAG,EAAE,OAAO,GAAG,IAAI,CAG1D"}

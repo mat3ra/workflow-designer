@@ -375,11 +375,14 @@ declare module "@mat3ra/move" {
     export const Model: any;
     export const Method: any;
     export const BrillouinZoneImage: any;
-    export const FixedRJSForm: any;
     export const PseudoList: any;
-    export const PseudoUploadDialog: any;
     export const PseudoPanel: any;
     export const PseudoSearchBar: any;
+}
+declare module "@mat3ra/move/pseudo" {
+    export const FixedRJSForm: any;
+    export const PseudoUploadDialog: any;
+    export const PseudoForm: any;
 }
 declare module "@mat3ra/jove" {
     export const ResultsTab: any;
