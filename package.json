@@ -24,6 +24,7 @@
         "test": "node --import tsx --test tests/*.tests.ts",
         "lint": "eslint src tests && prettier --check src tests",
         "dev": "vite --port 3002",
+        "build:standalone": "vite build",
         "test:e2e": "cd tests && npm run test:headless",
         "prepublishOnly": "npm run build"
     },
