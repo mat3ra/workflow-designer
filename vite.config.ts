@@ -15,6 +15,9 @@ import { nodePolyfills } from "vite-plugin-node-polyfills";
  * already maps unknown /imports/* to typings.d.ts stubs.
  */
 export default defineConfig({
+    // Matches the repo name so assets resolve under the GitHub Pages
+    // subpath (mat3ra.github.io/workflow-designer/). Harmless for `npm run dev`.
+    base: "/workflow-designer/",
     plugins: [
         react({
             jsxImportSource: "@emotion/react",
