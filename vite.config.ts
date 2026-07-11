@@ -32,10 +32,6 @@ export default defineConfig({
     },
     optimizeDeps: {
         exclude: [
-            // Still resolves via a local-source resolve.alias (../cove.js/dist), not a
-            // real node_modules package — excluding avoids Vite trying to pre-bundle a
-            // path outside node_modules.
-            "@exabyte-io/cove.js",
             // Self-referencing alias to local src/exports.ts — same reasoning.
             "@mat3ra/workflow-designer",
             // Aliased to a local stub file, not a real package.
@@ -106,17 +102,6 @@ export default defineConfig({
             {
                 find: "vite-plugin-node-polyfills/shims/buffer",
                 replacement: path.resolve(__dirname, "node_modules/vite-plugin-node-polyfills/shims/buffer"),
-            },
-            // Use the locally-built cove.js reference so that new exports
-            // (entityIcons, TabsMenu, LoadingIndicator, InfoPopoverWithDocumentation…)
-            // are available even before the npm package is published.
-            {
-                find: /^@exabyte-io\/cove\.js\/dist\/(.*)$/,
-                replacement: path.resolve(__dirname, "../cove.js/dist/$1"),
-            },
-            {
-                find: /^@exabyte-io\/cove\.js$/,
-                replacement: path.resolve(__dirname, "../cove.js/dist/index.js"),
             },
             // Bypass the narrow `exports` field in @mat3ra/prode so that deep
             // subpath imports (e.g. /dist/js/meta_properties/…) resolve correctly.
