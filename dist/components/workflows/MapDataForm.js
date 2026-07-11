@@ -1,15 +1,15 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 /* eslint-disable @typescript-eslint/no-empty-function */
-import RJSForm from "@exabyte-io/cove.js/dist/other/rjsf/RJSForm";
 import Checkbox from "@exabyte-io/cove.js/dist/mui/components/checkbox/Checkbox";
+import RJSForm from "@exabyte-io/cove.js/dist/other/rjsf/RJSForm";
 import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
 import Grid from "@mui/material/Grid";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import MuiSelect from "@mui/material/Select";
-import setClass from "classnames";
 import ajv from "@rjsf/validator-ajv8";
+import setClass from "classnames";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import _ from "underscore";
 // Inline map input schema: fields name, target, values, useValues, scope
@@ -51,9 +51,7 @@ export default function MapDataForm({ mapData, onUpdate, scopeOptions, className
         const newMapData = {
             ...next,
             useValues: newUseValues,
-            values: newUseValues
-                ? JSON.stringify(JSON.parse(valuesStr), null, 4)
-                : next.values,
+            values: newUseValues ? JSON.stringify(JSON.parse(valuesStr), null, 4) : next.values,
         };
         setState(newMapData);
         const upstream = {

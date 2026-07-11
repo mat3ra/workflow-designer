@@ -1,6 +1,5 @@
-import type { Template } from "@mat3ra/ade";
 import TabsMenu from "@exabyte-io/cove.js/dist/mui/components/tabs/TabsMenu";
-import { useWorkflowComponents } from "../../WorkflowComponentsContext";
+import type { Template } from "@mat3ra/ade";
 import type { SubworkflowSchema } from "@mat3ra/esse/dist/js/types";
 import { type OrderedMaterial, type Workflow as WodeWorkflow } from "@mat3ra/wode";
 import { UnitType } from "@mat3ra/wode/dist/js/enums";
@@ -9,10 +8,6 @@ import TabContext from "@mui/lab/TabContext";
 import TabPanel from "@mui/lab/TabPanel";
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useState } from "react";
 
-import WorkflowCompute from "../subworkflows/WorkflowCompute";
-import MapDataForm from "./MapDataForm";
-import type { WorkflowProps } from "./Workflow";
-import { Workflow } from "./Workflow";
 import type {
     WorkflowDesignerAccount,
     WorkflowDesignerCluster,
@@ -22,6 +17,11 @@ import type {
     WorkflowDesignerTabItem,
     WorkflowDesignerUser,
 } from "../../types/context";
+import { useWorkflowComponents } from "../../WorkflowComponentsContext";
+import WorkflowCompute from "../subworkflows/WorkflowCompute";
+import MapDataForm from "./MapDataForm";
+import type { WorkflowProps } from "./Workflow";
+import { Workflow } from "./Workflow";
 
 type MapScopeOption = {
     subworkflowName: string;

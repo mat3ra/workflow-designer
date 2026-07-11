@@ -1,5 +1,5 @@
 import Checkbox from "@exabyte-io/cove.js/dist/mui/components/checkbox/Checkbox";
-const CheckboxComponent = Checkbox as any;
+import { Results } from "@mat3ra/ave";
 import type { NameResultSchema } from "@mat3ra/code/dist/js/utils/object";
 import type { ExecutionUnitSchema } from "@mat3ra/esse/dist/js/types";
 import { ApplicationRegistry } from "@mat3ra/standata";
@@ -10,7 +10,7 @@ import React, { useMemo } from "react";
 
 import UnitProperties from "./UnitProperties";
 
-import { Results } from "@mat3ra/ave";
+const CheckboxComponent = Checkbox as any;
 
 export interface UnitDetailsProps {
     unit: ExecutionUnitSchema;
@@ -32,7 +32,10 @@ function UnitDetails({
     onUnitPostProcessorChanged,
 }: UnitDetailsProps) {
     const { isDraft } = unit;
-    const selectedMonitors = useMemo(() => (unit.monitors ?? []).map((m) => m.name), [unit.monitors]);
+    const selectedMonitors = useMemo(
+        () => (unit.monitors ?? []).map((m) => m.name),
+        [unit.monitors],
+    );
     const selectedPostProcessors = useMemo(() => {
         return (unit.postProcessors ?? []).map((p) => p.name);
     }, [unit.postProcessors]);
@@ -78,7 +81,7 @@ function UnitDetails({
                     <Typography variant="subtitle2" color="text.primary">
                         Monitors
                     </Typography>
-                <Results
+                    <Results
                         data_tid="monitors"
                         allowed={executable.monitors ?? []}
                         selected={selectedMonitors}

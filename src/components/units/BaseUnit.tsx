@@ -1,5 +1,6 @@
 /* eslint-disable react/require-default-props */
 import JSONSchemasInterface from "@mat3ra/esse/dist/js/esse/JSONSchemasInterface";
+import { FixedRJSForm } from "@mat3ra/move/pseudo";
 import { UnitType } from "@mat3ra/wode/dist/js/enums";
 import type {
     AnySubworkflowUnit,
@@ -15,9 +16,8 @@ import React from "react";
 
 import UnitInputEditor from "./components/UnitInputEditor";
 import UnitPointerField from "./components/UnitPointerField";
-const UnitPointerFieldComponent = UnitPointerField as any;
 
-import { FixedRJSForm } from "@mat3ra/move/pseudo";
+const UnitPointerFieldComponent = UnitPointerField as any;
 
 /**
  * Retrieves the filtered unit properties schema based on the unit type.
@@ -101,7 +101,13 @@ function ObjectFieldTemplate(props: ObjectFieldTemplateProps) {
 function TextWidget(props: WidgetProps) {
     const { onChange, ...rest } = props;
     // eslint-disable-next-line react/jsx-props-no-spreading
-    return <TextField {...(rest as any)} size="small" onChange={(event) => onChange(event.target.value)} />;
+    return (
+        <TextField
+            {...(rest as any)}
+            size="small"
+            onChange={(event) => onChange(event.target.value)}
+        />
+    );
 }
 
 export function BaseUnit(props: BaseUnitProps) {

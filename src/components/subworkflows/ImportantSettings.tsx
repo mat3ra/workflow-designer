@@ -1,15 +1,14 @@
 /* eslint-disable react/no-array-index-key */
 import RJSForm from "@exabyte-io/cove.js/dist/other/rjsf/RJSForm";
 import { type AnySubworkflowUnit, type ExecutionUnit, type Subworkflow } from "@mat3ra/wode";
+import { ExtraImportantSettingsByContextProvider } from "@mat3ra/wove";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import ajv from "@rjsf/validator-ajv8";
 import React from "react";
 
-import { ExtraImportantSettingsByContextProvider } from "@mat3ra/wove";
-import { mergeUiSchemaWithDefaultFieldStyles } from "./importantSettingsFormUtils";
-
 import { useWorkflowComponents } from "../../WorkflowComponentsContext";
+import { mergeUiSchemaWithDefaultFieldStyles } from "./importantSettingsFormUtils";
 
 /**
  * Use schema `type`, not `instanceof`. Job/workflow units are built via Meteor-compiled
@@ -64,7 +63,8 @@ function ImportantSettingsForUnit({
             my={2}
             className="important-settings-for-unit ImportantSettingsForUnit"
             id={unit.flowchartId}
-            data-tid={unit.name}>
+            data-tid={unit.name}
+        >
             <SubworkflowFormTitleComponent title={`Unit ${unitIndex}: ${unit.name}`} />
             <Box ml={3}>
                 {getUnitImportantSettingsProviders(unit).map((provider, index) => {
@@ -77,7 +77,8 @@ function ImportantSettingsForUnit({
                             key={index}
                             my={2}
                             data-form-revision={formRevision}
-                            data-tid={title}>
+                            data-tid={title}
+                        >
                             <Typography variant="h6">{title}</Typography>
                             <ExtraImportantSettingsByContextProvider provider={provider} />
 
@@ -100,7 +101,8 @@ function ImportantSettingsForUnit({
                                     unit.savePersistentContext();
                                     setFormRevision((revision) => revision + 1);
                                     onContextChanged();
-                                }}>
+                                }}
+                            >
                                 {" "}
                             </RJSForm>
                         </Box>
@@ -126,7 +128,8 @@ function ImportantSettingsForSubworkflow({
             className="ImportantSettingsForSubworkflow"
             my={2}
             id={subworkflow.id}
-            key={subworkflow.id}>
+            key={subworkflow.id}
+        >
             <SubworkflowFormTitleComponent title="Settings global to this Subworkflow" />
             <Box ml={3} mt={2}>
                 {subworkflow.unitsInstances.filter(isExecutionUnit).flatMap((unit) => {
@@ -158,7 +161,8 @@ function ImportantSettingsForSubworkflow({
                                             provider.setData(formData);
                                             unit.savePersistentContext();
                                             onContextChanged();
-                                        }}>
+                                        }}
+                                    >
                                         {" "}
                                     </RJSForm>
                                 </Box>

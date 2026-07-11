@@ -2,8 +2,8 @@ import type { DropdownAction } from "@exabyte-io/cove.js/dist/mui/components/dro
 import type { Template } from "@mat3ra/ade";
 import { type OrderedMaterial, Workflow } from "@mat3ra/wode";
 import React from "react";
-import type { SaveWorkflowFromDesigner } from "./utils/persistWorkflowDesigner";
 import type { WorkflowDesignerAccount, WorkflowDesignerCluster, WorkflowDesignerDialogState, WorkflowDesignerHistory, WorkflowDesignerMetaProperty, WorkflowDesignerProfile, WorkflowDesignerUser } from "./types/context";
+import type { SaveWorkflowFromDesigner } from "./utils/persistWorkflowDesigner";
 type WorkflowDesignerContainerBaseProps = {
     initialWorkflow: Workflow;
     defaultMaterial: OrderedMaterial;

@@ -1,10 +1,12 @@
 /* eslint-disable no-param-reassign -- Wode unit helpers mutate; class built only for those APIs */
 import Accordion from "@exabyte-io/cove.js/dist/mui/components/accordion/Accordion";
-const AccordionComponent = Accordion as any;
+import TabsMenu from "@exabyte-io/cove.js/dist/mui/components/tabs/TabsMenu";
 import { Application } from "@mat3ra/ade";
+import { Application as ApplicationAve } from "@mat3ra/ave";
 import { type NameResultSchema, safeMakeObject } from "@mat3ra/code/dist/js/utils/object";
 import type { ApplicationSchema, SubworkflowSchema } from "@mat3ra/esse/dist/js/types";
 import type { Model as ModeModel } from "@mat3ra/mode";
+import { Model } from "@mat3ra/move";
 import { ApplicationModelStandata, ModelStandata } from "@mat3ra/standata";
 import {
     type DefaultSubworkflowUnitType,
@@ -13,22 +15,13 @@ import {
     UnitFactory,
 } from "@mat3ra/wode";
 import type { AnySubworkflowUnitSchema } from "@mat3ra/wode/dist/js/units/factory";
+import { Properties, UnitsFlowchartContainer } from "@mat3ra/wove";
 import TabContext from "@mui/lab/TabContext";
 import TabPanel from "@mui/lab/TabPanel";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import React, { useCallback, useMemo, useState } from "react";
 
-import { ImportantSettings } from "./ImportantSettings";
-import { Properties } from "@mat3ra/wove";
-import { SubworkflowExecutionUnitDetailsRow } from "./SubworkflowExecutionUnitDetailsRow";
-import { SubworkflowMethodPanel } from "./SubworkflowMethodPanel";
-import WorkflowCompute from "./WorkflowCompute";
-import UnitModal from "../units/UnitModal";
-
-import { Application as ApplicationAve } from "@mat3ra/ave";
-import TabsMenu from "@exabyte-io/cove.js/dist/mui/components/tabs/TabsMenu";
-import { useWorkflowComponents } from "../../WorkflowComponentsContext";
 import type {
     WorkflowDesignerAccount,
     WorkflowDesignerCluster,
@@ -42,8 +35,14 @@ import type {
     WorkflowDesignerTabItem,
     WorkflowDesignerUser,
 } from "../../types/context";
-import { Model } from "@mat3ra/move";
-import { UnitsFlowchartContainer } from "@mat3ra/wove";
+import { useWorkflowComponents } from "../../WorkflowComponentsContext";
+import UnitModal from "../units/UnitModal";
+import { ImportantSettings } from "./ImportantSettings";
+import { SubworkflowExecutionUnitDetailsRow } from "./SubworkflowExecutionUnitDetailsRow";
+import { SubworkflowMethodPanel } from "./SubworkflowMethodPanel";
+import WorkflowCompute from "./WorkflowCompute";
+
+const AccordionComponent = Accordion as any;
 
 export type SubworkflowProps = {
     subworkflow: WodeSubworkflow;
@@ -335,9 +334,14 @@ export function Subworkflow({
                 <TabPanel
                     value="0"
                     id={TAB_NAVIGATION_CONFIG.overview.href}
-                    sx={{ height: "100%" }}>
+                    sx={{ height: "100%" }}
+                >
                     <Stack spacing={3} height="100%">
-                        <AccordionComponent header="Details" id="subworkflow-accordion" sx={{ pt: 0 }}>
+                        <AccordionComponent
+                            header="Details"
+                            id="subworkflow-accordion"
+                            sx={{ pt: 0 }}
+                        >
                             <Stack spacing={2}>
                                 <Properties
                                     subworkflow={subworkflow}
@@ -374,7 +378,7 @@ export function Subworkflow({
                                 />
                             </Stack>
                         </AccordionComponent>
-                         <UnitsFlowchartContainer
+                        <UnitsFlowchartContainer
                             units={subworkflow.unitsInstances}
                             onUnitAdd={onUnitAdd}
                             isStandalone={isStandalone}
@@ -400,7 +404,8 @@ export function Subworkflow({
                 <TabPanel
                     value="1"
                     id={TAB_NAVIGATION_CONFIG.importantSettings.href}
-                    data-tab-name={TAB_NAVIGATION_CONFIG.importantSettings.itemName}>
+                    data-tab-name={TAB_NAVIGATION_CONFIG.importantSettings.itemName}
+                >
                     <ImportantSettings
                         id={TAB_NAVIGATION_CONFIG.importantSettings.href}
                         subworkflow={subworkflow}

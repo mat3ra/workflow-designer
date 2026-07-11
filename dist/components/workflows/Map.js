@@ -1,10 +1,10 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import TabsMenu from "@exabyte-io/cove.js/dist/mui/components/tabs/TabsMenu";
-import { useWorkflowComponents } from "../../WorkflowComponentsContext";
 import { UnitType } from "@mat3ra/wode/dist/js/enums";
 import TabContext from "@mui/lab/TabContext";
 import TabPanel from "@mui/lab/TabPanel";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from "react";
+import { useWorkflowComponents } from "../../WorkflowComponentsContext";
 import WorkflowCompute from "../subworkflows/WorkflowCompute";
 import MapDataForm from "./MapDataForm";
 import { Workflow } from "./Workflow";

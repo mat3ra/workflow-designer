@@ -1,9 +1,9 @@
 /* eslint-disable react/no-array-index-key */
 import { showErrorAlert } from "@exabyte-io/cove.js/dist/other/alerts";
-import { useWorkflowComponents } from "../../WorkflowComponentsContext";
 import type { DataIOUnitSchema } from "@mat3ra/esse/dist/js/types";
 import type { Material } from "@mat3ra/made";
 import type IOUnit from "@mat3ra/wode/dist/js/units/IOUnit";
+import { DataFrameIOUnitResultCheckbox } from "@mat3ra/wove";
 import Alert from "@mui/material/Alert";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
@@ -11,7 +11,7 @@ import math from "mathjs";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import _ from "underscore";
 
-import { DataFrameIOUnitResultCheckbox } from "@mat3ra/wove";
+import { useWorkflowComponents } from "../../WorkflowComponentsContext";
 
 const ID_COLUMN = "exabyteId";
 
@@ -274,7 +274,8 @@ export function DataFrameIOUnit({
                             <Alert
                                 className="unit-validation-message"
                                 severity="warning"
-                                key={index}>
+                                key={index}
+                            >
                                 {err.message}
                             </Alert>
                         ))}

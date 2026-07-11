@@ -1,4 +1,5 @@
 import type { Material } from "@mat3ra/made";
+import { MethodData } from "@mat3ra/move";
 import type { Subworkflow as WodeSubworkflow } from "@mat3ra/wode";
 import React from "react";
 
@@ -10,7 +11,6 @@ import type {
     WorkflowDesignerProfile,
 } from "../../types/context";
 import { useWorkflowComponents } from "../../WorkflowComponentsContext";
-import { MethodData } from "@mat3ra/move";
 
 export type SubworkflowMethodPanelProps = {
     subworkflow: WodeSubworkflow;

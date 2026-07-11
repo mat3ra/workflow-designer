@@ -9,28 +9,28 @@
  */
 import "./preloads";
 
-import CssBaseline from "@mui/material/CssBaseline";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import JSONSchemasInterface from "@mat3ra/esse/dist/js/esse/JSONSchemasInterface";
+import esseSchemas from "@mat3ra/esse/dist/js/schemas.json";
+import { Material } from "@mat3ra/made";
+import { ApplicationRegistry, MaterialStandata, WorkflowStandata } from "@mat3ra/standata";
+import { ApplicationDriver } from "@mat3ra/standata/dist/js/ApplicationDriver";
+import { Workflow as WodeWorkflow } from "@mat3ra/wode";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import Container from "@mui/material/Container";
+import CssBaseline from "@mui/material/CssBaseline";
 import Divider from "@mui/material/Divider";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Stack from "@mui/material/Stack";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React, { useCallback, useMemo, useState } from "react";
 import ReactDOM from "react-dom";
-import { Workflow as WodeWorkflow } from "@mat3ra/wode";
-import { WorkflowStandata, MaterialStandata, ApplicationRegistry } from "@mat3ra/standata";
-import { ApplicationDriver } from "@mat3ra/standata/dist/js/ApplicationDriver";
-import JSONSchemasInterface from "@mat3ra/esse/dist/js/esse/JSONSchemasInterface";
-import esseSchemas from "@mat3ra/esse/dist/js/schemas.json";
 
 import WorkflowDesignerContainer from "../WorkflowDesignerContainer";
-import { Material } from "@mat3ra/made";
 
 // ---------------------------------------------------------------------------
 // Bootstrap — must run before any component renders
@@ -54,21 +54,35 @@ const demoTheme = createTheme({
 // ---------------------------------------------------------------------------
 // Stub UI components injected into WorkflowDesignerContainer as React props
 // ---------------------------------------------------------------------------
-const EntityHeaderStub = ({ name }: any) => (
-    <Typography variant="h6" fontWeight={600}>
-        {String(name ?? "")}
-    </Typography>
-);
-const EntityNameStub = () => null;
-const MetadataStub = () => null;
-const HistoryStub = () => null;
-const SubworkflowFormTitleStub = ({ title }: { title: string }) => (
-    <Typography variant="subtitle1" fontWeight={600}>
-        {title}
-    </Typography>
-);
-const PseudoFormStub = () => null;
-const DataGridStub = () => null;
+function EntityHeaderStub({ name }: any) {
+    return (
+        <Typography variant="h6" fontWeight={600}>
+            {String(name ?? "")}
+        </Typography>
+    );
+}
+function EntityNameStub() {
+    return null;
+}
+function MetadataStub() {
+    return null;
+}
+function HistoryStub() {
+    return null;
+}
+function SubworkflowFormTitleStub({ title }: { title: string }) {
+    return (
+        <Typography variant="subtitle1" fontWeight={600}>
+            {title}
+        </Typography>
+    );
+}
+function PseudoFormStub() {
+    return null;
+}
+function DataGridStub() {
+    return null;
+}
 
 // ---------------------------------------------------------------------------
 // Standata loaders
@@ -89,7 +103,10 @@ function tryCreateWorkflow(json: any): WodeWorkflow | null {
 function App() {
     // --- Workflows ---
     const workflowStandata = useMemo(() => new WorkflowStandata(), []);
-    const allWorkflowJsons: any[] = useMemo(() => workflowStandata.getAll() ?? [], [workflowStandata]);
+    const allWorkflowJsons: any[] = useMemo(
+        () => workflowStandata.getAll() ?? [],
+        [workflowStandata],
+    );
     const [workflowIndex, setWorkflowIndex] = useState(0);
 
     const selectedWorkflowJson = allWorkflowJsons[workflowIndex];
@@ -101,7 +118,10 @@ function App() {
 
     // --- Materials ---
     const materialStandata = useMemo(() => new MaterialStandata(), []);
-    const allMaterialJsons: any[] = useMemo(() => materialStandata.getAll() ?? [], [materialStandata]);
+    const allMaterialJsons: any[] = useMemo(
+        () => materialStandata.getAll() ?? [],
+        [materialStandata],
+    );
     // Wrap each JSON in a Material instance so Wode's uniqueElements getter works
     const allMaterials: Material[] = useMemo(
         () => allMaterialJsons.map((json) => new Material(json)),
@@ -143,7 +163,8 @@ function App() {
                     borderBottom: "1px solid",
                     borderColor: "divider",
                     bgcolor: "background.paper",
-                }}>
+                }}
+            >
                 <Stack direction="row" spacing={2} alignItems="center" flexWrap="wrap">
                     <Typography
                         variant="h5"
@@ -154,7 +175,8 @@ function App() {
                             WebkitTextFillColor: "transparent",
                             mr: 2,
                             flexShrink: 0,
-                        }}>
+                        }}
+                    >
                         Workflow Designer
                     </Typography>
 
@@ -166,7 +188,8 @@ function App() {
                             id="workflow-select"
                             value={workflowIndex}
                             label="Workflow"
-                            onChange={(e) => setWorkflowIndex(Number(e.target.value))}>
+                            onChange={(e) => setWorkflowIndex(Number(e.target.value))}
+                        >
                             {allWorkflowJsons.map((wf: any, i: number) => (
                                 <MenuItem key={i} value={i}>
                                     {wf?.name ?? `Workflow ${i + 1}`}
@@ -189,7 +212,8 @@ function App() {
                             id="material-select"
                             value={materialIndex}
                             label="Material"
-                            onChange={(e) => setMaterialIndex(Number(e.target.value))}>
+                            onChange={(e) => setMaterialIndex(Number(e.target.value))}
+                        >
                             {allMaterials.map((mat: any, i: number) => (
                                 <MenuItem key={i} value={i}>
                                     {mat?.name ?? mat?.formula ?? `Material ${i + 1}`}
@@ -214,12 +238,12 @@ function App() {
                     key={designerKey}
                     initialWorkflow={wodeWorkflow}
                     defaultMaterial={selectedMaterial}
-                    editable={true}
+                    editable
                     showHistory={false}
                     workflowHistory={{ list: [], loading: false } as any}
-                    isStandalone={true}
-                    adjustable={true}
-                    showHeader={true}
+                    isStandalone
+                    adjustable
+                    showHeader
                     showMetadata={false}
                     accountUsers={[]}
                     accountUsersIsLoading={false}
@@ -232,13 +256,11 @@ function App() {
                     }
                     publicAccount={{ entity: { id: "public" } } as any}
                     clusters={[]}
-                    dialogs={
-                        {
-                            // ReduxDialogState is a [openFn, closeFn] tuple
-                            pseudoUploadReduxDialog: [() => {}, () => {}] as any,
-                            unitTypeReduxDialog: [() => {}, () => {}] as any,
-                        }
-                    }
+                    dialogs={{
+                        // ReduxDialogState is a [openFn, closeFn] tuple
+                        pseudoUploadReduxDialog: [() => {}, () => {}] as any,
+                        unitTypeReduxDialog: [() => {}, () => {}] as any,
+                    }}
                     templates={[]}
                     isLoading={false}
                     saveWorkflow={handleSave}

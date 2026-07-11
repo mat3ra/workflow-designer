@@ -1,11 +1,11 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import { Utils } from "@mat3ra/utils";
 import { Subworkflow, Workflow } from "@mat3ra/wode";
-import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Workflow as WoveWorkflowDesigner } from "./components/workflows/Workflow";
-import { WorkflowComponentsContext, } from "./WorkflowComponentsContext";
+import { WorkflowComponentsContext } from "./WorkflowComponentsContext";
 /** Stable empty-array sentinel so the metaProperties useLayoutEffect dep never spuriously fires. */
 const EMPTY_META_PROPERTIES = [];
 export default function WorkflowDesignerContainer(containerProps) {
@@ -165,7 +165,14 @@ export default function WorkflowDesignerContainer(containerProps) {
     const { workflow } = state;
     const materials = useMemo(() => [defaultMaterial], [defaultMaterial]);
     if (!workflow) {
-        return (_jsx(Box, { sx: { display: "flex", justifyContent: "center", alignItems: "center", height: "100%", width: "100%", py: 4 }, children: _jsx(CircularProgress, {}) }));
+        return (_jsx(Box, { sx: {
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100%",
+                width: "100%",
+                py: 4,
+            }, children: _jsx(CircularProgress, {}) }));
     }
     return (_jsx(WorkflowComponentsContext.Provider, { value: workflowComponents, children: _jsx(WoveWorkflowDesigner, { workflow: workflow, jobHasParent: Boolean((state.job || {}).parentJob), isSetPublicVisible: state.isSetPublicVisible || false, isLoading: isLoading, materials: materials, showHeader: showHeader, showMetadata: showMetadata, editable: editable, showHistory: showHistory, workflowHistory: workflowHistory, isStandalone: isStandalone, adjustable: adjustable, metaProperties: metaProperties, extraActions: extraActions, accountUsers: accountUsers, accountUsersIsLoading: accountUsersIsLoading, profile: profile, publicAccount: publicAccount, clusters: clusters, dialogs: dialogs, templates: templates, onUpdate: onUpdate, onSave: onSave, onNameUpdate: onNameUpdate, onUpdateTags: onUpdateTags, onUnitAdd: onUnitAdd, onUnitAddSubworkflowFromConfig: onUnitAddSubworkflowFromConfig, onUnitRemove: onUnitRemove, onUnitUpdate: onUnitUpdate, onSubworkflowUnitUpdate: onSubworkflowUnitUpdate, onRender: renderWorkflow, workflowRenderGeneration: renderGeneration, isDescriptionEditable: isDescriptionEditable }) }));
 }

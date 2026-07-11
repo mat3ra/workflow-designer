@@ -1,6 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Dialog from "@exabyte-io/cove.js/dist/mui/components/dialog/Dialog";
+import { InfoPopoverWithDocumentation } from "@exabyte-io/cove.js/dist/mui/components/popover/info-popover/InfoPopoverWithDocumentation";
 import Select from "@exabyte-io/cove.js/dist/mui/components/select";
 import Grid from "@mui/material/Grid";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -8,7 +9,6 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { useMemo, useState } from "react";
 import { ConvergenceParameterInputs } from "./ConvergenceParameterInputs";
-import { InfoPopoverWithDocumentation } from "@exabyte-io/cove.js/dist/mui/components/popover/info-popover/InfoPopoverWithDocumentation";
 const parameterTypes = { N_k: "scalar", N_k_nonuniform: "vector" };
 const parameterNames = { N_k: "N_k", N_k_nonuniform: "N_k (non-uniform)" };
 const scopeVariables = ["N_k", "N_k_nonuniform"];

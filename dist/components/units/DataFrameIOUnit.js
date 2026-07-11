@@ -1,14 +1,14 @@
 import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
 /* eslint-disable react/no-array-index-key */
 import { showErrorAlert } from "@exabyte-io/cove.js/dist/other/alerts";
-import { useWorkflowComponents } from "../../WorkflowComponentsContext";
+import { DataFrameIOUnitResultCheckbox } from "@mat3ra/wove";
 import Alert from "@mui/material/Alert";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import math from "mathjs";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import _ from "underscore";
-import { DataFrameIOUnitResultCheckbox } from "@mat3ra/wove";
+import { useWorkflowComponents } from "../../WorkflowComponentsContext";
 const ID_COLUMN = "exabyteId";
 function columnComparer(a, b, targets) {
     if (a === ID_COLUMN || targets.indexOf(a) > -1)

@@ -13,11 +13,11 @@ import type { AnyWorkflowUnit } from "@mat3ra/wode/dist/js/units/factory";
 import type { WorkflowRenderContext } from "@mat3ra/wode/dist/js/Workflow";
 import React, { useCallback, useMemo, useState } from "react";
 
+import type { SubworkflowDesignerUpdate } from "../../utils/subworkflowDesignerUpdate";
 import { useWorkflowComponents } from "../../WorkflowComponentsContext";
 import UnitPaste from "../units/UnitPaste";
 import UnitTypeSelect from "../units/UnitTypeSelect";
 import Convergence from "../workflows/Convergence";
-import type { SubworkflowDesignerUpdate } from "../../utils/subworkflowDesignerUpdate";
 
 type SubworkflowExternalContextForConvergence = WorkflowRenderContext & {
     workflowHasRelaxation: boolean;

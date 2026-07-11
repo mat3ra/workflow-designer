@@ -1,13 +1,13 @@
 {
-  "name": "@mat3ra/workflow-designer-tests",
-  "version": "0.0.0",
-  "private": true,
-  "scripts": {
-    "test": "cypress open",
-    "test:headless": "cypress run"
-  },
-  "devDependencies": {
-    "cypress": "^13.6.0",
-    "typescript": "^5.3.2"
-  }
+    "name": "@mat3ra/workflow-designer-tests",
+    "version": "0.0.0",
+    "private": true,
+    "scripts": {
+        "test": "cypress open",
+        "test:headless": "cypress run"
+    },
+    "devDependencies": {
+        "cypress": "^13.6.0",
+        "typescript": "^5.3.2"
+    }
 }

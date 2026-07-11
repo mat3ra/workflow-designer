@@ -1,7 +1,4 @@
-import type {
-    WorkflowDesignerAccessType,
-    WorkflowDesignerProfile,
-} from "../types/context";
+import type { WorkflowDesignerAccessType, WorkflowDesignerProfile } from "../types/context";
 
 // "edit" is the only ACCESS_TYPES value used here; hardcoded to remove the getDependency registry.
 const EDIT_ACCESS_TYPE = "edit" as WorkflowDesignerAccessType;

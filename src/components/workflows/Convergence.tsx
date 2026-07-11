@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Dialog from "@exabyte-io/cove.js/dist/mui/components/dialog/Dialog";
+import { InfoPopoverWithDocumentation } from "@exabyte-io/cove.js/dist/mui/components/popover/info-popover/InfoPopoverWithDocumentation";
 import Select from "@exabyte-io/cove.js/dist/mui/components/select";
 import Grid from "@mui/material/Grid";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -9,7 +10,6 @@ import React, { useMemo, useState } from "react";
 
 import { ConvergenceParameterInputs } from "./ConvergenceParameterInputs";
 import { ConvergenceProps } from "./ConvergenceProps";
-import { InfoPopoverWithDocumentation } from "@exabyte-io/cove.js/dist/mui/components/popover/info-popover/InfoPopoverWithDocumentation";
 
 const parameterTypes = { N_k: "scalar", N_k_nonuniform: "vector" };
 const parameterNames = { N_k: "N_k", N_k_nonuniform: "N_k (non-uniform)" };
@@ -25,10 +25,10 @@ export default function Convergence({
     onClose,
     onApply,
 }: ConvergenceProps) {
-    const [selectedParameter, setSelectedParameter] = useState<(typeof scopeVariables)[number]>(
+    const [selectedParameter, setSelectedParameter] = useState<typeof scopeVariables[number]>(
         scopeVariables[0],
     );
-    const [selectedResult, setSelectedResult] = useState<(typeof scalarResults)[number]>(
+    const [selectedResult, setSelectedResult] = useState<typeof scalarResults[number]>(
         scalarResults[0],
     );
     const [resultInitial, setResultInitial] = useState(0);
@@ -64,7 +64,8 @@ export default function Convergence({
     };
 
     const areEmptyInputs = useMemo(() => {
-        if ([resultInitial, maxOccurrences, tolerance].some((value) => (value as any) === "")) return true;
+        if ([resultInitial, maxOccurrences, tolerance].some((value) => (value as any) === ""))
+            return true;
         if (parameterTypes[selectedParameter] === "vector") {
             return [parameterInitial0, parameterInitial1, parameterInitial2].some(
                 (value) => (value as any) === "",
@@ -108,7 +109,8 @@ export default function Convergence({
             submitButtonText="Apply"
             isSubmitButtonProcessing={isApplying}
             isSubmitButtonDisabled={areEmptyInputs}
-            maxWidth="md">
+            maxWidth="md"
+        >
             <Grid container spacing={2}>
                 <Grid item xs={6}>
                     <Select
@@ -118,7 +120,7 @@ export default function Convergence({
                         formControlProps={{}}
                         items={scopeVariablesItems}
                         onChange={(e) => {
-                            setSelectedParameter(e.target.value as (typeof scopeVariables)[number]);
+                            setSelectedParameter(e.target.value as typeof scopeVariables[number]);
                         }}
                     />
                 </Grid>
@@ -147,7 +149,7 @@ export default function Convergence({
                             name: value,
                         }))}
                         onChange={(e) =>
-                            setSelectedResult(e.target.value as (typeof scalarResults)[number])
+                            setSelectedResult(e.target.value as typeof scalarResults[number])
                         }
                     />
                 </Grid>
@@ -178,7 +180,8 @@ export default function Convergence({
                                 <InputAdornment position="end">
                                     <InfoPopoverWithDocumentation
                                         popoverTitle="Convergence Condition"
-                                        searchText="Assignment">
+                                        searchText="Assignment"
+                                    >
                                         This field specifies the convergence condition and will
                                         appear in the convergence workflow as an assignment unit.
                                     </InfoPopoverWithDocumentation>

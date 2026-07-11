@@ -32,7 +32,7 @@ import moment from "moment";
     // findLast
     function findLast(array, callback) {
         var index = array.length;
-        while (index -= 1) {
+        while ((index -= 1)) {
             if (callback(array[index])) {
                 return array[index];
             }
@@ -159,7 +159,9 @@ import moment from "moment";
                 extend(settings, arg);
             }
         });
-        types = settings.types = (isArray(settings.types) ? settings.types : settings.types.split(" "));
+        types = settings.types = isArray(settings.types)
+            ? settings.types
+            : settings.types.split(" ");
         if (typeof settings.template === "function") {
             settings.template = settings.template.apply(settings);
         }
@@ -176,8 +178,8 @@ import moment from "moment";
             return {
                 index: index,
                 length: length,
-                token: (type === "escape" ? token.replace(settings.escape, "$1") : token),
-                type: ((type === "escape" || type === "general") ? null : type)
+                token: type === "escape" ? token.replace(settings.escape, "$1") : token,
+                type: type === "escape" || type === "general" ? null : type,
             };
         }, this);
         momentTypes = intersection(types, unique(compact(pluck(tokens, "type"))));
@@ -187,10 +189,10 @@ import moment from "moment";
         each(momentTypes, function (momentType, index) {
             var value, wholeValue, decimalValue, isLeast, isMost;
             value = remainder.as(momentType);
-            wholeValue = (value > 0 ? Math.floor(value) : Math.ceil(value));
+            wholeValue = value > 0 ? Math.floor(value) : Math.ceil(value);
             decimalValue = value - wholeValue;
-            isLeast = ((index + 1) === momentTypes.length);
-            isMost = (!index);
+            isLeast = index + 1 === momentTypes.length;
+            isMost = !index;
             each(tokens, function (token) {
                 if (token.type === momentType) {
                     extend(token, {
@@ -198,7 +200,7 @@ import moment from "moment";
                         wholeValue: wholeValue,
                         decimalValue: decimalValue,
                         isLeast: isLeast,
-                        isMost: isMost
+                        isMost: isMost,
                     });
                     if (isMost) {
                         if (settings.forceLength == null && token.length > 1) {
@@ -223,8 +225,9 @@ import moment from "moment";
             if (!token.type) {
                 return token.token;
             }
-            if (token.isLeast && (settings.precision < 0)) {
-                val = (Math.floor(token.wholeValue * Math.pow(10, settings.precision)) * Math.pow(10, -settings.precision)).toString();
+            if (token.isLeast && settings.precision < 0) {
+                val = (Math.floor(token.wholeValue * Math.pow(10, settings.precision)) *
+                    Math.pow(10, -settings.precision)).toString();
             }
             else {
                 val = token.wholeValue.toString();
@@ -233,17 +236,26 @@ import moment from "moment";
             if (token.length > 1 && (foundFirst || token.isMost || settings.forceLength)) {
                 val = padZero(val, token.length);
             }
-            if (token.isLeast && (settings.precision > 0)) {
-                decVal = token.decimalValue.toString().replace(/^\-/, "").split(/\.|e\-/);
+            if (token.isLeast && settings.precision > 0) {
+                decVal = token.decimalValue
+                    .toString()
+                    .replace(/^\-/, "")
+                    .split(/\.|e\-/);
                 switch (decVal.length) {
                     case 1:
-                        val += "." + padZero(decVal[0], settings.precision, true).slice(0, settings.precision);
+                        val +=
+                            "." +
+                                padZero(decVal[0], settings.precision, true).slice(0, settings.precision);
                         break;
                     case 2:
-                        val += "." + padZero(decVal[1], settings.precision, true).slice(0, settings.precision);
+                        val +=
+                            "." +
+                                padZero(decVal[1], settings.precision, true).slice(0, settings.precision);
                         break;
                     case 3:
-                        val += "." + padZero(repeatZero((+decVal[2]) - 1) + (decVal[0] || "0") + decVal[1], settings.precision, true).slice(0, settings.precision);
+                        val +=
+                            "." +
+                                padZero(repeatZero(+decVal[2] - 1) + (decVal[0] || "0") + decVal[1], settings.precision, true).slice(0, settings.precision);
                         break;
                     default:
                         throw "Moment Duration Format: unable to parse token decimal value.";
@@ -297,6 +309,6 @@ import moment from "moment";
                 default:
                     return "y[y] M[m] d[d] h:mm:ss";
             }
-        }
+        },
     };
 })(moment);

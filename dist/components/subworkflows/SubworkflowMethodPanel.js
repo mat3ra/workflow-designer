@@ -1,6 +1,6 @@
 import { jsx as _jsx } from "react/jsx-runtime";
-import { useWorkflowComponents } from "../../WorkflowComponentsContext";
 import { MethodData } from "@mat3ra/move";
+import { useWorkflowComponents } from "../../WorkflowComponentsContext";
 export function SubworkflowMethodPanel({ subworkflow, editable, adjustable, isMethodDataLoading, isStandalone, materials, profile, onUpdate, pseudoUploadReduxDialog, metaProperties, createMetaProperty, }) {
     const { PseudoFormComponent } = useWorkflowComponents();
     if (!(!subworkflow.modelInstance.isUnknown || editable)) {

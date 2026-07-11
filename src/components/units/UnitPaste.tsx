@@ -35,7 +35,8 @@ export default function UnitPaste({
             onSubmit={handleSubmit}
             submitButtonText="Apply"
             scroll="paper"
-            maxWidth="lg">
+            maxWidth="lg"
+        >
             <Box sx={{ height: "100%", overflow: "hidden" }}>
                 <Select
                     id={`${id}-select-index`}
@@ -53,7 +54,8 @@ export default function UnitPaste({
                 />
                 <Box
                     id="workflow-unit-paste-contents"
-                    sx={{ border: "1px solid #ccc", borderRadius: 1, overflowY: "auto" }}>
+                    sx={{ border: "1px solid #ccc", borderRadius: 1, overflowY: "auto" }}
+                >
                     <Codemirror
                         content={unitContents}
                         updateContent={setUnitContents}

@@ -69,7 +69,8 @@ export function WorkflowValidationAlert({ workflow }: Props) {
         <Alert
             className="workflow-validation-alert"
             severity="error"
-            sx={{ alignItems: "flex-start", mx: 2, mt: 2, mb: 1 }}>
+            sx={{ alignItems: "flex-start", mx: 2, mt: 2, mb: 1 }}
+        >
             <Stack spacing={1.5} sx={{ width: "100%" }}>
                 <Box>
                     <Typography variant="subtitle2" component="div" sx={{ fontWeight: 600 }}>

@@ -1,13 +1,13 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import Checkbox from "@exabyte-io/cove.js/dist/mui/components/checkbox/Checkbox";
-const CheckboxComponent = Checkbox;
+import { Results } from "@mat3ra/ave";
 import { ApplicationRegistry } from "@mat3ra/standata";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { useMemo } from "react";
 import UnitProperties from "./UnitProperties";
-import { Results } from "@mat3ra/ave";
+const CheckboxComponent = Checkbox;
 const INDENT = 1;
 function UnitDetails({ unit, editable, onUnitResultsChanged, onUnitIsDraftChanged, onUnitMonitorChanged, onUnitPostProcessorChanged, }) {
     var _a, _b, _c, _d;

@@ -9,26 +9,26 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  * - Dark MUI theme, no Meteor / no Redux / no setDependencies()
  */
 import "./preloads";
-import CssBaseline from "@mui/material/CssBaseline";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import JSONSchemasInterface from "@mat3ra/esse/dist/js/esse/JSONSchemasInterface";
+import esseSchemas from "@mat3ra/esse/dist/js/schemas.json";
+import { Material } from "@mat3ra/made";
+import { ApplicationRegistry, MaterialStandata, WorkflowStandata } from "@mat3ra/standata";
+import { ApplicationDriver } from "@mat3ra/standata/dist/js/ApplicationDriver";
+import { Workflow as WodeWorkflow } from "@mat3ra/wode";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
+import CssBaseline from "@mui/material/CssBaseline";
 import Divider from "@mui/material/Divider";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Stack from "@mui/material/Stack";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React, { useCallback, useMemo, useState } from "react";
 import ReactDOM from "react-dom";
-import { Workflow as WodeWorkflow } from "@mat3ra/wode";
-import { WorkflowStandata, MaterialStandata, ApplicationRegistry } from "@mat3ra/standata";
-import { ApplicationDriver } from "@mat3ra/standata/dist/js/ApplicationDriver";
-import JSONSchemasInterface from "@mat3ra/esse/dist/js/esse/JSONSchemasInterface";
-import esseSchemas from "@mat3ra/esse/dist/js/schemas.json";
 import WorkflowDesignerContainer from "../WorkflowDesignerContainer";
-import { Material } from "@mat3ra/made";
 // ---------------------------------------------------------------------------
 // Bootstrap — must run before any component renders
 // ---------------------------------------------------------------------------
@@ -49,13 +49,27 @@ const demoTheme = createTheme({
 // ---------------------------------------------------------------------------
 // Stub UI components injected into WorkflowDesignerContainer as React props
 // ---------------------------------------------------------------------------
-const EntityHeaderStub = ({ name }) => (_jsx(Typography, { variant: "h6", fontWeight: 600, children: String(name !== null && name !== void 0 ? name : "") }));
-const EntityNameStub = () => null;
-const MetadataStub = () => null;
-const HistoryStub = () => null;
-const SubworkflowFormTitleStub = ({ title }) => (_jsx(Typography, { variant: "subtitle1", fontWeight: 600, children: title }));
-const PseudoFormStub = () => null;
-const DataGridStub = () => null;
+function EntityHeaderStub({ name }) {
+    return (_jsx(Typography, { variant: "h6", fontWeight: 600, children: String(name !== null && name !== void 0 ? name : "") }));
+}
+function EntityNameStub() {
+    return null;
+}
+function MetadataStub() {
+    return null;
+}
+function HistoryStub() {
+    return null;
+}
+function SubworkflowFormTitleStub({ title }) {
+    return (_jsx(Typography, { variant: "subtitle1", fontWeight: 600, children: title }));
+}
+function PseudoFormStub() {
+    return null;
+}
+function DataGridStub() {
+    return null;
+}
 // ---------------------------------------------------------------------------
 // Standata loaders
 // ---------------------------------------------------------------------------

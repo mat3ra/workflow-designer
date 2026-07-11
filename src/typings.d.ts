@@ -7,7 +7,7 @@ declare global {
 
 declare module "/imports/*" {
     type Any = any;
-    
+
     export interface DefaultExport {
         [key: string]: any;
     }
@@ -16,22 +16,36 @@ declare module "/imports/*" {
 
     // Named exports (both types and values)
     export namespace DialogType {
-        export interface SelectMaterialsExplorer { [key: string]: any; }
+        export interface SelectMaterialsExplorer {
+            [key: string]: any;
+        }
         export const SelectMaterialsExplorer: any;
-        export interface SelectParentJobExplorer { [key: string]: any; }
+        export interface SelectParentJobExplorer {
+            [key: string]: any;
+        }
         export const SelectParentJobExplorer: any;
-        export interface SelectWorkflowExplorer { [key: string]: any; }
+        export interface SelectWorkflowExplorer {
+            [key: string]: any;
+        }
         export const SelectWorkflowExplorer: any;
-        export interface DatasetUploadsExplorer { [key: string]: any; }
+        export interface DatasetUploadsExplorer {
+            [key: string]: any;
+        }
         export const DatasetUploadsExplorer: any;
-        export interface PseudoUpload { [key: string]: any; }
+        export interface PseudoUpload {
+            [key: string]: any;
+        }
         export const PseudoUpload: any;
-        export interface UnitTypeSelect { [key: string]: any; }
+        export interface UnitTypeSelect {
+            [key: string]: any;
+        }
         export const UnitTypeSelect: any;
     }
     export const DialogType: any;
 
-    export interface ReduxDialogState<T = any> extends Array<any> { [key: string]: any; }
+    export interface ReduxDialogState<T = any> extends Array<any> {
+        [key: string]: any;
+    }
     export const ReduxDialogState: any;
 
     export const CorePropertyHolder: any;
@@ -225,7 +239,7 @@ declare module "/imports/*" {
     export const DataFrameIOUnitResultCheckbox: any;
     export const ErrorUnitContent: any;
     export const ExecutionUnitViewer: any;
-    
+
     export const CoreAccount: any;
     export type CoreAccount = any;
 }
@@ -438,4 +452,3 @@ declare module "@exabyte-io/cove.js/dist/mui/components/popover/info-popover/Inf
 }
 
 export {};
-

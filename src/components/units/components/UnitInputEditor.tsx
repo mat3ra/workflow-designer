@@ -1,8 +1,9 @@
 import { showErrorAlert, showSuccessAlert } from "@exabyte-io/cove.js/dist/other/alerts";
-import { useWorkflowComponents } from "../../../WorkflowComponentsContext";
 import CodeMirror from "@exabyte-io/cove.js/dist/other/codemirror";
 import _ from "lodash";
 import React, { useCallback, useState } from "react";
+
+import { useWorkflowComponents } from "../../../WorkflowComponentsContext";
 
 type Props = {
     initialInput: unknown;
@@ -18,7 +19,10 @@ function UnitInputEditor({ initialInput, onChange, editable = true }: Props) {
         showErrorAlert("Invalid JSON content");
     }
 
-    const showJSONContentAlert = useCallback(_.debounce(_showJSONContentAlert, 2000, { leading: true, trailing: false }), []);
+    const showJSONContentAlert = useCallback(
+        _.debounce(_showJSONContentAlert, 2000, { leading: true, trailing: false }),
+        [],
+    );
 
     const handleInputUpdate = (newInputAsText: string) => {
         try {

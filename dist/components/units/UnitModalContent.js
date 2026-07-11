@@ -1,10 +1,9 @@
 import { jsx as _jsx } from "react/jsx-runtime";
+import { ExecutionUnit, ExecutionUnitViewer } from "@mat3ra/ave";
 import { UnitType } from "@mat3ra/wode/dist/js/enums";
+import { ErrorUnitContent } from "@mat3ra/wove";
 import { BaseUnit } from "./BaseUnit";
 import { DataFrameIOUnit } from "./DataFrameIOUnit";
-import { ErrorUnitContent } from "@mat3ra/wove";
-import { ExecutionUnit } from "@mat3ra/ave";
-import { ExecutionUnitViewer } from "@mat3ra/ave";
 export function UnitModalContent({ unit, units, onUpdate, adjustable, editable, isStandalone, onOutputUpdateRequest, materials, materialsIndex, onMaterialSwitch, jobProperties = [], }) {
     const isViewMode = !editable && !adjustable;
     if (unit.type === UnitType.error) {

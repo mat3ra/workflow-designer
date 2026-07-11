@@ -3,16 +3,15 @@ import { ENTITY_ICONS } from "@exabyte-io/cove.js/dist/mui/components/icon/entit
 import ThemeProvider from "@exabyte-io/cove.js/dist/theme/provider";
 import oldLightMaterialUITheme from "@exabyte-io/cove.js/dist/theme/theme";
 import { UnitType } from "@mat3ra/wode/dist/js/enums";
+import { ErrorUnitContent, WorkflowUnitsFlowchart } from "@mat3ra/wove";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
 import get from "lodash/get";
 import React from "react";
-import { WorkflowUnitsFlowchart } from "@mat3ra/wove";
 import { useWorkflowComponents } from "../../WorkflowComponentsContext";
 import { Subworkflow } from "../subworkflows/Subworkflow";
 import SubworkflowHeader from "../subworkflows/SubworkflowHeader";
-import { ErrorUnitContent } from "@mat3ra/wove";
 import { WorkflowValidationAlert } from "./WorkflowValidationAlert";
 // TODO: avoid cycle dependencies (Map imports Workflow)
 const MapWorkflowDesigner = React.lazy(() => import("./Map").then((module) => ({ default: module.MapWorkflowDesigner })));

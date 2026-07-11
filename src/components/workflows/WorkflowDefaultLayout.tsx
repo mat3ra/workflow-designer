@@ -13,16 +13,13 @@ import {
 } from "@mat3ra/wode";
 import { UnitType } from "@mat3ra/wode/dist/js/enums";
 import type { AnyWorkflowUnit } from "@mat3ra/wode/dist/js/units/factory";
+import { ErrorUnitContent, WorkflowUnitsFlowchart } from "@mat3ra/wove";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
 import get from "lodash/get";
 import React from "react";
 
-import type { WorkflowProps } from "./Workflow";
-import { WorkflowUnitsFlowchart } from "@mat3ra/wove";
-
-import { useWorkflowComponents } from "../../WorkflowComponentsContext";
 import type {
     WorkflowDesignerAccount,
     WorkflowDesignerCluster,
@@ -34,11 +31,12 @@ import type {
     WorkflowDesignerProperty,
     WorkflowDesignerUser,
 } from "../../types/context";
+import type { SubworkflowDesignerUpdate } from "../../utils/subworkflowDesignerUpdate";
+import { useWorkflowComponents } from "../../WorkflowComponentsContext";
 import { Subworkflow } from "../subworkflows/Subworkflow";
 import SubworkflowHeader from "../subworkflows/SubworkflowHeader";
-import { ErrorUnitContent } from "@mat3ra/wove";
+import type { WorkflowProps } from "./Workflow";
 import { WorkflowValidationAlert } from "./WorkflowValidationAlert";
-import type { SubworkflowDesignerUpdate } from "../../utils/subworkflowDesignerUpdate";
 
 // TODO: avoid cycle dependencies (Map imports Workflow)
 const MapWorkflowDesigner = React.lazy(() =>
@@ -244,7 +242,8 @@ export function WorkflowDefaultLayout(props: WorkflowDefaultLayoutProps) {
                         sx={{
                             borderRight: "1px solid #cecece",
                             backgroundColor: "background.default",
-                        }}>
+                        }}
+                    >
                         <Box className="workflow-flowchart-container" sx={{ height: "100%", p: 2 }}>
                             <WorkflowUnitsFlowchart
                                 editable={Boolean(editable)}
@@ -262,7 +261,8 @@ export function WorkflowDefaultLayout(props: WorkflowDefaultLayoutProps) {
                         className="workflow-subworkflow-container"
                         item
                         sx={{ display: "flex", flexDirection: "column" }}
-                        {...rightColumnGridProps}>
+                        {...rightColumnGridProps}
+                    >
                         <WorkflowValidationAlert workflow={entity} />
                         {unit.type === UnitType.subworkflow && (
                             <>

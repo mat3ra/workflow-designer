@@ -1,27 +1,26 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 /* eslint-disable no-param-reassign -- Wode unit helpers mutate; class built only for those APIs */
 import Accordion from "@exabyte-io/cove.js/dist/mui/components/accordion/Accordion";
-const AccordionComponent = Accordion;
+import TabsMenu from "@exabyte-io/cove.js/dist/mui/components/tabs/TabsMenu";
 import { Application } from "@mat3ra/ade";
+import { Application as ApplicationAve } from "@mat3ra/ave";
 import { safeMakeObject } from "@mat3ra/code/dist/js/utils/object";
+import { Model } from "@mat3ra/move";
 import { ApplicationModelStandata, ModelStandata } from "@mat3ra/standata";
 import { UnitFactory, } from "@mat3ra/wode";
+import { Properties, UnitsFlowchartContainer } from "@mat3ra/wove";
 import TabContext from "@mui/lab/TabContext";
 import TabPanel from "@mui/lab/TabPanel";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import { useCallback, useMemo, useState } from "react";
+import { useWorkflowComponents } from "../../WorkflowComponentsContext";
+import UnitModal from "../units/UnitModal";
 import { ImportantSettings } from "./ImportantSettings";
-import { Properties } from "@mat3ra/wove";
 import { SubworkflowExecutionUnitDetailsRow } from "./SubworkflowExecutionUnitDetailsRow";
 import { SubworkflowMethodPanel } from "./SubworkflowMethodPanel";
 import WorkflowCompute from "./WorkflowCompute";
-import UnitModal from "../units/UnitModal";
-import { Application as ApplicationAve } from "@mat3ra/ave";
-import TabsMenu from "@exabyte-io/cove.js/dist/mui/components/tabs/TabsMenu";
-import { useWorkflowComponents } from "../../WorkflowComponentsContext";
-import { Model } from "@mat3ra/move";
-import { UnitsFlowchartContainer } from "@mat3ra/wove";
+const AccordionComponent = Accordion;
 export const TAB_NAVIGATION_CONFIG = {
     overview: {
         itemName: "Overview",

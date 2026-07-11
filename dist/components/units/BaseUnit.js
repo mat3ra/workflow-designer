@@ -1,6 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 /* eslint-disable react/require-default-props */
 import JSONSchemasInterface from "@mat3ra/esse/dist/js/esse/JSONSchemasInterface";
+import { FixedRJSForm } from "@mat3ra/move/pseudo";
 import { UnitType } from "@mat3ra/wode/dist/js/enums";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
@@ -10,7 +11,6 @@ import _ from "lodash";
 import UnitInputEditor from "./components/UnitInputEditor";
 import UnitPointerField from "./components/UnitPointerField";
 const UnitPointerFieldComponent = UnitPointerField;
-import { FixedRJSForm } from "@mat3ra/move/pseudo";
 /**
  * Retrieves the filtered unit properties schema based on the unit type.
  * Filters out properties that are not relevant to the unit type.
@@ -76,7 +76,7 @@ function ObjectFieldTemplate(props) {
 function TextWidget(props) {
     const { onChange, ...rest } = props;
     // eslint-disable-next-line react/jsx-props-no-spreading
-    return _jsx(TextField, { ...rest, size: "small", onChange: (event) => onChange(event.target.value) });
+    return (_jsx(TextField, { ...rest, size: "small", onChange: (event) => onChange(event.target.value) }));
 }
 export function BaseUnit(props) {
     var _a;

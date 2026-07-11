@@ -28,7 +28,8 @@ export default function UnitTypeSelect({
             onClose={onClose}
             onSubmit={handleSubmit}
             submitButtonText="Apply"
-            maxWidth="sm">
+            maxWidth="sm"
+        >
             <Grid container spacing={0.5}>
                 <Grid item xs={11}>
                     <Select
@@ -47,9 +48,7 @@ export default function UnitTypeSelect({
                     />
                 </Grid>
                 <Grid item xs={1}>
-                    <InfoPopoverWithDocumentation
-                        popoverTitle="Unit types"
-                        searchText="Unit types">
+                    <InfoPopoverWithDocumentation popoverTitle="Unit types" searchText="Unit types">
                         Users can choose between one of the following unit types:
                         <br />
                         <dl>

@@ -1,4 +1,5 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
+import { ComputeForm } from "@mat3ra/ive";
 import Box from "@mui/material/Box";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -9,7 +10,6 @@ import type {
     WorkflowDesignerCoreUser,
     WorkflowDesignerUser,
 } from "../../types/context";
-import { ComputeForm } from "@mat3ra/ive";
 
 export type WorkflowComputeProps = {
     compute: object | null | undefined;

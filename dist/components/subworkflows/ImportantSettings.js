@@ -1,13 +1,13 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 /* eslint-disable react/no-array-index-key */
 import RJSForm from "@exabyte-io/cove.js/dist/other/rjsf/RJSForm";
+import { ExtraImportantSettingsByContextProvider } from "@mat3ra/wove";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import ajv from "@rjsf/validator-ajv8";
 import React from "react";
-import { ExtraImportantSettingsByContextProvider } from "@mat3ra/wove";
-import { mergeUiSchemaWithDefaultFieldStyles } from "./importantSettingsFormUtils";
 import { useWorkflowComponents } from "../../WorkflowComponentsContext";
+import { mergeUiSchemaWithDefaultFieldStyles } from "./importantSettingsFormUtils";
 /**
  * Use schema `type`, not `instanceof`. Job/workflow units are built via Meteor-compiled
  * `@mat3ra/wode` (see `rspack.config.js` `compileWithMeteor`); wove UI may resolve another

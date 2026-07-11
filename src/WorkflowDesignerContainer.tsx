@@ -3,15 +3,13 @@ import type { Template } from "@mat3ra/ade";
 import type { SubworkflowSchema } from "@mat3ra/esse/dist/js/types";
 import { Utils } from "@mat3ra/utils";
 import { type MaterialsSet, type OrderedMaterial, Subworkflow, Workflow } from "@mat3ra/wode";
-import type { AnyWorkflowUnit } from "@mat3ra/wode/dist/js/units/factory";
 import { UnitType } from "@mat3ra/wode/dist/js/enums";
-import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
-
-import type { SaveWorkflowFromDesigner } from "./utils/persistWorkflowDesigner";
-
+import type { AnyWorkflowUnit } from "@mat3ra/wode/dist/js/units/factory";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
+import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 
+import { Workflow as WoveWorkflowDesigner } from "./components/workflows/Workflow";
 import type {
     WorkflowDesignerAccount,
     WorkflowDesignerCluster,
@@ -23,12 +21,8 @@ import type {
     WorkflowDesignerProfile,
     WorkflowDesignerUser,
 } from "./types/context";
-
-import { Workflow as WoveWorkflowDesigner } from "./components/workflows/Workflow";
-import {
-    WorkflowComponentsContext,
-    type WorkflowComponents,
-} from "./WorkflowComponentsContext";
+import type { SaveWorkflowFromDesigner } from "./utils/persistWorkflowDesigner";
+import { type WorkflowComponents, WorkflowComponentsContext } from "./WorkflowComponentsContext";
 
 type WorkflowDesignerContainerBaseProps = {
     initialWorkflow: Workflow;
@@ -327,7 +321,16 @@ export default function WorkflowDesignerContainer(containerProps: WorkflowDesign
 
     if (!workflow) {
         return (
-            <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%", width: "100%", py: 4 }}>
+            <Box
+                sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: "100%",
+                    width: "100%",
+                    py: 4,
+                }}
+            >
                 <CircularProgress />
             </Box>
         );

@@ -1,9 +1,9 @@
 import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
 import { showErrorAlert, showSuccessAlert } from "@exabyte-io/cove.js/dist/other/alerts";
-import { useWorkflowComponents } from "../../../WorkflowComponentsContext";
 import CodeMirror from "@exabyte-io/cove.js/dist/other/codemirror";
 import _ from "lodash";
 import { useCallback, useState } from "react";
+import { useWorkflowComponents } from "../../../WorkflowComponentsContext";
 function UnitInputEditor({ initialInput, onChange, editable = true }) {
     const { SubworkflowFormTitleComponent } = useWorkflowComponents();
     const [inputText, setInputText] = useState(JSON.stringify(initialInput, null, "    "));

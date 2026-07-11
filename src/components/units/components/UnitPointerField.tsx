@@ -52,7 +52,8 @@ export default function UnitPointerField({
                 fullWidth
                 select
                 size="small"
-                InputLabelProps={{ shrink: true }}>
+                InputLabelProps={{ shrink: true }}
+            >
                 {optionsList}
             </TextField>
             <TextField

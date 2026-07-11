@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import RJSForm from "@exabyte-io/cove.js/dist/other/rjsf/RJSForm";
 import Checkbox from "@exabyte-io/cove.js/dist/mui/components/checkbox/Checkbox";
+import RJSForm from "@exabyte-io/cove.js/dist/other/rjsf/RJSForm";
 import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
 import Grid from "@mui/material/Grid";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import MuiSelect from "@mui/material/Select";
-import setClass from "classnames";
 import ajv from "@rjsf/validator-ajv8";
+import setClass from "classnames";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import _ from "underscore";
 
@@ -82,9 +82,7 @@ export default function MapDataForm({
             const newMapData: MapUnitInput = {
                 ...next,
                 useValues: newUseValues,
-                values: newUseValues
-                    ? JSON.stringify(JSON.parse(valuesStr), null, 4)
-                    : next.values,
+                values: newUseValues ? JSON.stringify(JSON.parse(valuesStr), null, 4) : next.values,
             };
             setState(newMapData);
             const upstream: MapUnitInput = {
@@ -130,11 +128,13 @@ export default function MapDataForm({
                                 const next = { ...state, scope: e.target.value as string };
                                 setState(next);
                                 handleChange(next);
-                            }}>
+                            }}
+                        >
                             {scopeOptions.map((option) => (
                                 <MenuItem
                                     key={option.unitFlowchartId}
-                                    value={option.unitFlowchartId}>
+                                    value={option.unitFlowchartId}
+                                >
                                     {`${option.subworkflowName}: ${option.unitName}`}
                                 </MenuItem>
                             ))}
@@ -161,7 +161,8 @@ export default function MapDataForm({
                             const next = { ...state, ...(fd as object) };
                             setState(next);
                             handleChange(next);
-                        }}>
+                        }}
+                    >
                         {" "}
                     </RJSForm>
                 </Grid>

@@ -4,8 +4,8 @@ import { type MaterialsSet, type OrderedMaterial, Workflow as WodeWorkflow } fro
 import { UnitType } from "@mat3ra/wode/dist/js/enums";
 import type { AnyWorkflowUnit } from "@mat3ra/wode/dist/js/units/factory";
 import React from "react";
-import type { SubworkflowDesignerUpdate } from "../../utils/subworkflowDesignerUpdate";
 import type { WorkflowDesignerAccount, WorkflowDesignerCluster, WorkflowDesignerCreateMetaPropertyConfig, WorkflowDesignerDialogs, WorkflowDesignerHistory, WorkflowDesignerMetaProperty, WorkflowDesignerMetaPropertySchema, WorkflowDesignerProfile, WorkflowDesignerProperty, WorkflowDesignerUser } from "../../types/context";
+import type { SubworkflowDesignerUpdate } from "../../utils/subworkflowDesignerUpdate";
 type WorkflowDialogs = WorkflowDesignerDialogs;
 export type WorkflowProps = {
     workflow: WodeWorkflow;

@@ -1,8 +1,8 @@
 import type { Template } from "@mat3ra/ade";
 import { type OrderedMaterial, type Workflow as WodeWorkflow } from "@mat3ra/wode";
 import React from "react";
-import type { WorkflowProps } from "./Workflow";
 import type { WorkflowDesignerAccount, WorkflowDesignerCluster, WorkflowDesignerCoreUser, WorkflowDesignerMetaProperty, WorkflowDesignerProfile, WorkflowDesignerUser } from "../../types/context";
+import type { WorkflowProps } from "./Workflow";
 export type MapUnitInput = {
     values: unknown[] | string;
     useValues?: boolean;

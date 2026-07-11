@@ -1,6 +1,5 @@
 import Dialog from "@exabyte-io/cove.js/dist/mui/components/dialog/Dialog";
 import { ENTITY_ICONS } from "@exabyte-io/cove.js/dist/mui/components/icon/entityIcons";
-import { useWorkflowComponents } from "../../WorkflowComponentsContext";
 import IconByName from "@exabyte-io/cove.js/dist/mui/components/icon/IconByName";
 import { showErrorAlert } from "@exabyte-io/cove.js/dist/other/alerts";
 import type { ExecutionUnitSchema } from "@mat3ra/esse/dist/js/types";
@@ -9,6 +8,7 @@ import type {
     AnySubworkflowUnit,
     AnySubworkflowUnitSchema,
 } from "@mat3ra/wode/dist/js/units/factory";
+import { getUnitStatusCls } from "@mat3ra/wove";
 import DialogTitle from "@mui/material/DialogTitle";
 import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
@@ -17,12 +17,9 @@ import Typography from "@mui/material/Typography";
 import lodash from "lodash";
 import React from "react";
 
+import type { WorkflowDesignerAccount, WorkflowDesignerProperty } from "../../types/context";
+import { useWorkflowComponents } from "../../WorkflowComponentsContext";
 import { UnitModalContent } from "./UnitModalContent";
-import { getUnitStatusCls } from "@mat3ra/wove";
-import type {
-    WorkflowDesignerAccount,
-    WorkflowDesignerProperty,
-} from "../../types/context";
 
 export interface UnitModalProps {
     id?: string;
@@ -116,7 +113,8 @@ export default function UnitModal({
             maxWidth="lg"
             className={className ? `UnitModal ${className}` : "UnitModal"}
             scrollable
-            fullWidth>
+            fullWidth
+        >
             <UnitModalContent
                 unit={unit}
                 units={units}

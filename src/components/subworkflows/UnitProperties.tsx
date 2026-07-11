@@ -97,7 +97,8 @@ function UnitProperties({
                     size="small"
                     onClick={handleEditClick}
                     sx={{ mx: 1 }}
-                    data-tid="edit-properties">
+                    data-tid="edit-properties"
+                >
                     Edit
                 </Button>
             ) : null}

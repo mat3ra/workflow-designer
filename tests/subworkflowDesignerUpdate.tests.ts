@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
-import assert from "node:assert";
-import test from "node:test";
-
 import {
     applySubworkflowUpdateToWorkflow,
     isWodeSubworkflowInstance,
-} from "../src/utils/subworkflowDesignerUpdate";
+} from "@mat3ra/workflow-designer/src/utils/subworkflowDesignerUpdate";
+import assert from "node:assert";
+import test from "node:test";
 
 test("isWodeSubworkflowInstance detects live wode subworkflow instances", () => {
     assert.strictEqual(isWodeSubworkflowInstance({ unitsInstances: [] } as never), true);

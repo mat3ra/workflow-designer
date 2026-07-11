@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
-import assert from "node:assert";
-import test from "node:test";
-
 import {
     getWorkflowDesignerTabResetKey,
     shouldResetWorkflowDesignerUiState,
-} from "../src/components/workflows/workflowDesignerTabState";
+} from "@mat3ra/workflow-designer/src/components/workflows/workflowDesignerTabState";
+import assert from "node:assert";
+import test from "node:test";
 
 test("getWorkflowDesignerTabResetKey uses workflow _id", () => {
     assert.strictEqual(getWorkflowDesignerTabResetKey({ _id: "map-wf-1" } as never), "map-wf-1");

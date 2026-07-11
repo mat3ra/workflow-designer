@@ -5,15 +5,11 @@ import type { Template } from "@mat3ra/ade";
 import { type MaterialsSet, type OrderedMaterial, Workflow as WodeWorkflow } from "@mat3ra/wode";
 import { UnitType } from "@mat3ra/wode/dist/js/enums";
 import type { AnyWorkflowUnit } from "@mat3ra/wode/dist/js/units/factory";
+import { getUnitStatusCls, getWorkflowStatusCls } from "@mat3ra/wove";
 import Box from "@mui/material/Box";
 import findIndex from "lodash/findIndex";
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 
-import { WorkflowDefaultLayout } from "./WorkflowDefaultLayout";
-import { getWorkflowDesignerTabResetKey } from "./workflowDesignerTabState";
-
-import { getUnitStatusCls, getWorkflowStatusCls } from "@mat3ra/wove";
-import type { SubworkflowDesignerUpdate } from "../../utils/subworkflowDesignerUpdate";
 import type {
     WorkflowDesignerAccount,
     WorkflowDesignerCluster,
@@ -26,6 +22,9 @@ import type {
     WorkflowDesignerProperty,
     WorkflowDesignerUser,
 } from "../../types/context";
+import type { SubworkflowDesignerUpdate } from "../../utils/subworkflowDesignerUpdate";
+import { WorkflowDefaultLayout } from "./WorkflowDefaultLayout";
+import { getWorkflowDesignerTabResetKey } from "./workflowDesignerTabState";
 
 type WorkflowDialogs = WorkflowDesignerDialogs;
 

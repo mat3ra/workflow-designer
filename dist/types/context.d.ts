@@ -6,6 +6,7 @@
  * at the boundary — no casting required in the webapp wrapper.
  */
 /** Replaces FulfilledUserState — only the shape actually used in components. */
+import type { ExecutionUnitSchema } from "@mat3ra/esse/dist/js/types";
 export interface WorkflowDesignerUser {
     entity: {
         id: string;
@@ -75,7 +76,6 @@ export interface WorkflowDesignerCoreUser {
 }
 /** Replaces AccessType from CoreTeam. */
 export type WorkflowDesignerAccessType = string;
-import type { ExecutionUnitSchema } from "@mat3ra/esse/dist/js/types";
 /** Replaces ExecutionUnitSchema from /imports/schemas. */
 export type WorkflowDesignerExecutionUnitSchema = ExecutionUnitSchema;
 /** Replaces HistorySchema["history"]. */
