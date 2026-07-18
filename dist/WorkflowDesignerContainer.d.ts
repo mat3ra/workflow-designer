@@ -1,4 +1,4 @@
-import type { DropdownAction } from "@exabyte-io/cove.js/dist/mui/components/dropdown";
+import type { DropdownAction } from "@mat3ra/cove.js/dist/mui/components/dropdown";
 import type { Template } from "@mat3ra/ade";
 import { type OrderedMaterial, Workflow } from "@mat3ra/wode";
 import React from "react";

@@ -1,4 +1,4 @@
-import TabsMenu from "@exabyte-io/cove.js/dist/mui/components/tabs/TabsMenu";
+import TabsMenu from "@mat3ra/cove.js/dist/mui/components/tabs/TabsMenu";
 import type { Template } from "@mat3ra/ade";
 import type { SubworkflowSchema } from "@mat3ra/esse/dist/js/types";
 import { type OrderedMaterial, type Workflow as WodeWorkflow } from "@mat3ra/wode";

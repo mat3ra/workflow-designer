@@ -1,6 +1,6 @@
-import Dialog from "@exabyte-io/cove.js/dist/mui/components/dialog/Dialog";
-import Select from "@exabyte-io/cove.js/dist/mui/components/select";
-import Codemirror from "@exabyte-io/cove.js/dist/other/codemirror";
+import Dialog from "@mat3ra/cove.js/dist/mui/components/dialog/Dialog";
+import Select from "@mat3ra/cove.js/dist/mui/components/select";
+import Codemirror from "@mat3ra/cove.js/dist/other/codemirror";
 import Box from "@mui/material/Box";
 import React, { useState } from "react";
 

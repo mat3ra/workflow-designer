@@ -1,7 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import Dialog from "@exabyte-io/cove.js/dist/mui/components/dialog/Dialog";
-import Select from "@exabyte-io/cove.js/dist/mui/components/select";
-import Codemirror from "@exabyte-io/cove.js/dist/other/codemirror";
+import Dialog from "@mat3ra/cove.js/dist/mui/components/dialog/Dialog";
+import Select from "@mat3ra/cove.js/dist/mui/components/select";
+import Codemirror from "@mat3ra/cove.js/dist/other/codemirror";
 import Box from "@mui/material/Box";
 import { useState } from "react";
 const JSON_QUERY_INDENT_SPACES = 4;

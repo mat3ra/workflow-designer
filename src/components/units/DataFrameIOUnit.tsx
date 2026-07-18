@@ -1,5 +1,5 @@
 /* eslint-disable react/no-array-index-key */
-import { showErrorAlert } from "@exabyte-io/cove.js/dist/other/alerts";
+import { showErrorAlert } from "@mat3ra/cove.js/dist/other/alerts";
 import type { DataIOUnitSchema } from "@mat3ra/esse/dist/js/types";
 import type { Material } from "@mat3ra/made";
 import type IOUnit from "@mat3ra/wode/dist/js/units/IOUnit";

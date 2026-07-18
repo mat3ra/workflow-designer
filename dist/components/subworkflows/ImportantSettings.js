@@ -1,6 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 /* eslint-disable react/no-array-index-key */
-import RJSForm from "@exabyte-io/cove.js/dist/other/rjsf/RJSForm";
+import RJSForm from "@mat3ra/cove.js/dist/other/rjsf/RJSForm";
 import { ExtraImportantSettingsByContextProvider } from "@mat3ra/wove";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";

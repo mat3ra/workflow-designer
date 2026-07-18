@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import type { DropdownAction } from "@exabyte-io/cove.js/dist/mui/components/dropdown";
-import IconByName from "@exabyte-io/cove.js/dist/mui/components/icon";
+import type { DropdownAction } from "@mat3ra/cove.js/dist/mui/components/dropdown";
+import IconByName from "@mat3ra/cove.js/dist/mui/components/icon";
 import type { Template } from "@mat3ra/ade";
 import { type MaterialsSet, type OrderedMaterial, Workflow as WodeWorkflow } from "@mat3ra/wode";
 import { UnitType } from "@mat3ra/wode/dist/js/enums";

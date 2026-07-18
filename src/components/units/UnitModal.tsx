@@ -1,7 +1,7 @@
-import Dialog from "@exabyte-io/cove.js/dist/mui/components/dialog/Dialog";
-import { ENTITY_ICONS } from "@exabyte-io/cove.js/dist/mui/components/icon/entityIcons";
-import IconByName from "@exabyte-io/cove.js/dist/mui/components/icon/IconByName";
-import { showErrorAlert } from "@exabyte-io/cove.js/dist/other/alerts";
+import Dialog from "@mat3ra/cove.js/dist/mui/components/dialog/Dialog";
+import { ENTITY_ICONS } from "@mat3ra/cove.js/dist/mui/components/icon/entityIcons";
+import IconByName from "@mat3ra/cove.js/dist/mui/components/icon/IconByName";
+import { showErrorAlert } from "@mat3ra/cove.js/dist/other/alerts";
 import type { ExecutionUnitSchema } from "@mat3ra/esse/dist/js/types";
 import { type OrderedMaterial, UNIT_NAME_INVALID_CHARS } from "@mat3ra/wode";
 import type {

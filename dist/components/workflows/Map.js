@@ -1,5 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import TabsMenu from "@exabyte-io/cove.js/dist/mui/components/tabs/TabsMenu";
+import TabsMenu from "@mat3ra/cove.js/dist/mui/components/tabs/TabsMenu";
 import { UnitType } from "@mat3ra/wode/dist/js/enums";
 import TabContext from "@mui/lab/TabContext";
 import TabPanel from "@mui/lab/TabPanel";

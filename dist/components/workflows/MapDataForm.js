@@ -1,7 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 /* eslint-disable @typescript-eslint/no-empty-function */
-import Checkbox from "@exabyte-io/cove.js/dist/mui/components/checkbox/Checkbox";
-import RJSForm from "@exabyte-io/cove.js/dist/other/rjsf/RJSForm";
+import Checkbox from "@mat3ra/cove.js/dist/mui/components/checkbox/Checkbox";
+import RJSForm from "@mat3ra/cove.js/dist/other/rjsf/RJSForm";
 import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
 import Grid from "@mui/material/Grid";

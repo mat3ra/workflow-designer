@@ -121,13 +121,13 @@
             "path": [
                 "src/typings.d.ts"
             ],
-            "@exabyte-io/cove.js/dist/mui/components/tabs/TabsMenu": [
+            "@mat3ra/cove.js/dist/mui/components/tabs/TabsMenu": [
                 "src/typings.d.ts"
             ],
-            "@exabyte-io/cove.js/dist/mui/components/icon/entityIcons": [
+            "@mat3ra/cove.js/dist/mui/components/icon/entityIcons": [
                 "src/typings.d.ts"
             ],
-            "@exabyte-io/cove.js/dist/mui/components/popover/info-popover/InfoPopoverWithDocumentation": [
+            "@mat3ra/cove.js/dist/mui/components/popover/info-popover/InfoPopoverWithDocumentation": [
                 "src/typings.d.ts"
             ]
         }

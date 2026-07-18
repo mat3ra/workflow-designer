@@ -1,5 +1,5 @@
-import IconByName from "@exabyte-io/cove.js/dist/mui/components/icon/IconByName";
-import { showWarningAlert } from "@exabyte-io/cove.js/dist/other/alerts";
+import IconByName from "@mat3ra/cove.js/dist/mui/components/icon/IconByName";
+import { showWarningAlert } from "@mat3ra/cove.js/dist/other/alerts";
 import {
     type DefaultSubworkflowUnitType,
     type MaterialsSet,

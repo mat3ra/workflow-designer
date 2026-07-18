@@ -1,6 +1,6 @@
 import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
-import IconByName from "@exabyte-io/cove.js/dist/mui/components/icon/IconByName";
-import { showWarningAlert } from "@exabyte-io/cove.js/dist/other/alerts";
+import IconByName from "@mat3ra/cove.js/dist/mui/components/icon/IconByName";
+import { showWarningAlert } from "@mat3ra/cove.js/dist/other/alerts";
 import { Subworkflow, } from "@mat3ra/wode";
 import { UnitType } from "@mat3ra/wode/dist/js/enums";
 import { useCallback, useMemo, useState } from "react";
