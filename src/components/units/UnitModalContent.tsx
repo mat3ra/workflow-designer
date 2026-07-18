@@ -9,6 +9,7 @@ import { ErrorUnitContent } from "@mat3ra/wove";
 import React from "react";
 
 import type { WorkflowDesignerProperty } from "../../types/context";
+import UnitDetails from "../subworkflows/UnitDetails";
 import { BaseUnit } from "./BaseUnit";
 import { DataFrameIOUnit } from "./DataFrameIOUnit";
 
@@ -71,6 +72,7 @@ export function UnitModalContent({
                 materials={materials}
                 materialsIndex={materialsIndex}
                 onMaterialSwitch={onMaterialSwitch}
+                UnitDetailsComponent={UnitDetails}
             />
         );
     }
