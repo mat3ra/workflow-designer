@@ -1,5 +1,5 @@
-import { showErrorAlert, showSuccessAlert } from "@exabyte-io/cove.js/dist/other/alerts";
-import CodeMirror from "@exabyte-io/cove.js/dist/other/codemirror";
+import { showErrorAlert, showSuccessAlert } from "@mat3ra/cove/dist/other/alerts";
+import CodeMirror from "@mat3ra/cove/dist/other/codemirror";
 import _ from "lodash";
 import React, { useCallback, useState } from "react";
 

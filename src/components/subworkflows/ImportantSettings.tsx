@@ -1,5 +1,5 @@
 /* eslint-disable react/no-array-index-key */
-import RJSForm from "@exabyte-io/cove.js/dist/other/rjsf/RJSForm";
+import RJSForm from "@mat3ra/cove/dist/other/rjsf/RJSForm";
 import { type AnySubworkflowUnit, type ExecutionUnit, type Subworkflow } from "@mat3ra/wode";
 import { ExtraImportantSettingsByContextProvider } from "@mat3ra/wove";
 import Box from "@mui/material/Box";

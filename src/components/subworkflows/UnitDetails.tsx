@@ -1,4 +1,4 @@
-import Checkbox from "@exabyte-io/cove.js/dist/mui/components/checkbox/Checkbox";
+import Checkbox from "@mat3ra/cove/dist/mui/components/checkbox/Checkbox";
 import { Results } from "@mat3ra/ave";
 import type { NameResultSchema } from "@mat3ra/code/dist/js/utils/object";
 import type { ExecutionUnitSchema } from "@mat3ra/esse/dist/js/types";

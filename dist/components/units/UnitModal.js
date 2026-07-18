@@ -1,8 +1,8 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
-import Dialog from "@exabyte-io/cove.js/dist/mui/components/dialog/Dialog";
-import { ENTITY_ICONS } from "@exabyte-io/cove.js/dist/mui/components/icon/entityIcons";
-import IconByName from "@exabyte-io/cove.js/dist/mui/components/icon/IconByName";
-import { showErrorAlert } from "@exabyte-io/cove.js/dist/other/alerts";
+import Dialog from "@mat3ra/cove/dist/mui/components/dialog/Dialog";
+import { ENTITY_ICONS } from "@mat3ra/cove/dist/mui/components/icon/entityIcons";
+import IconByName from "@mat3ra/cove/dist/mui/components/icon/IconByName";
+import { showErrorAlert } from "@mat3ra/cove/dist/other/alerts";
 import { UNIT_NAME_INVALID_CHARS } from "@mat3ra/wode";
 import { getUnitStatusCls } from "@mat3ra/wove";
 import DialogTitle from "@mui/material/DialogTitle";

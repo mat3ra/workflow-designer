@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import Dialog from "@exabyte-io/cove.js/dist/mui/components/dialog/Dialog";
-import { InfoPopoverWithDocumentation } from "@exabyte-io/cove.js/dist/mui/components/popover/info-popover/InfoPopoverWithDocumentation";
-import Select from "@exabyte-io/cove.js/dist/mui/components/select";
+import Dialog from "@mat3ra/cove/dist/mui/components/dialog/Dialog";
+import { InfoPopoverWithDocumentation } from "@mat3ra/cove/dist/mui/components/popover/info-popover/InfoPopoverWithDocumentation";
+import Select from "@mat3ra/cove/dist/mui/components/select";
 import Grid from "@mui/material/Grid";
 import InputAdornment from "@mui/material/InputAdornment";
 import TextField from "@mui/material/TextField";

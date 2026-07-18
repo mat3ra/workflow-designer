@@ -1,8 +1,8 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import type { DropdownAction } from "@exabyte-io/cove.js/dist/mui/components/dropdown";
-import { ENTITY_ICONS } from "@exabyte-io/cove.js/dist/mui/components/icon/entityIcons";
-import ThemeProvider from "@exabyte-io/cove.js/dist/theme/provider";
-import oldLightMaterialUITheme from "@exabyte-io/cove.js/dist/theme/theme";
+import type { DropdownAction } from "@mat3ra/cove/dist/mui/components/dropdown";
+import { ENTITY_ICONS } from "@mat3ra/cove/dist/mui/components/icon/entityIcons";
+import ThemeProvider from "@mat3ra/cove/dist/theme/provider";
+import oldLightMaterialUITheme from "@mat3ra/cove/dist/theme/theme";
 import type { Template } from "@mat3ra/ade";
 import {
     type ErrorUnit,

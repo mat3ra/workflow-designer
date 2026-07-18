@@ -1,5 +1,5 @@
 import { jsx as _jsx } from "react/jsx-runtime";
-import Accordion from "@exabyte-io/cove.js/dist/mui/components/accordion/Accordion";
+import Accordion from "@mat3ra/cove/dist/mui/components/accordion/Accordion";
 import { UnitType } from "@mat3ra/wode/dist/js/enums";
 import Grid from "@mui/material/Grid";
 import UnitDetails from "./UnitDetails";

@@ -1,6 +1,6 @@
 import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
 /* eslint-disable react/no-array-index-key */
-import { showErrorAlert } from "@exabyte-io/cove.js/dist/other/alerts";
+import { showErrorAlert } from "@mat3ra/cove/dist/other/alerts";
 import { DataFrameIOUnitResultCheckbox } from "@mat3ra/wove";
 import Alert from "@mui/material/Alert";
 import Grid from "@mui/material/Grid";

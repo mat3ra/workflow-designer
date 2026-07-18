@@ -1,4 +1,4 @@
-import { showErrorAlert } from "@exabyte-io/cove.js/dist/other/alerts";
+import { showErrorAlert } from "@mat3ra/cove/dist/other/alerts";
 import type { Workflow } from "@mat3ra/wode";
 
 export type SaveWorkflowFromDesigner = (params: {
