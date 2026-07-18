@@ -438,16 +438,16 @@ declare module "@mat3ra/prove" {
 
 // Stub declarations for cove.js sub-paths that the installed dist doesn't ship type files for.
 // TypeScript uses these; the bundler resolves them at build/runtime.
-declare module "@mat3ra/cove.js/dist/mui/components/tabs/TabsMenu" {
+declare module "@mat3ra/cove/dist/mui/components/tabs/TabsMenu" {
     const TabsMenu: React.ComponentType<any>;
     export default TabsMenu;
 }
 
-declare module "@mat3ra/cove.js/dist/mui/components/icon/entityIcons" {
+declare module "@mat3ra/cove/dist/mui/components/icon/entityIcons" {
     export const ENTITY_ICONS: Record<string, string>;
 }
 
-declare module "@mat3ra/cove.js/dist/mui/components/popover/info-popover/InfoPopoverWithDocumentation" {
+declare module "@mat3ra/cove/dist/mui/components/popover/info-popover/InfoPopoverWithDocumentation" {
     export const InfoPopoverWithDocumentation: React.ComponentType<any>;
 }
 

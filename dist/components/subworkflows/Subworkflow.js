@@ -1,7 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 /* eslint-disable no-param-reassign -- Wode unit helpers mutate; class built only for those APIs */
-import Accordion from "@mat3ra/cove.js/dist/mui/components/accordion/Accordion";
-import TabsMenu from "@mat3ra/cove.js/dist/mui/components/tabs/TabsMenu";
+import Accordion from "@mat3ra/cove/dist/mui/components/accordion/Accordion";
+import TabsMenu from "@mat3ra/cove/dist/mui/components/tabs/TabsMenu";
 import { Application } from "@mat3ra/ade";
 import { Application as ApplicationAve } from "@mat3ra/ave";
 import { safeMakeObject } from "@mat3ra/code/dist/js/utils/object";

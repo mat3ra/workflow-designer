@@ -1,6 +1,6 @@
-import Dialog from "@mat3ra/cove.js/dist/mui/components/dialog/Dialog";
-import { InfoPopoverWithDocumentation } from "@mat3ra/cove.js/dist/mui/components/popover/info-popover/InfoPopoverWithDocumentation";
-import Select from "@mat3ra/cove.js/dist/mui/components/select";
+import Dialog from "@mat3ra/cove/dist/mui/components/dialog/Dialog";
+import { InfoPopoverWithDocumentation } from "@mat3ra/cove/dist/mui/components/popover/info-popover/InfoPopoverWithDocumentation";
+import Select from "@mat3ra/cove/dist/mui/components/select";
 import Grid from "@mui/material/Grid";
 import React, { useState } from "react";
 

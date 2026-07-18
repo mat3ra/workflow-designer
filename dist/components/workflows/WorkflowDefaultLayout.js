@@ -1,7 +1,7 @@
 import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
-import { ENTITY_ICONS } from "@mat3ra/cove.js/dist/mui/components/icon/entityIcons";
-import ThemeProvider from "@mat3ra/cove.js/dist/theme/provider";
-import oldLightMaterialUITheme from "@mat3ra/cove.js/dist/theme/theme";
+import { ENTITY_ICONS } from "@mat3ra/cove/dist/mui/components/icon/entityIcons";
+import ThemeProvider from "@mat3ra/cove/dist/theme/provider";
+import oldLightMaterialUITheme from "@mat3ra/cove/dist/theme/theme";
 import { UnitType } from "@mat3ra/wode/dist/js/enums";
 import { ErrorUnitContent, WorkflowUnitsFlowchart } from "@mat3ra/wove";
 import Box from "@mui/material/Box";

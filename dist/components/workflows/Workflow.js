@@ -1,5 +1,5 @@
 import { jsx as _jsx } from "react/jsx-runtime";
-import IconByName from "@mat3ra/cove.js/dist/mui/components/icon";
+import IconByName from "@mat3ra/cove/dist/mui/components/icon";
 import { Workflow as WodeWorkflow } from "@mat3ra/wode";
 import { UnitType } from "@mat3ra/wode/dist/js/enums";
 import { getUnitStatusCls, getWorkflowStatusCls } from "@mat3ra/wove";

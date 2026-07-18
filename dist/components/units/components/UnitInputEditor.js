@@ -1,6 +1,6 @@
 import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
-import { showErrorAlert, showSuccessAlert } from "@mat3ra/cove.js/dist/other/alerts";
-import CodeMirror from "@mat3ra/cove.js/dist/other/codemirror";
+import { showErrorAlert, showSuccessAlert } from "@mat3ra/cove/dist/other/alerts";
+import CodeMirror from "@mat3ra/cove/dist/other/codemirror";
 import _ from "lodash";
 import { useCallback, useState } from "react";
 import { useWorkflowComponents } from "../../../WorkflowComponentsContext";
