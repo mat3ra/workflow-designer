@@ -56,7 +56,7 @@ function ImportantSettingsForUnit({
     onContextChanged,
 }: ImportantSettingsForUnitProps) {
     const [formRevision, setFormRevision] = React.useState(0);
-    const { SubworkflowFormTitleComponent } = useWorkflowComponents();
+    const { SubworkflowFormTitleComponent, BrillouinZoneImageComponent } = useWorkflowComponents();
 
     return (
         <Box
@@ -80,7 +80,10 @@ function ImportantSettingsForUnit({
                             data-tid={title}
                         >
                             <Typography variant="h6">{title}</Typography>
-                            <ExtraImportantSettingsByContextProvider provider={provider} />
+                            <ExtraImportantSettingsByContextProvider
+                                provider={provider}
+                                BrillouinZoneImageComponent={BrillouinZoneImageComponent}
+                            />
 
                             <RJSForm
                                 schema={provider.jsonSchema}
