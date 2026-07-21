@@ -11,9 +11,15 @@ import React from "react";
 import type { WorkflowDesignerProperty } from "../../types/context";
 import UnitDetails from "../subworkflows/UnitDetails";
 import { BaseUnit } from "./BaseUnit";
+import UnitPointerField from "./components/UnitPointerField";
 import { DataFrameIOUnit } from "./DataFrameIOUnit";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
+// Same cast BaseUnit.tsx uses: AnySubworkflowUnit as imported here vs. @mat3ra/wode's own
+// unit type declarations don't structurally match at the type level, though they're
+// interchangeable at runtime.
+const UnitPointerFieldComponent = UnitPointerField as any;
 
 export interface UnitModalContentProps {
     unit: AnySubworkflowUnit;
@@ -73,6 +79,7 @@ export function UnitModalContent({
                 materialsIndex={materialsIndex}
                 onMaterialSwitch={onMaterialSwitch}
                 UnitDetailsComponent={UnitDetails}
+                UnitPointerFieldComponent={UnitPointerFieldComponent}
             />
         );
     }

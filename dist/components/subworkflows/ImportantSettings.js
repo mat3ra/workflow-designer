@@ -32,11 +32,11 @@ function getProviderTitle(provider) {
 }
 function ImportantSettingsForUnit({ unit, unitIndex, onContextChanged, }) {
     const [formRevision, setFormRevision] = React.useState(0);
-    const { SubworkflowFormTitleComponent } = useWorkflowComponents();
+    const { SubworkflowFormTitleComponent, BrillouinZoneImageComponent } = useWorkflowComponents();
     return (_jsxs(Box, { my: 2, className: "important-settings-for-unit ImportantSettingsForUnit", id: unit.flowchartId, "data-tid": unit.name, children: [_jsx(SubworkflowFormTitleComponent, { title: `Unit ${unitIndex}: ${unit.name}` }), _jsx(Box, { ml: 3, children: getUnitImportantSettingsProviders(unit).map((provider, index) => {
                     const title = getProviderTitle(provider);
                     const data = provider.getData();
-                    return (_jsxs(Box, { className: "ImportantSettingsForUnit-Box", my: 2, "data-form-revision": formRevision, "data-tid": title, children: [_jsx(Typography, { variant: "h6", children: title }), _jsx(ExtraImportantSettingsByContextProvider, { provider: provider }), _jsx(RJSForm, { schema: provider.jsonSchema, validator: ajv, uiSchema: provider.uiSchema, formData: data, experimental_defaultFormStateBehavior: {
+                    return (_jsxs(Box, { className: "ImportantSettingsForUnit-Box", my: 2, "data-form-revision": formRevision, "data-tid": title, children: [_jsx(Typography, { variant: "h6", children: title }), _jsx(ExtraImportantSettingsByContextProvider, { provider: provider, BrillouinZoneImageComponent: BrillouinZoneImageComponent }), _jsx(RJSForm, { schema: provider.jsonSchema, validator: ajv, uiSchema: provider.uiSchema, formData: data, experimental_defaultFormStateBehavior: {
                                     mergeDefaultsIntoFormData: "useDefaultIfFormDataUndefined",
                                 }, onChange: ({ formData }) => {
                                     const rootSchema = provider.jsonSchema;

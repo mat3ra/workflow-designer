@@ -18,6 +18,17 @@ export type WorkflowComponents = {
     DataGridComponent: React.ComponentType<Record<string, unknown>>;
     getDefaultComputeConfig: (cluster?: unknown) => Record<string, unknown>;
     generateEntityId: () => string;
+    /**
+     * Optional rich Brillouin-zone image renderer (e.g. @mat3ra/move's BrillouinZoneImage).
+     * Intentionally left undefined by default (not defaulted to a no-op like the other
+     * components above) so wove's own ExtraImportantSettingsByContextProvider can fall back to
+     * its package-native plain <img> default when the host app doesn't provide one.
+     */
+    BrillouinZoneImageComponent?: React.ComponentType<{
+        latticeType?: string;
+        imgSrc?: string;
+        description?: string;
+    }>;
 };
 export declare const WorkflowComponentsContext: React.Context<WorkflowComponents>;
 export declare function useWorkflowComponents(): WorkflowComponents;
