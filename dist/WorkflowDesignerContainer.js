@@ -9,7 +9,7 @@ import { WorkflowComponentsContext } from "./WorkflowComponentsContext";
 /** Stable empty-array sentinel so the metaProperties useLayoutEffect dep never spuriously fires. */
 const EMPTY_META_PROPERTIES = [];
 export default function WorkflowDesignerContainer(containerProps) {
-    const { initialWorkflow, defaultMaterial, metaProperties = EMPTY_META_PROPERTIES, editable, showHistory, workflowHistory, isStandalone, adjustable, showHeader, showMetadata, extraActions = [], accountUsers, accountUsersIsLoading, profile, publicAccount, clusters, dialogs, templates, isLoading, saveWorkflow, isDescriptionEditable, EntityHeaderComponent, EntityNameComponent, MetadataComponent, HistoryComponent, SubworkflowFormTitleComponent, PseudoFormComponent, DataGridComponent, getDefaultComputeConfig, generateEntityId, } = containerProps;
+    const { initialWorkflow, defaultMaterial, metaProperties = EMPTY_META_PROPERTIES, editable, showHistory, workflowHistory, isStandalone, adjustable, showHeader, showMetadata, extraActions = [], accountUsers, accountUsersIsLoading, profile, publicAccount, clusters, dialogs, templates, isLoading, saveWorkflow, isDescriptionEditable, EntityHeaderComponent, EntityNameComponent, MetadataComponent, HistoryComponent, SubworkflowFormTitleComponent, PseudoFormComponent, DataGridComponent, BrillouinZoneImageComponent, getDefaultComputeConfig, generateEntityId, } = containerProps;
     const workflowComponents = useMemo(() => ({
         EntityHeaderComponent,
         EntityNameComponent,
@@ -18,6 +18,7 @@ export default function WorkflowDesignerContainer(containerProps) {
         SubworkflowFormTitleComponent,
         PseudoFormComponent,
         DataGridComponent,
+        BrillouinZoneImageComponent,
         getDefaultComputeConfig,
         generateEntityId,
     }), [
@@ -28,6 +29,7 @@ export default function WorkflowDesignerContainer(containerProps) {
         SubworkflowFormTitleComponent,
         PseudoFormComponent,
         DataGridComponent,
+        BrillouinZoneImageComponent,
         getDefaultComputeConfig,
         generateEntityId,
     ]);

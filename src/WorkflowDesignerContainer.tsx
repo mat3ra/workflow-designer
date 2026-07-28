@@ -60,6 +60,7 @@ type WorkflowDesignerContainerBaseProps = {
     SubworkflowFormTitleComponent: React.ComponentType<{ title: string }>;
     PseudoFormComponent: React.ComponentType<Record<string, unknown>>;
     DataGridComponent: React.ComponentType<Record<string, unknown>>;
+    BrillouinZoneImageComponent?: WorkflowComponents["BrillouinZoneImageComponent"];
     // Function props
     getDefaultComputeConfig: (cluster?: unknown) => Record<string, unknown>;
     generateEntityId: () => string;
@@ -113,6 +114,7 @@ export default function WorkflowDesignerContainer(containerProps: WorkflowDesign
         SubworkflowFormTitleComponent,
         PseudoFormComponent,
         DataGridComponent,
+        BrillouinZoneImageComponent,
         getDefaultComputeConfig,
         generateEntityId,
     } = containerProps;
@@ -126,6 +128,7 @@ export default function WorkflowDesignerContainer(containerProps: WorkflowDesign
             SubworkflowFormTitleComponent,
             PseudoFormComponent,
             DataGridComponent,
+            BrillouinZoneImageComponent,
             getDefaultComputeConfig,
             generateEntityId,
         }),
@@ -137,6 +140,7 @@ export default function WorkflowDesignerContainer(containerProps: WorkflowDesign
             SubworkflowFormTitleComponent,
             PseudoFormComponent,
             DataGridComponent,
+            BrillouinZoneImageComponent,
             getDefaultComputeConfig,
             generateEntityId,
         ],

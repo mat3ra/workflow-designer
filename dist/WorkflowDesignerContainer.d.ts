@@ -4,6 +4,7 @@ import { type OrderedMaterial, Workflow } from "@mat3ra/wode";
 import React from "react";
 import type { WorkflowDesignerAccount, WorkflowDesignerCluster, WorkflowDesignerDialogState, WorkflowDesignerHistory, WorkflowDesignerMetaProperty, WorkflowDesignerProfile, WorkflowDesignerUser } from "./types/context";
 import type { SaveWorkflowFromDesigner } from "./utils/persistWorkflowDesigner";
+import { type WorkflowComponents } from "./WorkflowComponentsContext";
 type WorkflowDesignerContainerBaseProps = {
     initialWorkflow: Workflow;
     defaultMaterial: OrderedMaterial;
@@ -43,6 +44,7 @@ type WorkflowDesignerContainerBaseProps = {
     }>;
     PseudoFormComponent: React.ComponentType<Record<string, unknown>>;
     DataGridComponent: React.ComponentType<Record<string, unknown>>;
+    BrillouinZoneImageComponent?: WorkflowComponents["BrillouinZoneImageComponent"];
     getDefaultComputeConfig: (cluster?: unknown) => Record<string, unknown>;
     generateEntityId: () => string;
     openDocumentationDialog?: (searchText: string) => void;
