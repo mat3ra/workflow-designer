@@ -51,28 +51,55 @@ function ImportantSettingsForUnit({ unit, unitIndex, onContextChanged, }) {
                                 }, children: " " })] }, index));
                 }) })] }));
 }
+function getSubworkflowImportantSettingsEntries(subworkflow) {
+    return subworkflow.unitsInstances.filter(isExecutionUnit).flatMap((unit) => {
+        return unit.contextProvidersInstances
+            .filter((provider) => provider.entityName === "subworkflow")
+            .filter((provider) => provider.domain === "important")
+            .map((provider) => ({ unit, provider }));
+    });
+}
+/**
+ * Several units in a subworkflow can each carry their own instance of the same
+ * subworkflow-scoped provider (e.g. `pw_scf` and `pw_bands` both have "cutoffs" - they must
+ * share one wavefunction/density cutoff, QE's `bands` step reuses the prior `scf` step's charge
+ * density). Group by provider name so exactly one editable panel renders per name instead of one
+ * per unit that happens to carry it.
+ */
+function groupEntriesByProviderName(entries) {
+    const groups = new Map();
+    entries.forEach((entry) => {
+        const group = groups.get(entry.provider.name);
+        if (group) {
+            group.push(entry);
+        }
+        else {
+            groups.set(entry.provider.name, [entry]);
+        }
+    });
+    return [...groups.values()];
+}
 function ImportantSettingsForSubworkflow({ subworkflow, onContextChanged, }) {
     const { SubworkflowFormTitleComponent } = useWorkflowComponents();
-    return (_jsxs(Box, { className: "ImportantSettingsForSubworkflow", my: 2, id: subworkflow.id, children: [_jsx(SubworkflowFormTitleComponent, { title: "Settings global to this Subworkflow" }), _jsx(Box, { ml: 3, mt: 2, children: subworkflow.unitsInstances.filter(isExecutionUnit).flatMap((unit) => {
-                    return unit.contextProvidersInstances
-                        .filter((provider) => provider.entityName === "subworkflow")
-                        .filter((provider) => provider.domain === "important")
-                        .map((provider) => {
-                        const data = provider.getData();
-                        return (_jsxs(Box, { children: [_jsx(Typography, { variant: "h6", children: getProviderTitle(provider) }), _jsx(RJSForm, { validator: ajv, schema: provider.jsonSchema, uiSchema: mergeUiSchemaWithDefaultFieldStyles(provider.uiSchema), formData: data, 
-                                    // fields={provider.fields}
-                                    // widgets={{ CheckboxWidget: Checkbox }}
-                                    onChange: ({ formData }) => {
-                                        const rootSchema = provider.jsonSchema;
-                                        if (!ajv.isValid(rootSchema, formData, rootSchema)) {
-                                            return;
-                                        }
+    const groups = groupEntriesByProviderName(getSubworkflowImportantSettingsEntries(subworkflow));
+    return (_jsxs(Box, { className: "ImportantSettingsForSubworkflow", my: 2, id: subworkflow.id, children: [_jsx(SubworkflowFormTitleComponent, { title: "Settings global to this Subworkflow" }), _jsx(Box, { ml: 3, mt: 2, children: groups.map((group) => {
+                    const [{ provider: firstProvider }] = group;
+                    const data = firstProvider.getData();
+                    return (_jsxs(Box, { children: [_jsx(Typography, { variant: "h6", children: getProviderTitle(firstProvider) }), _jsx(RJSForm, { validator: ajv, schema: firstProvider.jsonSchema, uiSchema: mergeUiSchemaWithDefaultFieldStyles(firstProvider.uiSchema), formData: data, 
+                                // fields={firstProvider.fields}
+                                // widgets={{ CheckboxWidget: Checkbox }}
+                                onChange: ({ formData }) => {
+                                    const rootSchema = firstProvider.jsonSchema;
+                                    if (!ajv.isValid(rootSchema, formData, rootSchema)) {
+                                        return;
+                                    }
+                                    group.forEach(({ unit, provider }) => {
                                         provider.setIsEdited(true);
                                         provider.setData(formData);
                                         unit.savePersistentContext();
-                                        onContextChanged();
-                                    }, children: " " })] }, `${unit.flowchartId}-${provider.name}`));
-                    });
+                                    });
+                                    onContextChanged();
+                                }, children: " " })] }, firstProvider.name));
                 }) })] }, subworkflow.id));
 }
 export function ImportantSettings({ subworkflow, role, className, id, onContextChanged, }) {

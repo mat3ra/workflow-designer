@@ -121,11 +121,51 @@ interface ImportantSettingsForSubworkflowProps {
     onContextChanged: () => void;
 }
 
+interface SubworkflowProviderEntry {
+    unit: ExecutionUnit;
+    provider: ExecutionUnit["contextProvidersInstances"][number];
+}
+
+function getSubworkflowImportantSettingsEntries(
+    subworkflow: Subworkflow,
+): SubworkflowProviderEntry[] {
+    return subworkflow.unitsInstances.filter(isExecutionUnit).flatMap((unit) => {
+        return unit.contextProvidersInstances
+            .filter((provider) => provider.entityName === "subworkflow")
+            .filter((provider) => provider.domain === "important")
+            .map((provider) => ({ unit, provider }));
+    });
+}
+
+/**
+ * Several units in a subworkflow can each carry their own instance of the same
+ * subworkflow-scoped provider (e.g. `pw_scf` and `pw_bands` both have "cutoffs" - they must
+ * share one wavefunction/density cutoff, QE's `bands` step reuses the prior `scf` step's charge
+ * density). Group by provider name so exactly one editable panel renders per name instead of one
+ * per unit that happens to carry it.
+ */
+function groupEntriesByProviderName(
+    entries: SubworkflowProviderEntry[],
+): SubworkflowProviderEntry[][] {
+    const groups = new Map<string, SubworkflowProviderEntry[]>();
+    entries.forEach((entry) => {
+        const group = groups.get(entry.provider.name);
+        if (group) {
+            group.push(entry);
+        } else {
+            groups.set(entry.provider.name, [entry]);
+        }
+    });
+    return [...groups.values()];
+}
+
 function ImportantSettingsForSubworkflow({
     subworkflow,
     onContextChanged,
 }: ImportantSettingsForSubworkflowProps) {
     const { SubworkflowFormTitleComponent } = useWorkflowComponents();
+    const groups = groupEntriesByProviderName(getSubworkflowImportantSettingsEntries(subworkflow));
+
     return (
         <Box
             className="ImportantSettingsForSubworkflow"
@@ -135,42 +175,39 @@ function ImportantSettingsForSubworkflow({
         >
             <SubworkflowFormTitleComponent title="Settings global to this Subworkflow" />
             <Box ml={3} mt={2}>
-                {subworkflow.unitsInstances.filter(isExecutionUnit).flatMap((unit) => {
-                    return unit.contextProvidersInstances
-                        .filter((provider) => provider.entityName === "subworkflow")
-                        .filter((provider) => provider.domain === "important")
-                        .map((provider) => {
-                            const data = provider.getData();
-                            return (
-                                <Box key={`${unit.flowchartId}-${provider.name}`}>
-                                    <Typography variant="h6">
-                                        {getProviderTitle(provider)}
-                                    </Typography>
-                                    <RJSForm
-                                        validator={ajv}
-                                        schema={provider.jsonSchema}
-                                        uiSchema={mergeUiSchemaWithDefaultFieldStyles(
-                                            provider.uiSchema,
-                                        )}
-                                        formData={data}
-                                        // fields={provider.fields}
-                                        // widgets={{ CheckboxWidget: Checkbox }}
-                                        onChange={({ formData }) => {
-                                            const rootSchema = provider.jsonSchema;
-                                            if (!ajv.isValid(rootSchema, formData, rootSchema)) {
-                                                return;
-                                            }
-                                            provider.setIsEdited(true);
-                                            provider.setData(formData);
-                                            unit.savePersistentContext();
-                                            onContextChanged();
-                                        }}
-                                    >
-                                        {" "}
-                                    </RJSForm>
-                                </Box>
-                            );
-                        });
+                {groups.map((group) => {
+                    const [{ provider: firstProvider }] = group;
+                    const data = firstProvider.getData();
+
+                    return (
+                        <Box key={firstProvider.name}>
+                            <Typography variant="h6">{getProviderTitle(firstProvider)}</Typography>
+                            <RJSForm
+                                validator={ajv}
+                                schema={firstProvider.jsonSchema}
+                                uiSchema={mergeUiSchemaWithDefaultFieldStyles(
+                                    (firstProvider as any).uiSchema,
+                                )}
+                                formData={data}
+                                // fields={firstProvider.fields}
+                                // widgets={{ CheckboxWidget: Checkbox }}
+                                onChange={({ formData }) => {
+                                    const rootSchema = firstProvider.jsonSchema;
+                                    if (!ajv.isValid(rootSchema, formData, rootSchema)) {
+                                        return;
+                                    }
+                                    group.forEach(({ unit, provider }) => {
+                                        provider.setIsEdited(true);
+                                        provider.setData(formData);
+                                        unit.savePersistentContext();
+                                    });
+                                    onContextChanged();
+                                }}
+                            >
+                                {" "}
+                            </RJSForm>
+                        </Box>
+                    );
                 })}
             </Box>
         </Box>
