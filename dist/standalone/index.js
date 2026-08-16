@@ -107,6 +107,7 @@ function App() {
         return siIndex >= 0 ? siIndex : 0;
     });
     const selectedMaterial = allMaterials[materialIndex];
+    const [isDirty, setIsDirty] = useState(false);
     // Re-key the designer when either selection changes so it re-mounts cleanly
     const designerKey = `${workflowIndex}-${materialIndex}`;
     const handleSave = useCallback(async () => {
@@ -128,13 +129,19 @@ function App() {
                                 WebkitTextFillColor: "transparent",
                                 mr: 2,
                                 flexShrink: 0,
-                            }, children: "Workflow Designer" }), _jsxs(FormControl, { size: "small", sx: { minWidth: 300 }, children: [_jsx(InputLabel, { id: "workflow-select-label", children: "Workflow" }), _jsx(Select, { labelId: "workflow-select-label", id: "workflow-select", value: workflowIndex, label: "Workflow", onChange: (e) => setWorkflowIndex(Number(e.target.value)), children: allWorkflowJsons.map((wf, i) => {
+                            }, children: "Workflow Designer" }), _jsxs(FormControl, { size: "small", sx: { minWidth: 300 }, children: [_jsx(InputLabel, { id: "workflow-select-label", children: "Workflow" }), _jsx(Select, { labelId: "workflow-select-label", id: "workflow-select", value: workflowIndex, label: "Workflow", onChange: (e) => {
+                                        setWorkflowIndex(Number(e.target.value));
+                                        setIsDirty(false);
+                                    }, children: allWorkflowJsons.map((wf, i) => {
                                         var _a;
                                         return (_jsx(MenuItem, { value: i, children: (_a = wf === null || wf === void 0 ? void 0 : wf.name) !== null && _a !== void 0 ? _a : `Workflow ${i + 1}` }, i));
-                                    }) })] }), appName && (_jsx(Chip, { label: appName, size: "small", variant: "outlined", color: "primary" })), _jsx(Divider, { orientation: "vertical", flexItem: true }), _jsxs(FormControl, { size: "small", sx: { minWidth: 260 }, children: [_jsx(InputLabel, { id: "material-select-label", children: "Material" }), _jsx(Select, { labelId: "material-select-label", id: "material-select", value: materialIndex, label: "Material", onChange: (e) => setMaterialIndex(Number(e.target.value)), children: allMaterials.map((mat, i) => {
+                                    }) })] }), appName && (_jsx(Chip, { label: appName, size: "small", variant: "outlined", color: "primary" })), _jsx(Divider, { orientation: "vertical", flexItem: true }), _jsxs(FormControl, { size: "small", sx: { minWidth: 260 }, children: [_jsx(InputLabel, { id: "material-select-label", children: "Material" }), _jsx(Select, { labelId: "material-select-label", id: "material-select", value: materialIndex, label: "Material", onChange: (e) => {
+                                        setMaterialIndex(Number(e.target.value));
+                                        setIsDirty(false);
+                                    }, children: allMaterials.map((mat, i) => {
                                         var _a, _b;
                                         return (_jsx(MenuItem, { value: i, children: (_b = (_a = mat === null || mat === void 0 ? void 0 : mat.name) !== null && _a !== void 0 ? _a : mat === null || mat === void 0 ? void 0 : mat.formula) !== null && _b !== void 0 ? _b : `Material ${i + 1}` }, i));
-                                    }) })] }), _jsx(Chip, { label: `${allWorkflowJsons.length} workflows · ${allMaterials.length} materials`, size: "small", variant: "outlined", color: "secondary", sx: { ml: "auto" } })] }) }), _jsx(Box, { sx: { height: "calc(100vh - 72px)", overflow: "auto" }, children: _jsx(WorkflowDesignerContainer, { initialWorkflow: wodeWorkflow, defaultMaterial: selectedMaterial, editable: true, showHistory: false, workflowHistory: { list: [], loading: false }, isStandalone: true, adjustable: true, showHeader: true, showMetadata: false, accountUsers: [], accountUsersIsLoading: false, profile: {
+                                    }) })] }), isDirty && (_jsx(Chip, { label: "\u25CF Unsaved changes", size: "small", variant: "outlined", color: "warning", "data-tid": "dirty-indicator" })), _jsx(Chip, { label: `${allWorkflowJsons.length} workflows · ${allMaterials.length} materials`, size: "small", variant: "outlined", color: "secondary", sx: { ml: "auto" } })] }) }), _jsx(Box, { sx: { height: "calc(100vh - 72px)", overflow: "auto" }, children: _jsx(WorkflowDesignerContainer, { initialWorkflow: wodeWorkflow, defaultMaterial: selectedMaterial, editable: true, showHistory: false, workflowHistory: { list: [], loading: false }, isStandalone: true, adjustable: true, showHeader: true, showMetadata: false, accountUsers: [], accountUsersIsLoading: false, profile: {
                         user: { entity: { id: "1" } },
                         account: { entity: { id: "1" } },
                         personalAccount: { entity: { id: "1" } },
@@ -147,7 +154,7 @@ function App() {
                         nodes: 1,
                         queue: "D",
                         timeLimit: "01:00:00",
-                    }), generateEntityId: () => crypto.randomUUID(), openDocumentationDialog: undefined }, designerKey) })] }));
+                    }), generateEntityId: () => crypto.randomUUID(), openDocumentationDialog: undefined, onDirtyChange: setIsDirty }, designerKey) })] }));
 }
 // ---------------------------------------------------------------------------
 // Mount

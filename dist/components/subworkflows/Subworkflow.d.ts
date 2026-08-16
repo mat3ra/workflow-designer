@@ -27,20 +27,27 @@ export type SubworkflowProps = {
     jobProperties?: WorkflowDesignerProperty[];
     activeTabIndex: number;
     onActiveTabIndexChange: (tabIndex: number) => void;
+    /**
+     * Drops this subworkflow's own Compute tab. Set it when the host already
+     * shows a compute surface of its own — the job designer does, and two places
+     * called "Compute" on one screen leave the reader guessing which one the job
+     * will actually run with.
+     */
+    hideComputeSubTab?: boolean;
 };
 export declare const TAB_NAVIGATION_CONFIG: {
     readonly overview: {
-        readonly itemName: "Overview";
+        readonly itemName: "Units";
         readonly className: "";
         readonly href: "sw-overview";
     };
     readonly importantSettings: {
-        readonly itemName: "Important settings";
+        readonly itemName: "Settings";
         readonly className: "";
         readonly href: "sw-important-settings";
     };
     readonly detailedView: {
-        readonly itemName: "Detailed view";
+        readonly itemName: "Outputs";
         readonly className: "";
         readonly href: "sw-detailed-view";
     };
@@ -50,5 +57,5 @@ export declare const TAB_NAVIGATION_CONFIG: {
         readonly href: "sw-compute";
     };
 };
-export declare function Subworkflow({ subworkflow, onUpdate, isStandalone, editable, adjustable, metaProperties, onOutputUpdateRequest, isMethodDataLoading, accountUsers, accountUsersIsLoading, currentUser, clusters, materials, materialsIndex, onMaterialSwitch, profile, publicAccount, createMetaProperty, pseudoUploadReduxDialog, unitTypeReduxDialog, className, jobProperties, activeTabIndex, onActiveTabIndexChange, }: SubworkflowProps): React.JSX.Element;
+export declare function Subworkflow({ subworkflow, onUpdate, isStandalone, editable, adjustable, metaProperties, onOutputUpdateRequest, isMethodDataLoading, accountUsers, accountUsersIsLoading, currentUser, clusters, materials, materialsIndex, onMaterialSwitch, profile, publicAccount, createMetaProperty, pseudoUploadReduxDialog, unitTypeReduxDialog, className, jobProperties, activeTabIndex, onActiveTabIndexChange, hideComputeSubTab, }: SubworkflowProps): React.JSX.Element;
 //# sourceMappingURL=Subworkflow.d.ts.map

@@ -5,7 +5,7 @@ import type { Template } from "@mat3ra/ade";
 import { type MaterialsSet, type OrderedMaterial, Workflow as WodeWorkflow } from "@mat3ra/wode";
 import { UnitType } from "@mat3ra/wode/dist/js/enums";
 import type { AnyWorkflowUnit } from "@mat3ra/wode/dist/js/units/factory";
-import { getUnitStatusCls, getWorkflowStatusCls } from "@mat3ra/wove";
+import { getUnitStatusCls, getWorkflowStatusCls, WoveDisplayOptionsProvider } from "@mat3ra/wove";
 import Box from "@mui/material/Box";
 import findIndex from "lodash/findIndex";
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
@@ -95,6 +95,20 @@ export type WorkflowProps = {
     isDescriptionEditable: boolean;
     /** Refined job properties for unit modals in job designer; optional elsewhere. */
     jobProperties?: WorkflowDesignerProperty[];
+    /**
+     * Shows unit status on cards and flowchart nodes. Off by default: in the
+     * designer nothing has run, so every unit reports a meaningless "idle".
+     * Hosts that render a workflow which is actually executing — the job
+     * designer, once a job leaves draft — turn it on.
+     */
+    showUnitStatus?: boolean;
+    /**
+     * Hides each subworkflow's own Compute tab. Set it when the host renders a
+     * compute surface of its own, as the job designer does — otherwise the same
+     * screen offers two things called "Compute" and the reader has to guess
+     * which one the job will run with.
+     */
+    hideComputeSubTab?: boolean;
 };
 
 const noop = (): undefined => undefined;
@@ -156,8 +170,12 @@ export function Workflow({
     workflowRenderGeneration,
     isDescriptionEditable,
     jobProperties,
+    hideComputeSubTab = false,
+    showUnitStatus = false,
 }: WorkflowProps) {
     const [unitIndex, setUnitIndex] = useState(0);
+    // Identifiers are noise for the person reading a workflow; opt-in per session.
+    const [showDeveloperInfo, setShowDeveloperInfo] = useState(false);
     const [isRelaxationToggled, setIsRelaxationToggled] = useState(false);
     const [isMultiMaterialToggled, setIsMultiMaterialToggled] = useState(() =>
         Boolean(workflow.isMultiMaterial),
@@ -369,6 +387,18 @@ export function Workflow({
                 showCheckIcon: isMultiMaterialToggled,
                 id: "toggle-multi-material",
             },
+            {
+                // Identifiers are hidden by default; this is how someone
+                // debugging gets them back without them being on show for
+                // everyone else.
+                isShown: true,
+                content: "Developer info",
+                onClick: (_action, _event) => {
+                    setShowDeveloperInfo((isShown) => !isShown);
+                },
+                showCheckIcon: showDeveloperInfo,
+                id: "toggle-developer-info",
+            },
         ];
     }, [
         adjustable,
@@ -377,6 +407,7 @@ export function Workflow({
         isRelaxationToggled,
         toggleIsMultiMaterial,
         toggleRelaxation,
+        showDeveloperInfo,
     ]);
 
     const getActions = useCallback(() => {
@@ -414,61 +445,67 @@ export function Workflow({
     }, [getActions]);
 
     return (
-        <Box data-workflow-render-generation={workflowRenderGeneration}>
-            <WorkflowDefaultLayout
-                entity={workflow}
-                unitIndex={unitIndex}
-                isMap={isMap}
-                materials={materials}
-                materialsIndex={materialsIndex}
-                materialsSet={materialsSet}
-                jobHasParent={jobHasParent}
-                editable={Boolean(editable)}
-                adjustable={Boolean(adjustable)}
-                isLoading={isLoading}
-                showHeader={showHeader}
-                isHeaderCompact={isHeaderCompact}
-                isStandalone={isStandalone}
-                isMethodDataLoading={isMethodDataLoading}
-                isSetPublicVisible={isSetPublicVisible}
-                showMetadata={showMetadata}
-                showHistory={showHistory}
-                workflowHistory={workflowHistory}
-                iconCls={iconCls}
-                onNameUpdate={onNameUpdate}
-                onUpdateTags={onUpdateTags}
-                onUnitAdd={onUnitAdd}
-                onUnitAddSubworkflowFromConfig={onUnitAddSubworkflowFromConfig}
-                onUnitUpdate={onUnitUpdate}
-                onSubworkflowUnitUpdate={onSubworkflowUnitUpdate}
-                onMapWorkflowUpdate={onMapWorkflowUpdate}
-                onUnitSelect={onUnitSelect}
-                onUpdateUnitIndex={onUpdateUnitIndex}
-                handleUnitRemove={handleUnitRemove}
-                onUnitNameUpdate={onUnitNameUpdate}
-                areWorkflowContentExpanded={areWorkflowContentExpanded}
-                toggleExpandWorkflowContent={toggleExpandWorkflowContent}
-                headerStatusCls={headerStatusCls}
-                getPagerProps={getPagerProps}
-                getSaveBtnProps={getSaveBtnProps}
-                getDropdownProps={getDropdownProps}
-                isDescriptionEditable={isDescriptionEditable}
-                onDescriptionUpdate={onDescriptionUpdate}
-                dialogs={dialogs}
-                metaProperties={metaProperties}
-                onMaterialSwitch={onMaterialSwitch}
-                onOutputUpdateRequest={onOutputUpdateRequest}
-                accountUsers={accountUsers}
-                accountUsersIsLoading={accountUsersIsLoading}
-                profile={profile}
-                publicAccount={publicAccount}
-                clusters={clusters}
-                templates={templates}
-                createMetaProperty={createMetaProperty}
-                jobProperties={jobProperties}
-                subworkflowActiveTabIndexById={subworkflowActiveTabIndexById}
-                onSubworkflowActiveTabIndexChange={onSubworkflowActiveTabIndexChange}
-            />
-        </Box>
+        <WoveDisplayOptionsProvider
+            showDeveloperInfo={showDeveloperInfo}
+            showStatus={showUnitStatus}
+        >
+            <Box data-workflow-render-generation={workflowRenderGeneration}>
+                <WorkflowDefaultLayout
+                    entity={workflow}
+                    unitIndex={unitIndex}
+                    isMap={isMap}
+                    materials={materials}
+                    materialsIndex={materialsIndex}
+                    materialsSet={materialsSet}
+                    jobHasParent={jobHasParent}
+                    editable={Boolean(editable)}
+                    adjustable={Boolean(adjustable)}
+                    isLoading={isLoading}
+                    showHeader={showHeader}
+                    isHeaderCompact={isHeaderCompact}
+                    isStandalone={isStandalone}
+                    isMethodDataLoading={isMethodDataLoading}
+                    isSetPublicVisible={isSetPublicVisible}
+                    showMetadata={showMetadata}
+                    showHistory={showHistory}
+                    workflowHistory={workflowHistory}
+                    iconCls={iconCls}
+                    onNameUpdate={onNameUpdate}
+                    onUpdateTags={onUpdateTags}
+                    onUnitAdd={onUnitAdd}
+                    onUnitAddSubworkflowFromConfig={onUnitAddSubworkflowFromConfig}
+                    onUnitUpdate={onUnitUpdate}
+                    onSubworkflowUnitUpdate={onSubworkflowUnitUpdate}
+                    onMapWorkflowUpdate={onMapWorkflowUpdate}
+                    onUnitSelect={onUnitSelect}
+                    onUpdateUnitIndex={onUpdateUnitIndex}
+                    handleUnitRemove={handleUnitRemove}
+                    onUnitNameUpdate={onUnitNameUpdate}
+                    areWorkflowContentExpanded={areWorkflowContentExpanded}
+                    toggleExpandWorkflowContent={toggleExpandWorkflowContent}
+                    headerStatusCls={headerStatusCls}
+                    getPagerProps={getPagerProps}
+                    getSaveBtnProps={getSaveBtnProps}
+                    getDropdownProps={getDropdownProps}
+                    isDescriptionEditable={isDescriptionEditable}
+                    onDescriptionUpdate={onDescriptionUpdate}
+                    dialogs={dialogs}
+                    metaProperties={metaProperties}
+                    onMaterialSwitch={onMaterialSwitch}
+                    onOutputUpdateRequest={onOutputUpdateRequest}
+                    accountUsers={accountUsers}
+                    accountUsersIsLoading={accountUsersIsLoading}
+                    profile={profile}
+                    publicAccount={publicAccount}
+                    clusters={clusters}
+                    templates={templates}
+                    createMetaProperty={createMetaProperty}
+                    jobProperties={jobProperties}
+                    hideComputeSubTab={hideComputeSubTab}
+                    subworkflowActiveTabIndexById={subworkflowActiveTabIndexById}
+                    onSubworkflowActiveTabIndexChange={onSubworkflowActiveTabIndexChange}
+                />
+            </Box>
+        </WoveDisplayOptionsProvider>
     );
 }
