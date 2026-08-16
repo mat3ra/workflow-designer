@@ -46,13 +46,14 @@ const PROVIDER_FIELD_LABELS: Record<string, Record<string, string>> = {
  * re-enable them with an explicit title instead of rendering bare inputs.
  */
 export function mergeUiSchemaWithDefaultFieldStyles(
-    uiSchema: UiSchema,
+    uiSchema: UiSchema | undefined,
     providerName?: string,
 ): UiSchema {
     const defaultFieldStyles = defaultFieldStylesForMerge();
     const fieldLabels = (providerName && PROVIDER_FIELD_LABELS[providerName]) || {};
+    // Not every provider ships a uiSchema; those render with RJSF's own field layout.
     return Object.fromEntries(
-        Object.keys(uiSchema).map((key) => {
+        Object.keys(uiSchema ?? {}).map((key) => {
             const value = uiSchema[key];
             if (value === false) {
                 return [key, false] as const;

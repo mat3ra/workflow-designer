@@ -67,6 +67,28 @@ the `BrillouinZone` renderer superseding `BrillouinZoneImage`. Once both land, t
 remaining upstream item is wove passing the provider's lattice to the injected component
 instead of `latticeType` + a dead `imgSrc`.
 
+### Settings tab rebuilt (2026-08-16)
+
+Items 1.1, 1.2 and 1.4 are built on `claude/ux-improvements-msn5h2`: grouped cards per
+provider with a real title and a scope line ("applies to the whole subworkflow" vs "unit
+pw_scf"), a "modified" badge and per-group Reset, a sticky unit index carrying per-unit
+counts of modified settings, and a filter that matches titles, unit names, field names and
+engine keywords (`ecutwfc` finds Planewave Cutoffs). Verified across 13 standata workflows
+including the no-settings empty state; the full edit → badge → index count → reset → badge
+clears round trip passes.
+
+**Bug found while wiring Reset (worth an upstream fix):** providers publish their defaults
+onto the JSON schema via `getPatchedSchemaById`, but the patch config addresses
+`{ wavefunction: { default } }` while the schema keeps fields under
+`properties.wavefunction`. esse's `applyPatchWithDotNotation` silently skips paths it cannot
+resolve, so **those defaults never reach the schema** — `PlanewaveCutoffDataManager`'s 40/200
+included. Reset therefore reads `getDefaultData()` (protected at compile time only), with
+schema defaults preferred where a provider declares them properly. Fixing the patch config in
+wode would make the schema route work and let the cast go.
+
+Still open in this portion: field-level modified/reset (1.3), domain widgets for k-grid and
+k-path (1.5), and the Compute form summary line (1.6).
+
 - **Contract to preserve:** provider API (`provider.jsonSchema`, `uiSchema`, `getData()`,
   `setData()`, `setIsEdited()`), `unit.savePersistentContext()`, and the
   `onContextChanged` flow into `Subworkflow.onImportantSettingsContextChanged` (syncs
