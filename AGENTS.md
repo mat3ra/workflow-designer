@@ -142,6 +142,22 @@ Also:
   - Filename: `comments-<short_commit_hash>.md` (using the 7-character short hash of the latest commit in the PR)
   - Example: `reviews/mat3ra/q3/pr-10/comments-b307df4.md`
 
+### 4.3. Binary Assets via Git LFS
+
+- **HARD RULE**: binary assets — raster images (`*.png`, `*.jpg`, `*.jpeg`, `*.gif`, `*.webp`),
+  archives, media — are tracked with Git LFS, never committed as plain blobs. Add the patterns to
+  `.gitattributes` before the first binary lands. If binaries were already committed plain,
+  convert them with `git lfs migrate import --no-rewrite <paths>` instead of rewriting history.
+
+### 4.4. UX / Design Review Assets (`docs/ux/`)
+
+- UX reviews and design proposals with visuals live in a repository's `docs/ux/` folder:
+  a `README.md` with the findings, self-contained HTML mockups (styles, scripts, and images
+  inlined; no build step, so they render straight from a checkout), and current-state
+  screenshots under `docs/ux/current-state/`.
+- Screenshots are compressed raster files (~1100 px wide JPEG is enough for review) and are
+  tracked with Git LFS per 4.3; refresh them by re-capturing and replacing files in place.
+
 ## 5. Concrete Review Examples
 
 When conducting PR reviews, look for these specific architectural and hygiene violations to flag. 
@@ -227,6 +243,10 @@ it is part of doing the work — not bookkeeping to be done later:
 
 Never edit a document in `implemented/` to match the code — rewriting history loses the reason a
 decision was made, which is the only thing the document is still good for; correct it with a
-`## Status` note instead. Name documents `<TICKET>-<Short-Title>.md`, e.g.
-`SOF-8010-Containerized-Venv-Plan.md`. The canonical `plan/README.md` to copy when introducing
-the folder to a repository lives in `mat3ra/agents` under `templates/plan/README.md`.
+`## Status` note instead. Name documents `<yyyy-mm-dd>-<short-title>.md`, all lowercase, with the
+creation date (e.g. `2026-08-16-containerized-venv-plan.md`). The tracking ticket (Jira) is
+linked from the document header, not the filename — repositories are public while the tracker is
+not, so ticket keys in filenames carry no meaning for outside readers. Each header also carries
+an **Updated** stamp, bumped on every edit. The canonical `plan/README.md` to copy when
+introducing the folder to a repository lives in `mat3ra/agents` under
+`templates/plan/README.md`.

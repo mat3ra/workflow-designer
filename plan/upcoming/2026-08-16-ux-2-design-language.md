@@ -1,8 +1,8 @@
 # SOF-8024 Portion 2 — Mat3ra Design Language for the Designer
 
-- **Parent:** [sof-8024-ux-0-overview.md](./sof-8024-ux-0-overview.md) · **Ticket:** [SOF-8024](https://mat3ra.atlassian.net/browse/SOF-8024) ·
+- **Parent:** [2026-08-16-ux-0-overview.md](./2026-08-16-ux-0-overview.md) · **Ticket:** [SOF-8024](https://mat3ra.atlassian.net/browse/SOF-8024) ·
   **Status:** upcoming
-- **Created:** 2026-08-16 · **Updated:** 2026-08-16
+- **Updated:** 2026-08-16
 - **Scope:** define the Mat3ra-specific design language (brand palette, typography,
   designer tokens) as theme tokens in `@mat3ra/cove`, in light **and** dark, and adopt it
   across the designer instead of the pinned legacy theme. Fixes W12 and gives portions

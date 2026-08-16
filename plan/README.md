@@ -15,9 +15,11 @@ it, so moving it is part of doing the work:
   sessions.
 
 Never edit a document in `implemented/` to match the code — correct it with a `## Status`
-note instead. Name documents `<ticket>-<short-title>.md`, all lowercase, with the ticket
-key from the Jira SOF project — e.g. `sof-8010-containerized-venv-plan.md` — and start
-each document with created/updated timestamps.
+note instead. Name documents `<yyyy-mm-dd>-<short-title>.md`, all lowercase, with the
+creation date — e.g. `2026-08-16-containerized-venv-plan.md`. The tracking ticket (Jira)
+is linked from the document header, not the filename: these repos are public and the
+tracker is not, so ticket keys in filenames carry no meaning for outside readers. Each
+header also carries an **Updated** stamp, bumped on every edit.
 
 Note: the canonical version of this README lives in `mat3ra/agents` under
 `templates/plan/README.md`; replace this copy with the canonical one if they diverge.

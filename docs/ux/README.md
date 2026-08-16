@@ -7,7 +7,7 @@ component tree in this repo, `@mat3ra/wove`, and `@mat3ra/ave`.
 Interactive mockups: open [`mockups.html`](./mockups.html) in a browser (self-contained,
 no build needed). Current-state captures are in [`current-state/`](./current-state/).
 The implementation plan lives in `plan/upcoming/`: main document
-[`sof-8024-ux-0-overview.md`](../../plan/upcoming/sof-8024-ux-0-overview.md) with one detailed
+[`2026-08-16-ux-0-overview.md`](../../plan/upcoming/2026-08-16-ux-0-overview.md) with one detailed
 document per portion (quick wins, design language, settings, input editor, shell
 relayout, add flows).
 
@@ -73,6 +73,21 @@ inspector instead of modals and duplicated panels.
 | Dedupe + humanize property chips | workflow-designer | W11 |
 | Minimum readable node size; auto-fit clamps then pans | wove flowchart | W2 |
 | Unsaved-changes dot on Save; warn on navigate-away | workflow-designer | W7 |
+
+## Managing this folder
+
+- **`README.md`** — the review text; edit in place, keep the W-numbering stable (plan
+  documents reference it).
+- **`mockups.html`** — fully self-contained (styles, scripts, and screenshots inlined as
+  data URIs); no build step — open directly in a browser or from the repo. Edit as a
+  single file; keep it self-contained so it renders from a checkout.
+- **`current-state/*.jpg`** — captures from the standalone demo (`npm run dev`), resized
+  to ≤ 1100 px JPEG. Stored in **Git LFS** (see `.gitattributes` at the repo root): run
+  `git lfs install` once locally, or clones show pointer files instead of images.
+- To refresh captures after UI changes: re-run the demo, replace files under
+  `current-state/` (same names when the subject is the same), and commit — the `*.jpg`
+  LFS pattern picks them up automatically. Keep captures compressed; LFS storage is
+  quota-billed.
 
 ## Ownership & phasing
 

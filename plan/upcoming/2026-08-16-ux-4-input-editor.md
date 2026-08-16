@@ -1,8 +1,8 @@
 # SOF-8024 Portion 4 — Input Editor & Unit Editing Depth
 
-- **Parent:** [sof-8024-ux-0-overview.md](./sof-8024-ux-0-overview.md) · **Ticket:** [SOF-8024](https://mat3ra.atlassian.net/browse/SOF-8024) ·
+- **Parent:** [2026-08-16-ux-0-overview.md](./2026-08-16-ux-0-overview.md) · **Ticket:** [SOF-8024](https://mat3ra.atlassian.net/browse/SOF-8024) ·
   **Status:** upcoming
-- **Created:** 2026-08-16 · **Updated:** 2026-08-16
+- **Updated:** 2026-08-16
 - **Scope:** the template-editing experience per Mockup D, replacing the nested
   accordion/sub-tab arrangement inside the unit dialog. Fixes W4. Bulk of the work lives
   in `@mat3ra/ave` (`ExecutionUnit` editor); this repo re-composes

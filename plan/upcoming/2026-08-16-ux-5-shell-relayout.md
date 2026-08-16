@@ -1,8 +1,8 @@
 # SOF-8024 Portion 5 — Shell Relayout (rail · canvas · inspector)
 
-- **Parent:** [sof-8024-ux-0-overview.md](./sof-8024-ux-0-overview.md) · **Ticket:** [SOF-8024](https://mat3ra.atlassian.net/browse/SOF-8024) ·
+- **Parent:** [2026-08-16-ux-0-overview.md](./2026-08-16-ux-0-overview.md) · **Ticket:** [SOF-8024](https://mat3ra.atlassian.net/browse/SOF-8024) ·
   **Status:** upcoming
-- **Created:** 2026-08-16 · **Updated:** 2026-08-16
+- **Updated:** 2026-08-16
 - **Scope:** replace the duplicated two-column layout with the Mockup A shell. Fixes W1,
   W2, W4, W9, W11. Today: `src/components/workflows/WorkflowDefaultLayout.tsx` renders
   wove `WorkflowUnitsFlowchart` (left, `lg=4`) + subworkflow tabs panel (right, `lg=8`).

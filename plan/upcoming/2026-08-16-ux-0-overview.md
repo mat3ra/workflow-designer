@@ -2,7 +2,7 @@
 
 - **Ticket:** [SOF-8024](https://mat3ra.atlassian.net/browse/SOF-8024)
 - **Status:** upcoming — direction agreed via the UX review; nothing built yet.
-- **Created:** 2026-08-16 · **Updated:** 2026-08-16
+- **Updated:** 2026-08-16
 - **Review inputs:** [`docs/ux/README.md`](../../docs/ux/README.md) (issue inventory
   W1–W12), [`docs/ux/mockups.html`](../../docs/ux/mockups.html) (Mockups A–E),
   [`docs/ux/current-state/`](../../docs/ux/current-state/) (captures).
@@ -46,12 +46,12 @@ progresses; this overview moves last.
 
 | # | Document | Scope (one line) | Fixes | Size |
 |---|----------|------------------|-------|------|
-| 1 | [sof-8024-ux-1-quick-wins.md](./sof-8024-ux-1-quick-wins.md) | Ten ≤1-day fixes inside the current layout: UUIDs, labels, tooltips, delete guards, tab renames, dirty state | W2–W7, W9–W11 | days |
-| 2 | [sof-8024-ux-2-design-language.md](./sof-8024-ux-2-design-language.md) | Mat3ra brand beyond stock themes: token inventory, designer-specific tokens (unit types, canvas, states), light+dark, typography | W12 + brand | 1 sprint, then adoption |
-| 3 | [sof-8024-ux-3-important-settings.md](./sof-8024-ux-3-important-settings.md) | Settings tab rebuild: grouped scoped cards, modified/reset state, filter, domain widgets; Compute form completion | W5, W6 | 1 sprint |
-| 4 | [sof-8024-ux-4-input-editor.md](./sof-8024-ux-4-input-editor.md) | Template editing: full-height editor, syntax + render checks, variables panel, Advanced demotion of internals | W4 | 1 sprint |
-| 5 | [sof-8024-ux-5-shell-relayout.md](./sof-8024-ux-5-shell-relayout.md) | Rail · canvas · inspector shell replacing the duplicated two-column layout; header consolidation; rollout via `layoutVariant` | W1, W2, W4, W9, W11 | 2 sprints |
-| 6 | [sof-8024-ux-6-add-flows.md](./sof-8024-ux-6-add-flows.md) | Unit palette on edge "+", step library dialog (search/filter/preview) replacing JSON paste | W8 | 1 sprint |
+| 1 | [2026-08-16-ux-1-quick-wins.md](./2026-08-16-ux-1-quick-wins.md) | Ten ≤1-day fixes inside the current layout: UUIDs, labels, tooltips, delete guards, tab renames, dirty state | W2–W7, W9–W11 | days |
+| 2 | [2026-08-16-ux-2-design-language.md](./2026-08-16-ux-2-design-language.md) | Mat3ra brand beyond stock themes: token inventory, designer-specific tokens (unit types, canvas, states), light+dark, typography | W12 + brand | 1 sprint, then adoption |
+| 3 | [2026-08-16-ux-3-important-settings.md](./2026-08-16-ux-3-important-settings.md) | Settings tab rebuild: grouped scoped cards, modified/reset state, filter, domain widgets; Compute form completion | W5, W6 | 1 sprint |
+| 4 | [2026-08-16-ux-4-input-editor.md](./2026-08-16-ux-4-input-editor.md) | Template editing: full-height editor, syntax + render checks, variables panel, Advanced demotion of internals | W4 | 1 sprint |
+| 5 | [2026-08-16-ux-5-shell-relayout.md](./2026-08-16-ux-5-shell-relayout.md) | Rail · canvas · inspector shell replacing the duplicated two-column layout; header consolidation; rollout via `layoutVariant` | W1, W2, W4, W9, W11 | 2 sprints |
+| 6 | [2026-08-16-ux-6-add-flows.md](./2026-08-16-ux-6-add-flows.md) | Unit palette on edge "+", step library dialog (search/filter/preview) replacing JSON paste | W8 | 1 sprint |
 
 ## 4. Ownership map (which repo owns what)
 
