@@ -6,8 +6,10 @@ component tree in this repo, `@mat3ra/wove`, and `@mat3ra/ave`.
 
 Interactive mockups: open [`mockups.html`](./mockups.html) in a browser (self-contained,
 no build needed). Current-state captures are in [`current-state/`](./current-state/).
-The detailed implementation plan lives in
-[`plan/upcoming/Workflow-Designer-UX-Improvements.md`](../../plan/upcoming/Workflow-Designer-UX-Improvements.md).
+The implementation plan lives in `plan/upcoming/`: main document
+[`WFD-UX-0-Overview.md`](../../plan/upcoming/WFD-UX-0-Overview.md) with one detailed
+document per portion (quick wins, design language, settings, input editor, shell
+relayout, add flows).
 
 **One-sentence diagnosis:** the designer shows the same information two or three times,
 hides the two most common actions (edit a unit, add a unit) behind tiny targets and
