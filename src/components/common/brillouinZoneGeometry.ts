@@ -166,24 +166,24 @@ function solve3x3(rows: [Vector3, Vector3, Vector3], rhs: Vector3): Vector3 | nu
 const TOLERANCE = 1e-7;
 
 /**
- * Builds the first Brillouin zone: the set of points closer to the origin than to any other
- * reciprocal lattice point, i.e. the intersection of the half-spaces `x·G ≤ |G|²/2`. Vertices
- * are the plane triple-intersections that satisfy every other half-space; faces group the
- * vertices lying on each plane.
+ * Builds the first Brillouin zone from the reciprocal lattice vectors: the set of points
+ * closer to the origin than to any other reciprocal lattice point, i.e. the intersection of
+ * the half-spaces `x·G ≤ |G|²/2`. Vertices are the plane triple-intersections that satisfy
+ * every other half-space; faces group the vertices lying on each plane.
+ *
+ * Prefer this over {@link computeBrillouinZoneFaces}: it is exact for the material at hand,
+ * where the lattice *type* alone leaves the cell shape underdetermined. Pass
+ * `new ReciprocalLattice(material.lattice).reciprocalVectors` from `@mat3ra/made`.
  */
-export function computeBrillouinZoneFaces(latticeType: string): BrillouinZoneFace[] | null {
-    const key = String(latticeType || "")
-        .toUpperCase()
-        .split(/[_\-\s]/)[0];
-    const primitiveVectors = PRIMITIVE_VECTORS_BY_LATTICE_TYPE[key];
-    if (!primitiveVectors) {
+export function computeBrillouinZoneFacesFromReciprocalVectors(
+    vectors: [Vector3, Vector3, Vector3],
+): BrillouinZoneFace[] | null {
+    const [b1, b2, b3] = vectors;
+    if (
+        [b1, b2, b3].some((vector) => !vector || vector.length !== 3 || vector.some(Number.isNaN))
+    ) {
         return null;
     }
-    const reciprocal = reciprocalVectors(...primitiveVectors);
-    if (!reciprocal) {
-        return null;
-    }
-    const [b1, b2, b3] = reciprocal;
 
     const reciprocalLatticePoints: Vector3[] = [];
     for (let h = -2; h <= 2; h += 1) {
@@ -264,6 +264,23 @@ export function computeBrillouinZoneFaces(latticeType: string): BrillouinZoneFac
     return faces.length >= 4 ? faces : null;
 }
 
-export const SUPPORTED_LATTICE_TYPES = Object.keys(PRIMITIVE_VECTORS_BY_LATTICE_TYPE);
+/**
+ * Zone for a Bravais lattice *type*, for callers that have no material to hand.
+ *
+ * The type alone does not fix the cell: non-cubic systems have c/a and angle freedom, so
+ * {@link PRIMITIVE_VECTORS_BY_LATTICE_TYPE} stands in representative ratios — the same
+ * compromise a single canonical image per type makes. Exact for the cubic systems.
+ */
+export function computeBrillouinZoneFaces(latticeType: string): BrillouinZoneFace[] | null {
+    const key = String(latticeType || "")
+        .toUpperCase()
+        .split(/[_\-\s]/)[0];
+    const primitiveVectors = PRIMITIVE_VECTORS_BY_LATTICE_TYPE[key];
+    if (!primitiveVectors) {
+        return null;
+    }
+    const reciprocal = reciprocalVectors(...primitiveVectors);
+    return reciprocal ? computeBrillouinZoneFacesFromReciprocalVectors(reciprocal) : null;
+}
 
-export const brillouinZoneTestables = { dot, cross, length, normalize, subtract, scale };
+export const SUPPORTED_LATTICE_TYPES = Object.keys(PRIMITIVE_VECTORS_BY_LATTICE_TYPE);

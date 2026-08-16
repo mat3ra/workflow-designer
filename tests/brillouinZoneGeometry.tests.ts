@@ -1,5 +1,8 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
-import { computeBrillouinZoneFaces } from "@mat3ra/workflow-designer/src/components/common/brillouinZoneGeometry";
+import {
+    computeBrillouinZoneFaces,
+    computeBrillouinZoneFacesFromReciprocalVectors,
+} from "@mat3ra/workflow-designer/src/components/common/brillouinZoneGeometry";
 import assert from "node:assert";
 import test from "node:test";
 
@@ -73,4 +76,49 @@ test("extended lattice type names resolve to their base type", () => {
 test("unknown lattice types return null so callers can fall back to an image", () => {
     assert.strictEqual(computeBrillouinZoneFaces("NOT_A_LATTICE"), null);
     assert.strictEqual(computeBrillouinZoneFaces(""), null);
+});
+
+test("reciprocal vectors of a cubic lattice give a cube", () => {
+    const faces = computeBrillouinZoneFacesFromReciprocalVectors([
+        [1, 0, 0],
+        [0, 1, 0],
+        [0, 0, 1],
+    ]);
+    assert.ok(faces);
+    assert.strictEqual(faces.length, 6);
+    assert.strictEqual(countVertices(faces), 8);
+});
+
+test("a material's own lattice shapes the zone, not just its type", () => {
+    // Same hexagonal type, different c/a: a slab's large vacuum spacing flattens the zone.
+    const bulk = computeBrillouinZoneFacesFromReciprocalVectors([
+        [1, -0.577, 0],
+        [1, 0.577, 0],
+        [0, 0, 0.6],
+    ]);
+    const slab = computeBrillouinZoneFacesFromReciprocalVectors([
+        [1, -0.577, 0],
+        [1, 0.577, 0],
+        [0, 0, 0.05],
+    ]);
+    assert.ok(bulk);
+    assert.ok(slab);
+    assert.strictEqual(bulk.length, slab.length, "same face count for the same lattice type");
+
+    const height = (faces: NonNullable<typeof bulk>) => {
+        const z = faces.flatMap((face) => face.vertices.map((vertex) => vertex[2]));
+        return Math.max(...z) - Math.min(...z);
+    };
+    assert.ok(height(slab) < height(bulk) / 5, "the slab's zone is flattened along kz");
+});
+
+test("degenerate reciprocal vectors return null instead of throwing", () => {
+    assert.strictEqual(
+        computeBrillouinZoneFacesFromReciprocalVectors([
+            [1, 0, 0],
+            [1, 0, 0],
+            [0, 0, 1],
+        ]),
+        null,
+    );
 });

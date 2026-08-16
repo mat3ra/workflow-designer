@@ -8,7 +8,7 @@ import ajv from "@rjsf/validator-ajv8";
 import React from "react";
 
 import { useWorkflowComponents } from "../../WorkflowComponentsContext";
-import { BrillouinZone } from "../common/BrillouinZone";
+import { brillouinZoneComponentForProvider } from "../common/brillouinZoneForProvider";
 import { mergeUiSchemaWithDefaultFieldStyles } from "./importantSettingsFormUtils";
 
 /**
@@ -91,7 +91,8 @@ function ImportantSettingsForUnit({
                             <ExtraImportantSettingsByContextProvider
                                 provider={provider}
                                 BrillouinZoneImageComponent={
-                                    BrillouinZoneImageComponent ?? BrillouinZone
+                                    BrillouinZoneImageComponent ??
+                                    brillouinZoneComponentForProvider(provider)
                                 }
                             />
 

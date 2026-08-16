@@ -7,12 +7,19 @@ import {
     type BrillouinZoneFace,
     type Vector3,
     computeBrillouinZoneFaces,
+    computeBrillouinZoneFacesFromReciprocalVectors,
 } from "./brillouinZoneGeometry";
 
 export interface BrillouinZoneProps {
-    /** Bravais lattice type of the material, e.g. `FCC` (from wove's context provider). */
+    /**
+     * Reciprocal vectors of the material's own lattice
+     * (`new ReciprocalLattice(material.lattice).reciprocalVectors`). Preferred: exact for this
+     * material. wove's component contract does not carry them, so the call site supplies them.
+     */
+    reciprocalVectors?: [Vector3, Vector3, Vector3];
+    /** Bravais lattice type, e.g. `FCC` — used only when {@link reciprocalVectors} is absent. */
     latticeType?: string;
-    /** Web-app asset path wove derives from the lattice; used only as a fallback. */
+    /** Web-app asset path wove derives from the lattice; used only as a last fallback. */
     imgSrc?: string;
     description?: string;
 }
@@ -92,9 +99,20 @@ function projectFaces(faces: BrillouinZoneFace[]): ProjectedFace[] {
  * default for everyone else, where `imgSrc` points at an asset that does not exist (see
  * {@link computeBrillouinZoneFaces}). Falls back to the image for lattice types it cannot model.
  */
-export function BrillouinZone({ latticeType, imgSrc, description }: BrillouinZoneProps) {
+export function BrillouinZone({
+    reciprocalVectors,
+    latticeType,
+    imgSrc,
+    description,
+}: BrillouinZoneProps) {
     const theme = useTheme();
-    const faces = useMemo(() => computeBrillouinZoneFaces(latticeType ?? ""), [latticeType]);
+    const faces = useMemo(
+        () =>
+            reciprocalVectors
+                ? computeBrillouinZoneFacesFromReciprocalVectors(reciprocalVectors)
+                : computeBrillouinZoneFaces(latticeType ?? ""),
+        [reciprocalVectors, latticeType],
+    );
     const projected = useMemo(() => (faces ? projectFaces(faces) : null), [faces]);
 
     if (!projected) {

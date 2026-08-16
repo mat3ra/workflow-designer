@@ -417,6 +417,10 @@ declare module "@mat3ra/made" {
     export type Made = any;
     export const Material: any;
     export type Material = any;
+    export const Lattice: any;
+    export type Lattice = any;
+    export const ReciprocalLattice: any;
+    export type ReciprocalLattice = any;
 }
 
 declare module "@mat3ra/ide" {

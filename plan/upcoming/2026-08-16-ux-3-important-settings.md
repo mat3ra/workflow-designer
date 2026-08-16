@@ -29,6 +29,36 @@ Validated against crystallography — FCC → truncated octahedron (8 hexagons +
 vertices), BCC → rhombic dodecahedron, CUB → cube, HEX → hexagonal prism, all satisfying
 V − E + F = 2 (`tests/brillouinZoneGeometry.tests.ts`).
 
+The zone is computed from the material's **own** reciprocal lattice
+(`new ReciprocalLattice(material.lattice).reciprocalVectors`, read off the context provider at
+the call site), not from its lattice *type*: same type, different cell shape — a graphene
+monolayer's large vacuum spacing flattens its zone while bulk GaN's stays a tall prism, both
+`HEX`. The per-type table survives only as a fallback for callers with no material.
+
+### Where this code belongs (it does not belong here)
+
+None of it is workflow-designer domain; it sits here only because the fix could not be made in
+the packages that own it from this branch. Target homes:
+
+- **Geometry → `@mat3ra/made`**, in `lattice/reciprocal/` next to `ReciprocalLattice`. It is
+  pure crystallography with no React, and `made` already owns the reciprocal lattice, its
+  `reciprocalVectors`, and `symmetryPoints`. Natural shape: a `brillouinZone` getter on
+  `ReciprocalLattice`, which also removes this module's duplicate reciprocal-vector math.
+  **Input required: just the lattice** — the three vectors. Not the material, and not a type
+  string.
+- **Renderer → `@mat3ra/move`**, beside the existing `BrillouinZoneImage` (materials
+  visualization). It would then supersede that component rather than sit behind it.
+- **`@mat3ra/wove`** should pass the provider's `material` (or lattice) to the injected
+  component instead of `latticeType` + a dead `imgSrc`; the material is already in scope there
+  (`ExtraImportantSettingsByContextProvider` destructures it). That lossy prop contract is why
+  the call-site binding in `brillouinZoneForProvider.tsx` exists at all — delete it once wove
+  passes the lattice through.
+- **workflow-designer** then keeps none of this and simply consumes the component.
+
+Once `made` owns the geometry, `symmetryPoints` makes the obvious next step cheap: label Γ/X/L
+on the zone and overlay the k-path being edited in this very form — something a static PNG per
+lattice type could never do.
+
 Upstream follow-ups for wove/move (not done here): make the derived zone the library-level
 default so the fix is not per-consumer, and make any remaining asset path base-relative.
 
