@@ -7,7 +7,7 @@ component tree in this repo, `@mat3ra/wove`, and `@mat3ra/ave`.
 Interactive mockups: open [`mockups.html`](./mockups.html) in a browser (self-contained,
 no build needed). Current-state captures are in [`current-state/`](./current-state/).
 The implementation plan lives in `plan/upcoming/`: main document
-[`WFD-UX-0-Overview.md`](../../plan/upcoming/WFD-UX-0-Overview.md) with one detailed
+[`sof-8024-ux-0-overview.md`](../../plan/upcoming/sof-8024-ux-0-overview.md) with one detailed
 document per portion (quick wins, design language, settings, input editor, shell
 relayout, add flows).
 

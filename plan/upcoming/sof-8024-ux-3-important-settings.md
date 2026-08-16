@@ -1,7 +1,8 @@
-# WFD-UX Portion 3 — Important Settings Rebuild
+# SOF-8024 Portion 3 — Important Settings Rebuild
 
-- **Parent:** [WFD-UX-0-Overview.md](./WFD-UX-0-Overview.md) · **Ticket:** TBD ·
+- **Parent:** [sof-8024-ux-0-overview.md](./sof-8024-ux-0-overview.md) · **Ticket:** [SOF-8024](https://mat3ra.atlassian.net/browse/SOF-8024) ·
   **Status:** upcoming
+- **Created:** 2026-08-16 · **Updated:** 2026-08-16
 - **Scope:** rebuild the Settings (today "Important settings") tab per Mockup B, plus
   Compute form completion (Mockup E). Fixes W5 and closes W6.
 - **Contract to preserve:** provider API (`provider.jsonSchema`, `uiSchema`, `getData()`,

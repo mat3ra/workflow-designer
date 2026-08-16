@@ -1,8 +1,8 @@
 # Workflow Designer UX Improvements — Overview (main plan)
 
-- **Ticket:** TBD — prefix this document set with the real ticket once filed
-  (`<TICKET>-…`), keeping the numeric portion ordering.
+- **Ticket:** [SOF-8024](https://mat3ra.atlassian.net/browse/SOF-8024)
 - **Status:** upcoming — direction agreed via the UX review; nothing built yet.
+- **Created:** 2026-08-16 · **Updated:** 2026-08-16
 - **Review inputs:** [`docs/ux/README.md`](../../docs/ux/README.md) (issue inventory
   W1–W12), [`docs/ux/mockups.html`](../../docs/ux/mockups.html) (Mockups A–E),
   [`docs/ux/current-state/`](../../docs/ux/current-state/) (captures).
@@ -46,12 +46,12 @@ progresses; this overview moves last.
 
 | # | Document | Scope (one line) | Fixes | Size |
 |---|----------|------------------|-------|------|
-| 1 | [WFD-UX-1-Quick-Wins.md](./WFD-UX-1-Quick-Wins.md) | Ten ≤1-day fixes inside the current layout: UUIDs, labels, tooltips, delete guards, tab renames, dirty state | W2–W7, W9–W11 | days |
-| 2 | [WFD-UX-2-Design-Language.md](./WFD-UX-2-Design-Language.md) | Mat3ra brand beyond stock themes: token inventory, designer-specific tokens (unit types, canvas, states), light+dark, typography | W12 + brand | 1 sprint, then adoption |
-| 3 | [WFD-UX-3-Important-Settings.md](./WFD-UX-3-Important-Settings.md) | Settings tab rebuild: grouped scoped cards, modified/reset state, filter, domain widgets; Compute form completion | W5, W6 | 1 sprint |
-| 4 | [WFD-UX-4-Input-Editor.md](./WFD-UX-4-Input-Editor.md) | Template editing: full-height editor, syntax + render checks, variables panel, Advanced demotion of internals | W4 | 1 sprint |
-| 5 | [WFD-UX-5-Shell-Relayout.md](./WFD-UX-5-Shell-Relayout.md) | Rail · canvas · inspector shell replacing the duplicated two-column layout; header consolidation; rollout via `layoutVariant` | W1, W2, W4, W9, W11 | 2 sprints |
-| 6 | [WFD-UX-6-Add-Flows.md](./WFD-UX-6-Add-Flows.md) | Unit palette on edge "+", step library dialog (search/filter/preview) replacing JSON paste | W8 | 1 sprint |
+| 1 | [sof-8024-ux-1-quick-wins.md](./sof-8024-ux-1-quick-wins.md) | Ten ≤1-day fixes inside the current layout: UUIDs, labels, tooltips, delete guards, tab renames, dirty state | W2–W7, W9–W11 | days |
+| 2 | [sof-8024-ux-2-design-language.md](./sof-8024-ux-2-design-language.md) | Mat3ra brand beyond stock themes: token inventory, designer-specific tokens (unit types, canvas, states), light+dark, typography | W12 + brand | 1 sprint, then adoption |
+| 3 | [sof-8024-ux-3-important-settings.md](./sof-8024-ux-3-important-settings.md) | Settings tab rebuild: grouped scoped cards, modified/reset state, filter, domain widgets; Compute form completion | W5, W6 | 1 sprint |
+| 4 | [sof-8024-ux-4-input-editor.md](./sof-8024-ux-4-input-editor.md) | Template editing: full-height editor, syntax + render checks, variables panel, Advanced demotion of internals | W4 | 1 sprint |
+| 5 | [sof-8024-ux-5-shell-relayout.md](./sof-8024-ux-5-shell-relayout.md) | Rail · canvas · inspector shell replacing the duplicated two-column layout; header consolidation; rollout via `layoutVariant` | W1, W2, W4, W9, W11 | 2 sprints |
+| 6 | [sof-8024-ux-6-add-flows.md](./sof-8024-ux-6-add-flows.md) | Unit palette on edge "+", step library dialog (search/filter/preview) replacing JSON paste | W8 | 1 sprint |
 
 ## 4. Ownership map (which repo owns what)
 
@@ -105,9 +105,8 @@ classic layout first; 2 blocks nothing but is consumed by all.
 
 ## 8. Open questions
 
-1. Ticket/epic for the set (then rename all documents per convention).
-2. Canonical Mat3ra brand palette: confirm with design/marketing (see portion 2 §2).
-3. Confirm-dialog vs snackbar-undo for deletes — one pattern platform-wide (portion 1).
-4. Does "My subworkflows" exist as an injectable API today, or is it new (portion 6)?
-5. Should the step library also replace the webapp's "new workflow" standata picker for
+1. Canonical Mat3ra brand palette: confirm with design/marketing (see portion 2 §2).
+2. Confirm-dialog vs snackbar-undo for deletes — one pattern platform-wide (portion 1).
+3. Does "My subworkflows" exist as an injectable API today, or is it new (portion 6)?
+4. Should the step library also replace the webapp's "new workflow" standata picker for
    consistency (portion 6)?

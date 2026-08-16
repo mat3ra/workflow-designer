@@ -15,8 +15,9 @@ it, so moving it is part of doing the work:
   sessions.
 
 Never edit a document in `implemented/` to match the code — correct it with a `## Status`
-note instead. Name documents `<TICKET>-<Short-Title>.md`, e.g.
-`SOF-8010-Containerized-Venv-Plan.md`.
+note instead. Name documents `<ticket>-<short-title>.md`, all lowercase, with the ticket
+key from the Jira SOF project — e.g. `sof-8010-containerized-venv-plan.md` — and start
+each document with created/updated timestamps.
 
 Note: the canonical version of this README lives in `mat3ra/agents` under
 `templates/plan/README.md`; replace this copy with the canonical one if they diverge.
