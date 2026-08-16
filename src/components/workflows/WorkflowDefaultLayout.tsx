@@ -125,6 +125,8 @@ export type WorkflowDefaultLayoutProps = {
     /** Subworkflow inner tabs (Overview, Important settings, …); owned by {@link Workflow} so remounts of {@link Subworkflow} do not reset them. */
     subworkflowActiveTabIndexById: Record<string, number>;
     onSubworkflowActiveTabIndexChange: (subworkflowId: string, tabIndex: number) => void;
+    /** See {@link SubworkflowProps.hideComputeSubTab}. */
+    hideComputeSubTab?: boolean;
 };
 
 export function WorkflowDefaultLayout(props: WorkflowDefaultLayoutProps) {
@@ -181,6 +183,7 @@ export function WorkflowDefaultLayout(props: WorkflowDefaultLayoutProps) {
         jobProperties,
         subworkflowActiveTabIndexById,
         onSubworkflowActiveTabIndexChange,
+        hideComputeSubTab,
     } = props;
 
     const { EntityHeaderComponent, MetadataComponent, HistoryComponent } = useWorkflowComponents();
@@ -301,6 +304,7 @@ export function WorkflowDefaultLayout(props: WorkflowDefaultLayoutProps) {
                                         activeTabIndex={
                                             subworkflowActiveTabIndexById[subworkflow.id] ?? 0
                                         }
+                                        hideComputeSubTab={hideComputeSubTab}
                                         onActiveTabIndexChange={(tabIndex) =>
                                             onSubworkflowActiveTabIndexChange(
                                                 subworkflow.id,

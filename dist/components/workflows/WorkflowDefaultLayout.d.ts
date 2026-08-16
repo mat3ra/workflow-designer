@@ -85,6 +85,8 @@ export type WorkflowDefaultLayoutProps = {
     /** Subworkflow inner tabs (Overview, Important settings, …); owned by {@link Workflow} so remounts of {@link Subworkflow} do not reset them. */
     subworkflowActiveTabIndexById: Record<string, number>;
     onSubworkflowActiveTabIndexChange: (subworkflowId: string, tabIndex: number) => void;
+    /** See {@link SubworkflowProps.hideComputeSubTab}. */
+    hideComputeSubTab?: boolean;
 };
 export declare function WorkflowDefaultLayout(props: WorkflowDefaultLayoutProps): React.JSX.Element;
 //# sourceMappingURL=WorkflowDefaultLayout.d.ts.map
