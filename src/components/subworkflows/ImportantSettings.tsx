@@ -8,6 +8,7 @@ import ajv from "@rjsf/validator-ajv8";
 import React from "react";
 
 import { useWorkflowComponents } from "../../WorkflowComponentsContext";
+import { BrillouinZone } from "../common/BrillouinZone";
 import { mergeUiSchemaWithDefaultFieldStyles } from "./importantSettingsFormUtils";
 
 /**
@@ -82,9 +83,16 @@ function ImportantSettingsForUnit({
                             data-tid={title}
                         >
                             <Typography variant="h6">{title}</Typography>
+                            {/*
+                                Default to the computed zone: wove's fallback points an <img> at
+                                `/images/brillouin_zone/<lattice>.png`, which only the web app
+                                serves. Hosts with their own artwork still inject a component.
+                            */}
                             <ExtraImportantSettingsByContextProvider
                                 provider={provider}
-                                BrillouinZoneImageComponent={BrillouinZoneImageComponent}
+                                BrillouinZoneImageComponent={
+                                    BrillouinZoneImageComponent ?? BrillouinZone
+                                }
                             />
 
                             <RJSForm

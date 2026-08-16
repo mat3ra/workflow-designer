@@ -5,6 +5,33 @@
 - **Updated:** 2026-08-16
 - **Scope:** rebuild the Settings (today "Important settings") tab per Mockup B, plus
   Compute form completion (Mockup E). Fixes W5 and closes W6.
+## Status (2026-08-16)
+
+Shipped early, out of order, because it made the Settings tab visibly broken outside the web
+app: **the Brillouin zone illustration**. `@mat3ra/wove`'s
+`ExtraImportantSettingsByContextProvider` derives `/images/brillouin_zone/<lattice>.png` from
+the material and renders it through an injectable `BrillouinZoneImageComponent`
+(`@mat3ra/move`'s `BrillouinZoneImage` is one such component — also a thin `<img>` wrapper).
+Two defects follow from that:
+
+1. **The asset ships nowhere.** No npm package contains those PNGs — only the web app serves
+   them, so every other consumer (standalone demo, Storybook, embedders) renders a broken
+   image. Confirmed: `/images/brillouin_zone/fcc.png` → 404 in the demo.
+2. **The path is absolute**, so it cannot resolve under a non-root deployment base (the demo
+   is served at `/workflow-designer/`); shipping the files in `public/` would not fix it.
+
+Fixed here by **deriving the zone instead of fetching it** — the lattice type is already
+known at that point. `src/components/common/brillouinZoneGeometry.ts` computes the first
+Brillouin zone as the Wigner-Seitz cell of the reciprocal lattice (half-space intersection),
+and `BrillouinZone.tsx` renders it as inline SVG; `ImportantSettings` uses it as the default
+when the host injects no component, so the web app keeps its own artwork unchanged.
+Validated against crystallography — FCC → truncated octahedron (8 hexagons + 6 squares, 24
+vertices), BCC → rhombic dodecahedron, CUB → cube, HEX → hexagonal prism, all satisfying
+V − E + F = 2 (`tests/brillouinZoneGeometry.tests.ts`).
+
+Upstream follow-ups for wove/move (not done here): make the derived zone the library-level
+default so the fix is not per-consumer, and make any remaining asset path base-relative.
+
 - **Contract to preserve:** provider API (`provider.jsonSchema`, `uiSchema`, `getData()`,
   `setData()`, `setIsEdited()`), `unit.savePersistentContext()`, and the
   `onContextChanged` flow into `Subworkflow.onImportantSettingsContextChanged` (syncs
