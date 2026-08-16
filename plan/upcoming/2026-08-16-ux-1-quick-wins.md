@@ -1,10 +1,31 @@
 # SOF-8024 Portion 1 — Quick Wins
 
 - **Parent:** [2026-08-16-ux-0-overview.md](./2026-08-16-ux-0-overview.md) · **Ticket:** [SOF-8024](https://mat3ra.atlassian.net/browse/SOF-8024) ·
-  **Status:** upcoming
+  **Status:** in progress — local items built, cross-repo items pending
 - **Updated:** 2026-08-16
 - **Scope:** ten fixes of ≤ ~1 day each (including tests) inside the current layout.
   Every item stands alone and ships independently.
+
+## Status (2026-08-16)
+
+Built on `claude/ux-improvements-msn5h2` (PR
+[#12](https://github.com/mat3ra/workflow-designer/pull/12)), verified in the standalone
+demo:
+
+- **1.2** ✅ cutoff labels via `PROVIDER_FIELD_LABELS` in `importantSettingsFormUtils.ts`
+  (landed locally; the wode uiSchema route remains open as the longer-term home).
+- **1.3** ✅ local half — dialog titled "`<unit>` — `<type>` unit", flowchartId removed
+  from the modal header. Ave rail tooltips remain (cross-repo).
+- **1.4** ✅ snackbar-undo removals at both levels (`UndoSnackbar`, 10 s), snapshot
+  restore verified.
+- **1.6** ✅ tabs renamed Units · Settings · Outputs · Compute; flowchart above Details.
+- **1.7** ✅ labeled compute override switch with behavior text.
+- **1.10** ✅ dirty tracking in the container (+ `onDirtyChange` prop), baseline captured
+  post-render, reset on save; demo shows an "Unsaved changes" chip that clears on undo.
+- **1.1, 1.5, 1.8, 1.9** ⏳ pending — require `@mat3ra/wove` (UUIDs, status chips,
+  Properties dedupe, node-size clamp).
+- Note: repo unit tests (`npm test`) fail in the dev environment for a pre-existing
+  module-resolution reason (also on `main`); CI is the arbiter.
 
 ### 1.1 Hide UUIDs behind a developer toggle — fixes W3
 

@@ -135,6 +135,7 @@ function App() {
         },
     );
     const selectedMaterial = allMaterials[materialIndex];
+    const [isDirty, setIsDirty] = useState(false);
 
     // Re-key the designer when either selection changes so it re-mounts cleanly
     const designerKey = `${workflowIndex}-${materialIndex}`;
@@ -188,7 +189,10 @@ function App() {
                             id="workflow-select"
                             value={workflowIndex}
                             label="Workflow"
-                            onChange={(e) => setWorkflowIndex(Number(e.target.value))}
+                            onChange={(e) => {
+                                setWorkflowIndex(Number(e.target.value));
+                                setIsDirty(false);
+                            }}
                         >
                             {allWorkflowJsons.map((wf: any, i: number) => (
                                 <MenuItem key={i} value={i}>
@@ -212,7 +216,10 @@ function App() {
                             id="material-select"
                             value={materialIndex}
                             label="Material"
-                            onChange={(e) => setMaterialIndex(Number(e.target.value))}
+                            onChange={(e) => {
+                                setMaterialIndex(Number(e.target.value));
+                                setIsDirty(false);
+                            }}
                         >
                             {allMaterials.map((mat: any, i: number) => (
                                 <MenuItem key={i} value={i}>
@@ -222,6 +229,15 @@ function App() {
                         </Select>
                     </FormControl>
 
+                    {isDirty && (
+                        <Chip
+                            label="● Unsaved changes"
+                            size="small"
+                            variant="outlined"
+                            color="warning"
+                            data-tid="dirty-indicator"
+                        />
+                    )}
                     <Chip
                         label={`${allWorkflowJsons.length} workflows · ${allMaterials.length} materials`}
                         size="small"
@@ -280,6 +296,7 @@ function App() {
                     })}
                     generateEntityId={() => crypto.randomUUID()}
                     openDocumentationDialog={undefined}
+                    onDirtyChange={setIsDirty}
                 />
             </Box>
         </Box>

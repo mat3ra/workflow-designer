@@ -39,6 +39,8 @@ function getProviderTitle(provider: { name: string }) {
     switch (provider.name) {
         case "boundaryConditions":
             return "Boundary Conditions";
+        case "cutoffs":
+            return "Planewave Cutoffs";
         default:
             return provider.name;
     }
@@ -187,6 +189,7 @@ function ImportantSettingsForSubworkflow({
                                 schema={firstProvider.jsonSchema}
                                 uiSchema={mergeUiSchemaWithDefaultFieldStyles(
                                     (firstProvider as any).uiSchema,
+                                    firstProvider.name,
                                 )}
                                 formData={data}
                                 // fields={firstProvider.fields}

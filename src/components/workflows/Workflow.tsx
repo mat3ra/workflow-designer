@@ -36,6 +36,8 @@ export type WorkflowProps = {
     onUpdateTags?: (tags: string[]) => void;
     extraActions?: DropdownAction[];
     onSave?: (omitRedirect: boolean) => void;
+    /** Unsaved changes exist; surfaces on the Save affordance. */
+    isDirty?: boolean;
     onNameUpdate?: (name: string) => void;
     iconCls?: string;
     onUnitAdd?: (unitType: UnitType, prepend?: boolean, unitIndex?: number) => void;
@@ -113,6 +115,7 @@ export function Workflow({
     onUpdateTags,
     extraActions = [],
     onSave,
+    isDirty = false,
     onNameUpdate,
     iconCls,
     onUnitAdd = noop,
@@ -394,11 +397,12 @@ export function Workflow({
         return {
             isShown: Boolean(editable && isStandalone),
             isLoading,
+            isDirty,
             onSave: (omitRedirect?: boolean) => {
                 onSave?.(omitRedirect ?? false);
             },
         };
-    }, [editable, isLoading, isStandalone, onSave]);
+    }, [editable, isLoading, isStandalone, onSave, isDirty]);
 
     const getDropdownProps = useCallback(() => {
         return {
