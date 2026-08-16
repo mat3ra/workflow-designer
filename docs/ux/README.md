@@ -6,6 +6,8 @@ component tree in this repo, `@mat3ra/wove`, and `@mat3ra/ave`.
 
 Interactive mockups: open [`mockups.html`](./mockups.html) in a browser (self-contained,
 no build needed). Current-state captures are in [`current-state/`](./current-state/).
+The detailed implementation plan lives in
+[`plan/upcoming/Workflow-Designer-UX-Improvements.md`](../../plan/upcoming/Workflow-Designer-UX-Improvements.md).
 
 **One-sentence diagnosis:** the designer shows the same information two or three times,
 hides the two most common actions (edit a unit, add a unit) behind tiny targets and
