@@ -59,8 +59,13 @@ Once `made` owns the geometry, `symmetryPoints` makes the obvious next step chea
 on the zone and overlay the k-path being edited in this very form — something a static PNG per
 lattice type could never do.
 
-Upstream follow-ups for wove/move (not done here): make the derived zone the library-level
-default so the fix is not per-consumer, and make any remaining asset path base-relative.
+**Upstream PRs opened (2026-08-16):** [mat3ra/made#295](https://github.com/mat3ra/made/pull/295)
+adds `ReciprocalLattice.brillouinZone` (validated against made's own Silicon / Na4Cl4 /
+Graphene / Si-slab fixtures), and [mat3ra/move#5](https://github.com/mat3ra/move/pull/5) adds
+the `BrillouinZone` renderer superseding `BrillouinZoneImage`. Once both land, this repo drops
+`brillouinZoneGeometry.ts` and `BrillouinZone.tsx` and consumes `move`'s component; the
+remaining upstream item is wove passing the provider's lattice to the injected component
+instead of `latticeType` + a dead `imgSrc`.
 
 - **Contract to preserve:** provider API (`provider.jsonSchema`, `uiSchema`, `getData()`,
   `setData()`, `setIsEdited()`), `unit.savePersistentContext()`, and the
