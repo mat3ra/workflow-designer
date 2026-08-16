@@ -22,8 +22,13 @@ demo:
 - **1.7** ✅ labeled compute override switch with behavior text.
 - **1.10** ✅ dirty tracking in the container (+ `onDirtyChange` prop), baseline captured
   post-render, reset on save; demo shows an "Unsaved changes" chip that clears on undo.
-- **1.1, 1.5, 1.8, 1.9** ⏳ pending — require `@mat3ra/wove` (UUIDs, status chips,
-  Properties dedupe, node-size clamp).
+- **1.1, 1.5, 1.8, 1.9** ✅ implemented upstream in
+  [mat3ra/wove#12](https://github.com/mat3ra/wove/pull/12): flowchart IDs behind
+  `showDeveloperInfo` (now off by default), `showStatus` threaded through the card and
+  react-flow node chain so designers can drop status badges, property chips deduped and
+  humanized, and auto-fit clamped to a legible zoom. Consuming them here needs a wove
+  release plus passing `showStatus={false}` from `WorkflowDefaultLayout` /
+  `UnitsFlowchartContainer`, and a "Developer info" kebab action for the opt-in.
 - Note: repo unit tests (`npm test`) fail in the dev environment for a pre-existing
   module-resolution reason (also on `main`); CI is the arbiter.
 
