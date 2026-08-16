@@ -66,7 +66,14 @@ export type WorkflowProps = {
     isDescriptionEditable: boolean;
     /** Refined job properties for unit modals in job designer; optional elsewhere. */
     jobProperties?: WorkflowDesignerProperty[];
+    /**
+     * Hides each subworkflow's own Compute tab. Set it when the host renders a
+     * compute surface of its own, as the job designer does — otherwise the same
+     * screen offers two things called "Compute" and the reader has to guess
+     * which one the job will run with.
+     */
+    hideComputeSubTab?: boolean;
 };
-export declare function Workflow({ workflow, metaProperties, onUpdate, onOutputUpdateRequest, onUpdateTags, extraActions, onSave, onNameUpdate, iconCls, onUnitAdd, onUnitAddSubworkflowFromConfig, onUnitRemove, onUnitUpdate, onSubworkflowUnitUpdate, materials, materialsIndex, jobHasParent, onMaterialSwitch, showHeaderPager, onHeaderPagerUpdate, dialogs, createMetaProperty, accountUsers, accountUsersIsLoading, profile, publicAccount, clusters, templates, isStandalone, isHeaderCompact, editable, adjustable, isLoading, showHeader, isMethodDataLoading, materialsSet, isMap, isSetPublicVisible, showMetadata, showHistory, workflowHistory, onIsMultiMaterialChanged, onRender, renderAtJobLevel, workflowRenderGeneration, isDescriptionEditable, jobProperties, }: WorkflowProps): React.JSX.Element;
+export declare function Workflow({ workflow, metaProperties, onUpdate, onOutputUpdateRequest, onUpdateTags, extraActions, onSave, onNameUpdate, iconCls, onUnitAdd, onUnitAddSubworkflowFromConfig, onUnitRemove, onUnitUpdate, onSubworkflowUnitUpdate, materials, materialsIndex, jobHasParent, onMaterialSwitch, showHeaderPager, onHeaderPagerUpdate, dialogs, createMetaProperty, accountUsers, accountUsersIsLoading, profile, publicAccount, clusters, templates, isStandalone, isHeaderCompact, editable, adjustable, isLoading, showHeader, isMethodDataLoading, materialsSet, isMap, isSetPublicVisible, showMetadata, showHistory, workflowHistory, onIsMultiMaterialChanged, onRender, renderAtJobLevel, workflowRenderGeneration, isDescriptionEditable, jobProperties, hideComputeSubTab, }: WorkflowProps): React.JSX.Element;
 export {};
 //# sourceMappingURL=Workflow.d.ts.map
