@@ -71,6 +71,13 @@ export type SubworkflowProps = {
     jobProperties?: WorkflowDesignerProperty[];
     activeTabIndex: number;
     onActiveTabIndexChange: (tabIndex: number) => void;
+    /**
+     * Drops this subworkflow's own Compute tab. Set it when the host already
+     * shows a compute surface of its own — the job designer does, and two places
+     * called "Compute" on one screen leave the reader guessing which one the job
+     * will actually run with.
+     */
+    hideComputeSubTab?: boolean;
 };
 
 export const TAB_NAVIGATION_CONFIG = {
@@ -95,6 +102,10 @@ export const TAB_NAVIGATION_CONFIG = {
         href: "sw-compute",
     },
 } as const;
+
+const COMPUTE_TAB_NAME = TAB_NAVIGATION_CONFIG.compute.itemName;
+/** Compute is the last tab, which is what lets it be dropped without renumbering the rest. */
+const COMPUTE_TAB_INDEX = Object.keys(TAB_NAVIGATION_CONFIG).indexOf("compute");
 
 export function Subworkflow({
     subworkflow,
@@ -121,6 +132,7 @@ export function Subworkflow({
     jobProperties,
     activeTabIndex,
     onActiveTabIndexChange,
+    hideComputeSubTab = false,
 }: SubworkflowProps) {
     const { getDefaultComputeConfig } = useWorkflowComponents();
     const [unitIndex, setUnitIndex] = useState(0);
@@ -312,25 +324,34 @@ export function Subworkflow({
 
     const tabs: WorkflowDesignerTabItem[] = useMemo(
         () =>
-            Object.values(TAB_NAVIGATION_CONFIG).map((tab, index) => ({
-                ...tab,
-                href: undefined,
-                onClick: (event) => {
-                    event.preventDefault();
-                    setTabIndex(index);
-                },
-            })),
-        [setTabIndex],
+            Object.values(TAB_NAVIGATION_CONFIG)
+                .map((tab, index) => ({
+                    ...tab,
+                    href: undefined,
+                    onClick: (event: React.MouseEvent) => {
+                        event.preventDefault();
+                        setTabIndex(index);
+                    },
+                }))
+                // Compute is the last entry, so dropping it leaves the remaining
+                // tabs on the indices their panels are keyed to.
+                .filter((tab) => !(hideComputeSubTab && tab.itemName === COMPUTE_TAB_NAME)),
+        [setTabIndex, hideComputeSubTab],
     );
+
+    // A subworkflow whose Compute tab was open when the host hid it would
+    // otherwise be left showing an empty panel.
+    const visibleTabIndex =
+        hideComputeSubTab && activeTabIndex === COMPUTE_TAB_INDEX ? 0 : activeTabIndex;
 
     return (
         <Stack data-tid="subworkflow" height="100%" className={className}>
             <TabsMenu
                 tabs={tabs}
-                activeTabIndex={activeTabIndex}
+                activeTabIndex={visibleTabIndex}
                 sx={{ fontSize: 12, height: "100%" }}
             />
-            <TabContext value={`${activeTabIndex}`}>
+            <TabContext value={`${visibleTabIndex}`}>
                 <TabPanel
                     value="0"
                     id={TAB_NAVIGATION_CONFIG.overview.href}
@@ -428,20 +449,22 @@ export function Subworkflow({
                         ))}
                     </Grid>
                 </TabPanel>
-                <TabPanel value="3">
-                    <WorkflowCompute
-                        compute={subworkflow.compute}
-                        onUpdate={onComputeUpdate}
-                        onToggle={onComputeToggle}
-                        showAdvancedOptions={
-                            new Application(subworkflow.application).hasAdvancedComputeOptions
-                        }
-                        accountUsers={accountUsers}
-                        accountUsersIsLoading={accountUsersIsLoading}
-                        currentUser={currentUser ?? profile.user.entity}
-                        clusters={clusters}
-                    />
-                </TabPanel>
+                {hideComputeSubTab ? null : (
+                    <TabPanel value={`${COMPUTE_TAB_INDEX}`}>
+                        <WorkflowCompute
+                            compute={subworkflow.compute}
+                            onUpdate={onComputeUpdate}
+                            onToggle={onComputeToggle}
+                            showAdvancedOptions={
+                                new Application(subworkflow.application).hasAdvancedComputeOptions
+                            }
+                            accountUsers={accountUsers}
+                            accountUsersIsLoading={accountUsersIsLoading}
+                            currentUser={currentUser ?? profile.user.entity}
+                            clusters={clusters}
+                        />
+                    </TabPanel>
+                )}
             </TabContext>
         </Stack>
     );
