@@ -93,6 +93,13 @@ export type WorkflowProps = {
     isDescriptionEditable: boolean;
     /** Refined job properties for unit modals in job designer; optional elsewhere. */
     jobProperties?: WorkflowDesignerProperty[];
+    /**
+     * Hides each subworkflow's own Compute tab. Set it when the host renders a
+     * compute surface of its own, as the job designer does — otherwise the same
+     * screen offers two things called "Compute" and the reader has to guess
+     * which one the job will run with.
+     */
+    hideComputeSubTab?: boolean;
 };
 
 const noop = (): undefined => undefined;
@@ -153,6 +160,7 @@ export function Workflow({
     workflowRenderGeneration,
     isDescriptionEditable,
     jobProperties,
+    hideComputeSubTab = false,
 }: WorkflowProps) {
     const [unitIndex, setUnitIndex] = useState(0);
     const [isRelaxationToggled, setIsRelaxationToggled] = useState(false);
@@ -462,6 +470,7 @@ export function Workflow({
                 templates={templates}
                 createMetaProperty={createMetaProperty}
                 jobProperties={jobProperties}
+                hideComputeSubTab={hideComputeSubTab}
                 subworkflowActiveTabIndexById={subworkflowActiveTabIndexById}
                 onSubworkflowActiveTabIndexChange={onSubworkflowActiveTabIndexChange}
             />
