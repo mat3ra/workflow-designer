@@ -10,7 +10,9 @@ export type ImportantSettingsFormProvider<T = unknown> = T & {
 };
 /**
  * Shallow-merges default layout into each top-level entry of `uiSchema`, matching
- * `JSONSchemaFormMixin#uiSchemaStyled` without mutating the input.
+ * `JSONSchemaFormMixin#uiSchemaStyled` without mutating the input. The defaults suppress
+ * per-field labels; fields listed in {@link PROVIDER_FIELD_LABELS} for `providerName`
+ * re-enable them with an explicit title instead of rendering bare inputs.
  */
-export declare function mergeUiSchemaWithDefaultFieldStyles(uiSchema: UiSchema): UiSchema;
+export declare function mergeUiSchemaWithDefaultFieldStyles(uiSchema: UiSchema, providerName?: string): UiSchema;
 //# sourceMappingURL=importantSettingsFormUtils.d.ts.map

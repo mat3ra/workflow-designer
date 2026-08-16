@@ -2,7 +2,7 @@ import { jsx as _jsx } from "react/jsx-runtime";
 import IconByName from "@mat3ra/cove/dist/mui/components/icon";
 import { Workflow as WodeWorkflow } from "@mat3ra/wode";
 import { UnitType } from "@mat3ra/wode/dist/js/enums";
-import { getUnitStatusCls, getWorkflowStatusCls } from "@mat3ra/wove";
+import { getUnitStatusCls, getWorkflowStatusCls, WoveDisplayOptionsProvider } from "@mat3ra/wove";
 import Box from "@mui/material/Box";
 import findIndex from "lodash/findIndex";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
@@ -11,8 +11,10 @@ import { getWorkflowDesignerTabResetKey } from "./workflowDesignerTabState";
 const noop = () => undefined;
 const EMPTY_META_PROPERTIES = [];
 const noopUnitAddSubworkflowFromConfig = (_config, _prependOrPasteIndex, _unitIndex) => undefined;
-export function Workflow({ workflow, metaProperties = EMPTY_META_PROPERTIES, onUpdate = noop, onOutputUpdateRequest, onUpdateTags, extraActions = [], onSave, onNameUpdate, iconCls, onUnitAdd = noop, onUnitAddSubworkflowFromConfig = noopUnitAddSubworkflowFromConfig, onUnitRemove = noop, onUnitUpdate = noop, onSubworkflowUnitUpdate = noop, materials = [], materialsIndex, jobHasParent = false, onMaterialSwitch, showHeaderPager = false, onHeaderPagerUpdate, dialogs, createMetaProperty = async (_property) => undefined, accountUsers, accountUsersIsLoading, profile, publicAccount, clusters = [], templates, isStandalone = false, isHeaderCompact, editable = false, adjustable = false, isLoading = false, showHeader = true, isMethodDataLoading = false, materialsSet, isMap, isSetPublicVisible, showMetadata = true, showHistory = false, workflowHistory = [], onIsMultiMaterialChanged, onRender, renderAtJobLevel = false, workflowRenderGeneration, isDescriptionEditable, jobProperties, hideComputeSubTab = false, }) {
+export function Workflow({ workflow, metaProperties = EMPTY_META_PROPERTIES, onUpdate = noop, onOutputUpdateRequest, onUpdateTags, extraActions = [], onSave, isDirty = false, onNameUpdate, iconCls, onUnitAdd = noop, onUnitAddSubworkflowFromConfig = noopUnitAddSubworkflowFromConfig, onUnitRemove = noop, onUnitUpdate = noop, onSubworkflowUnitUpdate = noop, materials = [], materialsIndex, jobHasParent = false, onMaterialSwitch, showHeaderPager = false, onHeaderPagerUpdate, dialogs, createMetaProperty = async (_property) => undefined, accountUsers, accountUsersIsLoading, profile, publicAccount, clusters = [], templates, isStandalone = false, isHeaderCompact, editable = false, adjustable = false, isLoading = false, showHeader = true, isMethodDataLoading = false, materialsSet, isMap, isSetPublicVisible, showMetadata = true, showHistory = false, workflowHistory = [], onIsMultiMaterialChanged, onRender, renderAtJobLevel = false, workflowRenderGeneration, isDescriptionEditable, jobProperties, hideComputeSubTab = false, showUnitStatus = false, }) {
     const [unitIndex, setUnitIndex] = useState(0);
+    // Identifiers are noise for the person reading a workflow; opt-in per session.
+    const [showDeveloperInfo, setShowDeveloperInfo] = useState(false);
     const [isRelaxationToggled, setIsRelaxationToggled] = useState(false);
     const [isMultiMaterialToggled, setIsMultiMaterialToggled] = useState(() => Boolean(workflow.isMultiMaterial));
     const [areWorkflowContentExpanded, setAreWorkflowContentExpanded] = useState(false);
@@ -169,6 +171,18 @@ export function Workflow({ workflow, metaProperties = EMPTY_META_PROPERTIES, onU
                 showCheckIcon: isMultiMaterialToggled,
                 id: "toggle-multi-material",
             },
+            {
+                // Identifiers are hidden by default; this is how someone
+                // debugging gets them back without them being on show for
+                // everyone else.
+                isShown: true,
+                content: "Developer info",
+                onClick: (_action, _event) => {
+                    setShowDeveloperInfo((isShown) => !isShown);
+                },
+                showCheckIcon: showDeveloperInfo,
+                id: "toggle-developer-info",
+            },
         ];
     }, [
         adjustable,
@@ -177,6 +191,7 @@ export function Workflow({ workflow, metaProperties = EMPTY_META_PROPERTIES, onU
         isRelaxationToggled,
         toggleIsMultiMaterial,
         toggleRelaxation,
+        showDeveloperInfo,
     ]);
     const getActions = useCallback(() => {
         return [...getDefaultActions(), ...extraActions];
@@ -194,11 +209,12 @@ export function Workflow({ workflow, metaProperties = EMPTY_META_PROPERTIES, onU
         return {
             isShown: Boolean(editable && isStandalone),
             isLoading,
+            isDirty,
             onSave: (omitRedirect) => {
                 onSave === null || onSave === void 0 ? void 0 : onSave(omitRedirect !== null && omitRedirect !== void 0 ? omitRedirect : false);
             },
         };
-    }, [editable, isLoading, isStandalone, onSave]);
+    }, [editable, isLoading, isStandalone, onSave, isDirty]);
     const getDropdownProps = useCallback(() => {
         return {
             isShown: true,
@@ -207,5 +223,5 @@ export function Workflow({ workflow, metaProperties = EMPTY_META_PROPERTIES, onU
             buttonContent: "Select Workflow Actions",
         };
     }, [getActions]);
-    return (_jsx(Box, { "data-workflow-render-generation": workflowRenderGeneration, children: _jsx(WorkflowDefaultLayout, { entity: workflow, unitIndex: unitIndex, isMap: isMap, materials: materials, materialsIndex: materialsIndex, materialsSet: materialsSet, jobHasParent: jobHasParent, editable: Boolean(editable), adjustable: Boolean(adjustable), isLoading: isLoading, showHeader: showHeader, isHeaderCompact: isHeaderCompact, isStandalone: isStandalone, isMethodDataLoading: isMethodDataLoading, isSetPublicVisible: isSetPublicVisible, showMetadata: showMetadata, showHistory: showHistory, workflowHistory: workflowHistory, iconCls: iconCls, onNameUpdate: onNameUpdate, onUpdateTags: onUpdateTags, onUnitAdd: onUnitAdd, onUnitAddSubworkflowFromConfig: onUnitAddSubworkflowFromConfig, onUnitUpdate: onUnitUpdate, onSubworkflowUnitUpdate: onSubworkflowUnitUpdate, onMapWorkflowUpdate: onMapWorkflowUpdate, onUnitSelect: onUnitSelect, onUpdateUnitIndex: onUpdateUnitIndex, handleUnitRemove: handleUnitRemove, onUnitNameUpdate: onUnitNameUpdate, areWorkflowContentExpanded: areWorkflowContentExpanded, toggleExpandWorkflowContent: toggleExpandWorkflowContent, headerStatusCls: headerStatusCls, getPagerProps: getPagerProps, getSaveBtnProps: getSaveBtnProps, getDropdownProps: getDropdownProps, isDescriptionEditable: isDescriptionEditable, onDescriptionUpdate: onDescriptionUpdate, dialogs: dialogs, metaProperties: metaProperties, onMaterialSwitch: onMaterialSwitch, onOutputUpdateRequest: onOutputUpdateRequest, accountUsers: accountUsers, accountUsersIsLoading: accountUsersIsLoading, profile: profile, publicAccount: publicAccount, clusters: clusters, templates: templates, createMetaProperty: createMetaProperty, jobProperties: jobProperties, hideComputeSubTab: hideComputeSubTab, subworkflowActiveTabIndexById: subworkflowActiveTabIndexById, onSubworkflowActiveTabIndexChange: onSubworkflowActiveTabIndexChange }) }));
+    return (_jsx(WoveDisplayOptionsProvider, { showDeveloperInfo: showDeveloperInfo, showStatus: showUnitStatus, children: _jsx(Box, { "data-workflow-render-generation": workflowRenderGeneration, children: _jsx(WorkflowDefaultLayout, { entity: workflow, unitIndex: unitIndex, isMap: isMap, materials: materials, materialsIndex: materialsIndex, materialsSet: materialsSet, jobHasParent: jobHasParent, editable: Boolean(editable), adjustable: Boolean(adjustable), isLoading: isLoading, showHeader: showHeader, isHeaderCompact: isHeaderCompact, isStandalone: isStandalone, isMethodDataLoading: isMethodDataLoading, isSetPublicVisible: isSetPublicVisible, showMetadata: showMetadata, showHistory: showHistory, workflowHistory: workflowHistory, iconCls: iconCls, onNameUpdate: onNameUpdate, onUpdateTags: onUpdateTags, onUnitAdd: onUnitAdd, onUnitAddSubworkflowFromConfig: onUnitAddSubworkflowFromConfig, onUnitUpdate: onUnitUpdate, onSubworkflowUnitUpdate: onSubworkflowUnitUpdate, onMapWorkflowUpdate: onMapWorkflowUpdate, onUnitSelect: onUnitSelect, onUpdateUnitIndex: onUpdateUnitIndex, handleUnitRemove: handleUnitRemove, onUnitNameUpdate: onUnitNameUpdate, areWorkflowContentExpanded: areWorkflowContentExpanded, toggleExpandWorkflowContent: toggleExpandWorkflowContent, headerStatusCls: headerStatusCls, getPagerProps: getPagerProps, getSaveBtnProps: getSaveBtnProps, getDropdownProps: getDropdownProps, isDescriptionEditable: isDescriptionEditable, onDescriptionUpdate: onDescriptionUpdate, dialogs: dialogs, metaProperties: metaProperties, onMaterialSwitch: onMaterialSwitch, onOutputUpdateRequest: onOutputUpdateRequest, accountUsers: accountUsers, accountUsersIsLoading: accountUsersIsLoading, profile: profile, publicAccount: publicAccount, clusters: clusters, templates: templates, createMetaProperty: createMetaProperty, jobProperties: jobProperties, hideComputeSubTab: hideComputeSubTab, subworkflowActiveTabIndexById: subworkflowActiveTabIndexById, onSubworkflowActiveTabIndexChange: onSubworkflowActiveTabIndexChange }) }) }));
 }

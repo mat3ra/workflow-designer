@@ -15,6 +15,8 @@ export type WorkflowProps = {
     onUpdateTags?: (tags: string[]) => void;
     extraActions?: DropdownAction[];
     onSave?: (omitRedirect: boolean) => void;
+    /** Unsaved changes exist; surfaces on the Save affordance. */
+    isDirty?: boolean;
     onNameUpdate?: (name: string) => void;
     iconCls?: string;
     onUnitAdd?: (unitType: UnitType, prepend?: boolean, unitIndex?: number) => void;
@@ -67,6 +69,13 @@ export type WorkflowProps = {
     /** Refined job properties for unit modals in job designer; optional elsewhere. */
     jobProperties?: WorkflowDesignerProperty[];
     /**
+     * Shows unit status on cards and flowchart nodes. Off by default: in the
+     * designer nothing has run, so every unit reports a meaningless "idle".
+     * Hosts that render a workflow which is actually executing — the job
+     * designer, once a job leaves draft — turn it on.
+     */
+    showUnitStatus?: boolean;
+    /**
      * Hides each subworkflow's own Compute tab. Set it when the host renders a
      * compute surface of its own, as the job designer does — otherwise the same
      * screen offers two things called "Compute" and the reader has to guess
@@ -74,6 +83,6 @@ export type WorkflowProps = {
      */
     hideComputeSubTab?: boolean;
 };
-export declare function Workflow({ workflow, metaProperties, onUpdate, onOutputUpdateRequest, onUpdateTags, extraActions, onSave, onNameUpdate, iconCls, onUnitAdd, onUnitAddSubworkflowFromConfig, onUnitRemove, onUnitUpdate, onSubworkflowUnitUpdate, materials, materialsIndex, jobHasParent, onMaterialSwitch, showHeaderPager, onHeaderPagerUpdate, dialogs, createMetaProperty, accountUsers, accountUsersIsLoading, profile, publicAccount, clusters, templates, isStandalone, isHeaderCompact, editable, adjustable, isLoading, showHeader, isMethodDataLoading, materialsSet, isMap, isSetPublicVisible, showMetadata, showHistory, workflowHistory, onIsMultiMaterialChanged, onRender, renderAtJobLevel, workflowRenderGeneration, isDescriptionEditable, jobProperties, hideComputeSubTab, }: WorkflowProps): React.JSX.Element;
+export declare function Workflow({ workflow, metaProperties, onUpdate, onOutputUpdateRequest, onUpdateTags, extraActions, onSave, isDirty, onNameUpdate, iconCls, onUnitAdd, onUnitAddSubworkflowFromConfig, onUnitRemove, onUnitUpdate, onSubworkflowUnitUpdate, materials, materialsIndex, jobHasParent, onMaterialSwitch, showHeaderPager, onHeaderPagerUpdate, dialogs, createMetaProperty, accountUsers, accountUsersIsLoading, profile, publicAccount, clusters, templates, isStandalone, isHeaderCompact, editable, adjustable, isLoading, showHeader, isMethodDataLoading, materialsSet, isMap, isSetPublicVisible, showMetadata, showHistory, workflowHistory, onIsMultiMaterialChanged, onRender, renderAtJobLevel, workflowRenderGeneration, isDescriptionEditable, jobProperties, hideComputeSubTab, showUnitStatus, }: WorkflowProps): React.JSX.Element;
 export {};
 //# sourceMappingURL=Workflow.d.ts.map

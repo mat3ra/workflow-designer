@@ -37,17 +37,17 @@ export type SubworkflowProps = {
 };
 export declare const TAB_NAVIGATION_CONFIG: {
     readonly overview: {
-        readonly itemName: "Overview";
+        readonly itemName: "Units";
         readonly className: "";
         readonly href: "sw-overview";
     };
     readonly importantSettings: {
-        readonly itemName: "Important settings";
+        readonly itemName: "Settings";
         readonly className: "";
         readonly href: "sw-important-settings";
     };
     readonly detailedView: {
-        readonly itemName: "Detailed view";
+        readonly itemName: "Outputs";
         readonly className: "";
         readonly href: "sw-detailed-view";
     };

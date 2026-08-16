@@ -48,6 +48,8 @@ type WorkflowDesignerContainerBaseProps = {
     getDefaultComputeConfig: (cluster?: unknown) => Record<string, unknown>;
     generateEntityId: () => string;
     openDocumentationDialog?: (searchText: string) => void;
+    /** Fires when unsaved-changes state flips; lets the shell mark Save / guard navigation. */
+    onDirtyChange?: (isDirty: boolean) => void;
 };
 export type WorkflowDesignerContainerProps = WorkflowDesignerContainerBaseProps;
 export default function WorkflowDesignerContainer(containerProps: WorkflowDesignerContainerProps): React.JSX.Element;
