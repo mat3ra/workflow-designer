@@ -123,7 +123,7 @@ export function BaseUnit(props: BaseUnitProps) {
     const unitData = unit.toJSON();
 
     const handleUnitKeyUpdate = (key: string, value: unknown) => {
-        unit.setProp(key, value);
+        unit.setProp(key as Parameters<typeof unit.setProp>[0], value as Parameters<typeof unit.setProp>[1]);
         // TODO: onUpdate should only be called on close to avoid rerendering all execution units on every keypress
         onUpdate(unit.toJSON());
     };
