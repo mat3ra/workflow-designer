@@ -18,7 +18,7 @@ import {
     FieldDefaultsContext,
     ImportantSettingsFieldTemplate,
 } from "./ImportantSettingsFieldTemplate";
-import { mergeUiSchemaWithDefaultFieldStyles } from "./importantSettingsFormUtils";
+import { mergeUiSchemaWithDefaultFieldStyles, withFieldTitles } from "./importantSettingsFormUtils";
 import {
     type SettingsGroup,
     getDefaultData,
@@ -107,7 +107,7 @@ function SettingsGroupCard({ group, onContextChanged }: SettingsGroupCardProps) 
         const providerUiSchema = (firstProvider as any).uiSchema;
         return group.scopeKey === "subworkflow"
             ? mergeUiSchemaWithDefaultFieldStyles(providerUiSchema, firstProvider.name)
-            : providerUiSchema;
+            : withFieldTitles(providerUiSchema, firstProvider.name);
     }, [firstProvider, group.scopeKey, schema]);
 
     return (

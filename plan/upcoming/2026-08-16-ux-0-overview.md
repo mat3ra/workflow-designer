@@ -14,7 +14,7 @@
 |---|---------|-------|
 | 1 | Quick wins | **done** — the ten items landed here and in [wove#12](https://github.com/mat3ra/wove/pull/12) |
 | 2 | Design language | not started — token *definition* is unblocked, adoption waits on brand palette sign-off |
-| 3 | Important settings | **mostly done** — 1.1–1.4 and 1.6 built; 1.5 done for the k-path, k-grid needs only field labels |
+| 3 | Important settings | **done** — 1.1–1.6, including the k-path chain editor and the path drawn on the zone |
 | 4 | Input editor | not started — largely `@mat3ra/ave`, which this repo does not yet attach |
 | 5 | Shell relayout | not started — the largest portion, and the one the edge "+" of portion 6 waits on |
 | 6 | Add flows | **done** for the classic layout — unit palette and step library; "My subworkflows" waits on §8's open question |

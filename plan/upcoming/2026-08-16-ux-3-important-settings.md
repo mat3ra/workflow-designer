@@ -1,7 +1,7 @@
 # SOF-8024 Portion 3 — Important Settings Rebuild
 
 - **Parent:** [2026-08-16-ux-0-overview.md](./2026-08-16-ux-0-overview.md) · **Ticket:** [SOF-8024](https://mat3ra.atlassian.net/browse/SOF-8024) ·
-  **Status:** mostly built (see below); k-grid field labels remain
+  **Status:** built (see below)
 - **Updated:** 2026-08-17
 - **Scope:** rebuild the Settings (today "Important settings") tab per Mockup B, plus
   Compute form completion (Mockup E). Fixes W5 and closes W6.
@@ -135,9 +135,23 @@ bulk silicon material.
 Locally, `ipath` and `igrid` also had no entry in `PROVIDER_TITLES`, so a card read "Ipath";
 both now have titles and engine keywords.
 
-Still open in this portion: the k-grid card renders as labelled dimensions/shifts columns and
-needs no new widget, but leaks two raw schema names (`gridMetricValue`, `preferGridMetric`)
-that want entries in `PROVIDER_FIELD_LABELS`.
+### K-grid labels (2026-08-17)
+
+The grid cards needed no new widget — dimensions and shifts already render as labelled columns
+— but two fields showed their schema names, `gridMetricValue` and `preferGridMetric`.
+`PointsGridFormDataProvider` does title them, through a `dependencies.gridMetricType.oneOf`
+branch in its `jsonSchemaPatchConfig`, and **esse drops the whole `dependencies` key**: the same
+silent skip that hides the cutoff defaults, confirmed directly against
+`getPatchedSchemaById`, which also drops the sibling `gridMetricType.default` from the very same
+patch config. (Patches that spell the path out in full — `PointsPathFormDataProvider`'s
+`"items.properties.point"` — do land, which is what makes the k-path enum work.) So the titles
+now come from `PROVIDER_FIELD_LABELS` via a new `withFieldTitles`, which adds titles to named
+fields without disturbing the layout the unit-scoped forms rely on. `preferGridMetric` reads
+"Derive dimensions from the metric" rather than wode's intended "prefer KPPRA", since that is
+what setting it does: the dimensions are computed and their inputs go read-only.
+
+With that, this portion is complete apart from anything the upstream fixes would let us
+simplify.
 
 - **Contract to preserve:** provider API (`provider.jsonSchema`, `uiSchema`, `getData()`,
   `setData()`, `setIsEdited()`), `unit.savePersistentContext()`, and the

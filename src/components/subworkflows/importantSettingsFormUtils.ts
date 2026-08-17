@@ -32,12 +32,54 @@ function defaultFieldStylesForMerge(): Record<string, unknown> {
  * Keyed by provider `name`, then schema field. Units are engine-specific (Ry for Quantum
  * ESPRESSO), which the provider's own description already states, so labels stay unitless.
  */
+const POINTS_GRID_FIELD_LABELS: Record<string, string> = {
+    dimensions: "Dimensions",
+    shifts: "Shifts",
+    reciprocalVectorRatios: "Reciprocal vector ratios",
+    gridMetricValue: "Grid metric value",
+    // What the flag does, rather than wode's "prefer KPPRA": with it set, the dimensions are
+    // computed from the metric instead of typed in, and their inputs go read-only.
+    preferGridMetric: "Derive dimensions from the metric",
+};
+
 const PROVIDER_FIELD_LABELS: Record<string, Record<string, string>> = {
     cutoffs: {
         wavefunction: "Wavefunction cutoff",
         density: "Charge density cutoff",
     },
+    kgrid: POINTS_GRID_FIELD_LABELS,
+    qgrid: POINTS_GRID_FIELD_LABELS,
+    igrid: POINTS_GRID_FIELD_LABELS,
 };
+
+/**
+ * Adds titles to named fields without touching the provider's own layout — for the unit-scoped
+ * forms (grids), which need RJSF's labelled layout and only lack the labels themselves.
+ *
+ * `PointsGridFormDataProvider` does supply titles, but through a `dependencies` branch in its
+ * `jsonSchemaPatchConfig`, and esse's `applyPatchWithDotNotation` drops the whole `dependencies`
+ * key (as it drops the sibling `gridMetricType.default`) because neither resolves against the
+ * schema root — the same silent-skip that hides the cutoff defaults. Until wode spells those
+ * paths out, the labels come from here.
+ */
+export function withFieldTitles(
+    uiSchema: UiSchema | undefined,
+    providerName?: string,
+): UiSchema | undefined {
+    const fieldLabels = providerName && PROVIDER_FIELD_LABELS[providerName];
+    if (!fieldLabels) {
+        return uiSchema;
+    }
+    const merged: UiSchema = { ...(uiSchema ?? {}) };
+    Object.entries(fieldLabels).forEach(([field, title]) => {
+        const existing = merged[field];
+        merged[field] =
+            existing && typeof existing === "object" && !Array.isArray(existing)
+                ? { ...(existing as Record<string, unknown>), "ui:title": title }
+                : { "ui:title": title };
+    });
+    return merged;
+}
 
 /**
  * Shallow-merges default layout into each top-level entry of `uiSchema`, matching
