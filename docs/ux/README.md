@@ -24,6 +24,7 @@ Captures of what has been built so far, alongside the originals:
 | [`2026-08-17-layout-classic.jpg`](./current-state/2026-08-17-layout-classic.jpg) vs [`-studio.jpg`](./current-state/2026-08-17-layout-studio.jpg) | W1: the duplicated flowchart column replaced by a steps rail, behind `layoutVariant="studio"` |
 | [`2026-08-17-settings-kpath.jpg`](./current-state/2026-08-17-settings-kpath.jpg) | W5: scoped setting cards, and the k-path as a chain with the path drawn on the Brillouin zone |
 | [`2026-08-17-step-library.jpg`](./current-state/2026-08-17-step-library.jpg) | W8: adding a step by picking one, instead of pasting JSON |
+| [`2026-08-17-input-variables.jpg`](./current-state/2026-08-17-input-variables.jpg) | W4: the context a template renders with, grouped by origin, and a typo named on its line |
 
 Portion status lives in the plan overview's §0 table.
 

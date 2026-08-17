@@ -15,7 +15,7 @@
 | 1 | Quick wins | **done** — the ten items landed here and in [wove#12](https://github.com/mat3ra/wove/pull/12) |
 | 2 | Design language | not started — token *definition* is unblocked, adoption waits on brand palette sign-off |
 | 3 | Important settings | **done** — 1.1–1.6, including the k-path chain editor and the path drawn on the zone |
-| 4 | Input editor | **started** — 1.5 (internals demoted to Advanced) built via [ave#8](https://github.com/mat3ra/ave/pull/8); 1.1–1.4 remain |
+| 4 | Input editor | **mostly done** — 1.3–1.5 built via [ave#8](https://github.com/mat3ra/ave/pull/8); 1.1–1.2 (editor layout, Jinja span colours) remain |
 | 5 | Shell relayout | **in progress** — `layoutVariant` rollout and the steps rail built; canvas, inspector and header consolidation remain |
 | 6 | Add flows | **done** for the classic layout — unit palette and step library; "My subworkflows" waits on §8's open question |
 
@@ -24,7 +24,7 @@ Upstream, opened out of this work and not yet released:
 [move#5](https://github.com/mat3ra/move/pull/5) (the zone renderer),
 [wove#12](https://github.com/mat3ra/wove/pull/12) (card flags, property names, zoom floor,
 lattice pass-through, and the zone for all five points-path providers),
-[ave#8](https://github.com/mat3ra/ave/pull/8) (execution order demoted to Advanced). Until wove
+[ave#8](https://github.com/mat3ra/ave/pull/8) (execution order demoted to Advanced; render check and variables panel). Until wove
 publishes, this repo keeps a local copy of the zone geometry and renderer, and cannot yet pass
 `showStatus={false}`; until ave publishes, the Advanced section is not in a released build.
 
