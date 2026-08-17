@@ -10,6 +10,11 @@ interface Props {
     availableUnits: AnySubworkflowUnit[];
     label: string;
     onChange: (value: string) => void;
+    /**
+     * Show the raw flowchart id beside the selector. Off by default: it is the same value the
+     * selector already holds, spelled as a UUID, and it took half the width of the unit form.
+     */
+    showFlowchartId?: boolean;
 }
 
 export default function UnitPointerField({
@@ -17,6 +22,7 @@ export default function UnitPointerField({
     availableUnits,
     label,
     onChange,
+    showFlowchartId = false,
 }: Props) {
     const options = useMemo(
         () => [
@@ -56,17 +62,19 @@ export default function UnitPointerField({
             >
                 {optionsList}
             </TextField>
-            <TextField
-                type="text"
-                variant="outlined"
-                fullWidth
-                label="FlowchartId"
-                className={`${s.slugify(label)}-flowchartid`}
-                value={selectedValue || "None"}
-                disabled
-                size="small"
-                InputLabelProps={{ shrink: true }}
-            />
+            {showFlowchartId ? (
+                <TextField
+                    type="text"
+                    variant="outlined"
+                    fullWidth
+                    label="FlowchartId"
+                    className={`${s.slugify(label)}-flowchartid`}
+                    value={selectedValue || "None"}
+                    disabled
+                    size="small"
+                    InputLabelProps={{ shrink: true }}
+                />
+            ) : null}
         </Stack>
     );
 }

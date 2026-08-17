@@ -1,7 +1,7 @@
 # Workflow Designer UX Improvements — Overview (main plan)
 
 - **Ticket:** [SOF-8024](https://mat3ra.atlassian.net/browse/SOF-8024)
-- **Status:** in progress — portions 1, 3 and 6 built on this branch, 5 started; see §0.
+- **Status:** in progress — portions 1, 3 and 6 built on this branch, 4 and 5 started; see §0.
 - **Updated:** 2026-08-17
 - **Review inputs:** [`docs/ux/README.md`](../../docs/ux/README.md) (issue inventory
   W1–W12), [`docs/ux/mockups.html`](../../docs/ux/mockups.html) (Mockups A–E),
@@ -15,7 +15,7 @@
 | 1 | Quick wins | **done** — the ten items landed here and in [wove#12](https://github.com/mat3ra/wove/pull/12) |
 | 2 | Design language | not started — token *definition* is unblocked, adoption waits on brand palette sign-off |
 | 3 | Important settings | **done** — 1.1–1.6, including the k-path chain editor and the path drawn on the zone |
-| 4 | Input editor | not started — largely `@mat3ra/ave`, which this repo does not yet attach |
+| 4 | Input editor | **started** — 1.5 (internals demoted to Advanced) built via [ave#8](https://github.com/mat3ra/ave/pull/8); 1.1–1.4 remain |
 | 5 | Shell relayout | **in progress** — `layoutVariant` rollout and the steps rail built; canvas, inspector and header consolidation remain |
 | 6 | Add flows | **done** for the classic layout — unit palette and step library; "My subworkflows" waits on §8's open question |
 
@@ -23,8 +23,10 @@ Upstream, opened out of this work and not yet released:
 [made#295](https://github.com/mat3ra/made/pull/295) (`ReciprocalLattice.brillouinZone`),
 [move#5](https://github.com/mat3ra/move/pull/5) (the zone renderer),
 [wove#12](https://github.com/mat3ra/wove/pull/12) (card flags, property names, zoom floor,
-lattice pass-through). Until wove publishes, this repo keeps a local copy of the zone geometry
-and renderer, and cannot yet pass `showStatus={false}`.
+lattice pass-through, and the zone for all five points-path providers),
+[ave#8](https://github.com/mat3ra/ave/pull/8) (execution order demoted to Advanced). Until wove
+publishes, this repo keeps a local copy of the zone geometry and renderer, and cannot yet pass
+`showStatus={false}`; until ave publishes, the Advanced section is not in a released build.
 
 ## 1. Background
 
