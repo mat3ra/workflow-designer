@@ -23,6 +23,8 @@ export interface WorkflowUnitPanelProps extends WorkflowDefaultLayoutProps {
     unit: NonNullable<WodeWorkflow["unitInstances"][number]>;
     subworkflow?: WodeSubworkflow;
     mapWorkflow?: WodeWorkflow;
+    /** Passed to {@link SubworkflowHeader}; false where the shell already names the step. */
+    showStepIdentity?: boolean;
 }
 
 /**
@@ -37,6 +39,7 @@ export function WorkflowUnitPanel(props: WorkflowUnitPanelProps) {
         unit,
         subworkflow,
         mapWorkflow,
+        showStepIdentity,
         entity,
         unitIndex,
         materials,
@@ -103,6 +106,7 @@ export function WorkflowUnitPanel(props: WorkflowUnitPanelProps) {
                         materialsIndex={materialsIndex}
                         materialsSet={materialsSet}
                         jobHasParent={jobHasParent}
+                        showStepIdentity={showStepIdentity}
                     />
                     {/*
                         key={subworkflow.id} remounts when the user picks another flowchart branch.

@@ -9,8 +9,8 @@
 
 ## Status (2026-08-17)
 
-Items **1.5 (rollout)** and **1.1 (steps rail)** are built on `claude/ux-improvements-msn5h2`;
-1.2 (canvas) and 1.3 (inspector) are not.
+Items **1.5 (rollout)**, **1.1 (steps rail)** and part of **1.4 (header consolidation)** are
+built on `claude/ux-improvements-msn5h2`; 1.2 (canvas) and 1.3 (inspector) are not.
 
 **Rollout first, deliberately.** `layoutVariant: "classic" | "studio"` is plumbed
 `WorkflowDesignerContainer` → `Workflow` → the layout component, defaulting to `classic`, so
@@ -45,10 +45,17 @@ Two bugs worth recording, both found by exercising the rail rather than reading 
 - The rail's steps must **not** be memoized on the workflow entity: wode mutates the workflow in
   place, so its identity survives a rename and a memo kept serving the old names.
 
+**Header consolidation (1.4), partly.** With the rail naming every step and switching between
+them, the panel header was rendering the same name a third time (and a step pager the rail makes
+redundant). `SubworkflowHeader` takes `showStepIdentity`, default true so the classic layout is
+unchanged; the studio layout passes false and gets a compact header carrying the step's actions
+and, in the space the name freed, what the step actually computes with —
+`espresso · DFT/GGA/PBE · pseudopotential/us`. Not done in 1.4: the validation chip that selects
+the offending unit (the full `WorkflowValidationAlert` still renders), and the breadcrumb.
+
 **Not built:** 1.2 (canvas node cards, edge "+"), 1.3 (the selection-driven inspector, which
-needs portion 4's editor for its Input tab), 1.4 (header consolidation — the workflow name and
-the step name still both render when a single-step workflow shares its name), and drag-reorder,
-which has no container callback today: `onUpdateUnitIndex` moves the selection, not the order.
+needs portion 4's editor for its Input tab), the rest of 1.4 above, and drag-reorder, which has
+no container callback today: `onUpdateUnitIndex` moves the selection, not the order.
 
 ## 1. Work items
 

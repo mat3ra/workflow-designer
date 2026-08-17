@@ -140,6 +140,9 @@ export function WorkflowStudioLayout(props: WorkflowDefaultLayoutProps) {
                         unit={unit}
                         subworkflow={subworkflow}
                         mapWorkflow={mapWorkflow}
+                        // The rail names every step and switches between them, so the panel
+                        // header would be the third render of the same name.
+                        showStepIdentity={false}
                     />
                 </Box>
             </Box>
