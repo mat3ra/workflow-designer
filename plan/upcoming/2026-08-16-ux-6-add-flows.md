@@ -1,8 +1,8 @@
 # SOF-8024 Portion 6 — Add Flows (Unit Palette & Step Library)
 
 - **Parent:** [2026-08-16-ux-0-overview.md](./2026-08-16-ux-0-overview.md) · **Ticket:** [SOF-8024](https://mat3ra.atlassian.net/browse/SOF-8024) ·
-  **Status:** upcoming
-- **Updated:** 2026-08-16
+  **Status:** built for the classic layout (see below); edge "+" waits on portion 5
+- **Updated:** 2026-08-17
 - **Scope:** replace the hidden add flows per Mockup C. Fixes W8. Today: units via
   "Select Unit Actions ▾ → Add Unit" (`UnitsFlowchartContainer` toolbar) and
   `src/components/units/UnitTypeSelect.tsx`; subworkflows via the header kebab ("Add

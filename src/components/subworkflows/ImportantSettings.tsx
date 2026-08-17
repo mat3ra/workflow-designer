@@ -25,6 +25,8 @@ import {
     getScopeIndex,
     getSettingsGroups,
 } from "./importantSettingsGroups";
+import { isPointsPathSchema } from "./kPath";
+import KPathField from "./KPathField";
 
 interface ImportantSettingsProps {
     subworkflow: Subworkflow;
@@ -90,6 +92,24 @@ function SettingsGroupCard({ group, onContextChanged }: SettingsGroupCardProps) 
         [defaultData, formData, onResetField],
     );
 
+    const schema = firstProvider.jsonSchema;
+    /*
+     * The compact field styles suit the subworkflow-wide panels (a couple of scalars each).
+     * Unit-scoped providers — k-grids, k-paths — carry their own uiSchema and need RJSF's
+     * labelled layout, so they are passed through. Points paths get a chain editor instead of
+     * the generated array form; `ui:field` at the root also drops the schema's own title and
+     * description, which only restated the card header.
+     */
+    const uiSchema = useMemo(() => {
+        if (isPointsPathSchema(schema)) {
+            return { "ui:field": KPathField };
+        }
+        const providerUiSchema = (firstProvider as any).uiSchema;
+        return group.scopeKey === "subworkflow"
+            ? mergeUiSchemaWithDefaultFieldStyles(providerUiSchema, firstProvider.name)
+            : providerUiSchema;
+    }, [firstProvider, group.scopeKey, schema]);
+
     return (
         <Paper
             variant="outlined"
@@ -131,29 +151,16 @@ function SettingsGroupCard({ group, onContextChanged }: SettingsGroupCardProps) 
 
             <FieldDefaultsContext.Provider value={fieldDefaults}>
                 <RJSForm
-                    schema={firstProvider.jsonSchema}
+                    schema={schema}
                     validator={ajv}
                     templates={{ FieldTemplate: ImportantSettingsFieldTemplate }}
-                    uiSchema={
-                        /*
-                         * The compact field styles suit the subworkflow-wide panels (a couple of
-                         * scalars each). Unit-scoped providers — k-grids, k-paths — carry their own
-                         * uiSchema and need RJSF's labelled layout, so they are passed through.
-                         */
-                        group.scopeKey === "subworkflow"
-                            ? mergeUiSchemaWithDefaultFieldStyles(
-                                  (firstProvider as any).uiSchema,
-                                  firstProvider.name,
-                              )
-                            : (firstProvider as any).uiSchema
-                    }
+                    uiSchema={uiSchema}
                     formData={formData}
                     experimental_defaultFormStateBehavior={{
                         mergeDefaultsIntoFormData: "useDefaultIfFormDataUndefined",
                     }}
                     onChange={({ formData }: { formData?: unknown }) => {
-                        const rootSchema = firstProvider.jsonSchema;
-                        if (!ajv.isValid(rootSchema, formData, rootSchema)) {
+                        if (!ajv.isValid(schema, formData, schema)) {
                             return;
                         }
                         applyToGroup(formData, true);

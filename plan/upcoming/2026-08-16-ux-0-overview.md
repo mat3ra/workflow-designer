@@ -1,12 +1,30 @@
 # Workflow Designer UX Improvements — Overview (main plan)
 
 - **Ticket:** [SOF-8024](https://mat3ra.atlassian.net/browse/SOF-8024)
-- **Status:** upcoming — direction agreed via the UX review; nothing built yet.
-- **Updated:** 2026-08-16
+- **Status:** in progress — portions 1, 3 and 6 built on this branch; see §0.
+- **Updated:** 2026-08-17
 - **Review inputs:** [`docs/ux/README.md`](../../docs/ux/README.md) (issue inventory
   W1–W12), [`docs/ux/mockups.html`](../../docs/ux/mockups.html) (Mockups A–E),
   [`docs/ux/current-state/`](../../docs/ux/current-state/) (captures).
 - **Branch:** `claude/ux-improvements-msn5h2`.
+
+## 0. Progress (2026-08-17)
+
+| # | Portion | State |
+|---|---------|-------|
+| 1 | Quick wins | **done** — the ten items landed here and in [wove#12](https://github.com/mat3ra/wove/pull/12) |
+| 2 | Design language | not started — token *definition* is unblocked, adoption waits on brand palette sign-off |
+| 3 | Important settings | **mostly done** — 1.1–1.4 and 1.6 built; 1.5 done for the k-path, k-grid needs only field labels |
+| 4 | Input editor | not started — largely `@mat3ra/ave`, which this repo does not yet attach |
+| 5 | Shell relayout | not started — the largest portion, and the one the edge "+" of portion 6 waits on |
+| 6 | Add flows | **done** for the classic layout — unit palette and step library; "My subworkflows" waits on §8's open question |
+
+Upstream, opened out of this work and not yet released:
+[made#295](https://github.com/mat3ra/made/pull/295) (`ReciprocalLattice.brillouinZone`),
+[move#5](https://github.com/mat3ra/move/pull/5) (the zone renderer),
+[wove#12](https://github.com/mat3ra/wove/pull/12) (card flags, property names, zoom floor,
+lattice pass-through). Until wove publishes, this repo keeps a local copy of the zone geometry
+and renderer, and cannot yet pass `showStatus={false}`.
 
 ## 1. Background
 

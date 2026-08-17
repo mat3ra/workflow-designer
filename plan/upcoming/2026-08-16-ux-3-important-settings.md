@@ -1,8 +1,8 @@
 # SOF-8024 Portion 3 — Important Settings Rebuild
 
 - **Parent:** [2026-08-16-ux-0-overview.md](./2026-08-16-ux-0-overview.md) · **Ticket:** [SOF-8024](https://mat3ra.atlassian.net/browse/SOF-8024) ·
-  **Status:** upcoming
-- **Updated:** 2026-08-16
+  **Status:** mostly built (see below); k-grid field labels remain
+- **Updated:** 2026-08-17
 - **Scope:** rebuild the Settings (today "Important settings") tab per Mockup B, plus
   Compute form completion (Mockup E). Fixes W5 and closes W6.
 ## Status (2026-08-16)
@@ -92,9 +92,52 @@ the group's other edits intact and the group badge clears only once everything i
 default; and the Compute tab restates the selection as "Requests N cores · up to T · queue Q
 · on <cluster>" rather than leaving nodes × cores-per-node to be multiplied by eye.
 
-Still open in this portion: domain widgets for k-grid and k-path (1.5) — the k-grid already
-renders as labelled dimensions/shifts columns, so the remaining value there is the k-path
-segment-chip editor.
+### K-path chain editor and the path drawn on the zone (2026-08-17)
+
+Item 1.5 is built for the k-path. The generated array form gave a routine FCC path eleven
+identical `point` / `steps` rows — over 600px of form for a decision that is one line of
+physics — and left two things unsaid: a point's `steps` describes the leg *leaving* it (so the
+last one is read by nobody), and nothing anywhere totalled the k-points the path costs, which
+is what decides how long the run takes.
+
+The path is now a chain of chips — `Γ 10→ X 10→ W` — with the step count on each leg, insert on
+a leg, remove on a chip, and a line reading "10 legs · 101 k-points along the path". Each point
+is a `Chip` rather than a bare select plus a `✕`, because `Γ ✕ 10` reads as multiplication. The
+editing rules live in `kPath.ts` and are covered by `tests/kPath.tests.ts`; the field is bound
+through `ui:field` at the schema root, which also drops the "Points Path Data Provider Schema"
+heading and its "coordinates are derived at render time" note — both restated the card header
+or described the implementation. Matched by schema shape, so q-path and i-path providers get
+the same editor.
+
+**The path is drawn inside the Brillouin zone**, labelled at each high-symmetry point — the
+thing a per-lattice PNG could never do, and the reason the zone was worth computing rather than
+fetching. `BrillouinZone` now exposes the projection it fits the solid with, so the path lands
+in the same view; `brillouinZoneForProvider` resolves point names to cartesian coordinates via
+`ReciprocalLattice.symmetryPoints` and reads the path at render time, so editing a leg redraws
+the picture. Labels are offset radially from the zone centre because high-symmetry points sit
+in a single irreducible wedge and a fixed offset stacks them on top of one another.
+
+Verified across all 55 standata workflows: 12 render the chain editor, 8 of them draw the path
+on the zone, no page errors. On the FCC default, 11 chips → edit a leg → 131 k-points and the
+group badge turns modified → remove a point → 9 legs → insert → 10 legs → Reset → 101.
+
+**Two upstream findings from that sweep.** First, wove's
+`ExtraImportantSettingsByContextProvider` allowlists `["kpath", "qpath", "explicitKPath"]` by
+name, so `ipath` and `explicitKPath2PIBA` — the other two subclasses of the same
+`PointsPathFormDataProvider` — get no zone at all, which is why Phonon Dispersions and the GW
+band-structure workflows show a path with no picture. (The allowlist is by name for a good
+documented reason: `instanceof` fails across the Meteor-compiled copy of wode. Matching the
+schema shape, as `kPath.ts` does, avoids both problems.) Second, and unrelated,
+**pre-existing and reproduced with these changes stashed**: selecting "Valence Band Offset (2D)"
+blanks the demo with `(unknown path)`, thrown while building the workflow against the default
+bulk silicon material.
+
+Locally, `ipath` and `igrid` also had no entry in `PROVIDER_TITLES`, so a card read "Ipath";
+both now have titles and engine keywords.
+
+Still open in this portion: the k-grid card renders as labelled dimensions/shifts columns and
+needs no new widget, but leaks two raw schema names (`gridMetricValue`, `preferGridMetric`)
+that want entries in `PROVIDER_FIELD_LABELS`.
 
 - **Contract to preserve:** provider API (`provider.jsonSchema`, `uiSchema`, `getData()`,
   `setData()`, `setIsEdited()`), `unit.savePersistentContext()`, and the

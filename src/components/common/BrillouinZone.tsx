@@ -10,6 +10,12 @@ import {
     computeBrillouinZoneFacesFromReciprocalVectors,
 } from "./brillouinZoneGeometry";
 
+/** A leg of the k-path, in the same cartesian reciprocal units as the zone's own vectors. */
+export interface BrillouinZonePathPoint {
+    point: string;
+    coordinates: Vector3;
+}
+
 export interface BrillouinZoneProps {
     /**
      * Reciprocal vectors of the material's own lattice
@@ -22,13 +28,17 @@ export interface BrillouinZoneProps {
     /** Web-app asset path wove derives from the lattice; used only as a last fallback. */
     imgSrc?: string;
     description?: string;
+    /** The k-path currently being edited, drawn inside the zone and labelled at each point. */
+    path?: BrillouinZonePathPoint[];
 }
 
 /** Fixed three-quarter view; the zone is a static illustration, not an interactive scene. */
 const VIEW_YAW = Math.PI / 5;
 const VIEW_PITCH = Math.PI / 7;
-const SIZE = 220;
-const PADDING = 12;
+const SIZE = 240;
+const PADDING = 20;
+/** How far a k-point's label sits from its marker, radially outward from the zone centre. */
+const LABEL_OFFSET = 10;
 
 interface ProjectedPoint {
     x: number;
@@ -56,7 +66,17 @@ interface ProjectedFace {
     shade: number;
 }
 
-function projectFaces(faces: BrillouinZoneFace[]): ProjectedFace[] {
+interface Scene {
+    faces: ProjectedFace[];
+    /** Maps any point of reciprocal space into the same view the zone was drawn in. */
+    toScreen: (vector: Vector3) => { x: number; y: number };
+}
+
+/**
+ * Fits the zone to the viewport once and hands the same transform back, so anything else drawn
+ * in reciprocal space — the k-path, its labels — lands where the zone puts it.
+ */
+function buildScene(faces: BrillouinZoneFace[]): Scene {
     const projectedByFace = faces.map((face) => face.vertices.map(project));
     const all = projectedByFace.flat();
     const minX = Math.min(...all.map((p) => p.x));
@@ -68,28 +88,27 @@ function projectFaces(faces: BrillouinZoneFace[]): ProjectedFace[] {
     const offsetX = PADDING + (SIZE - 2 * PADDING - (maxX - minX) * scaleFactor) / 2;
     const offsetY = PADDING + (SIZE - 2 * PADDING - (maxY - minY) * scaleFactor) / 2;
 
-    return (
-        projectedByFace
-            .map((projected, index) => {
-                const points = projected
-                    .map(
-                        (p) =>
-                            `${(offsetX + (p.x - minX) * scaleFactor).toFixed(2)},${(
-                                offsetY +
-                                (p.y - minY) * scaleFactor
-                            ).toFixed(2)}`,
-                    )
-                    .join(" ");
-                const depth =
-                    projected.reduce((sum, p) => sum + p.depth, 0) / (projected.length || 1);
-                // Lambert-ish shading from a light above and to the viewer's left.
-                const [nx, ny, nz] = faces[index].normal;
-                const shade = Math.max(0, nx * -0.3 + ny * 0.55 + nz * 0.78);
-                return { points, depth, shade };
-            })
-            // Painter's algorithm: the zone is convex, so far-to-near ordering hides back faces.
-            .sort((left, right) => left.depth - right.depth)
-    );
+    const place = (p: ProjectedPoint) => ({
+        x: offsetX + (p.x - minX) * scaleFactor,
+        y: offsetY + (p.y - minY) * scaleFactor,
+    });
+
+    const projectedFaces = projectedByFace
+        .map((projected, index) => {
+            const points = projected
+                .map(place)
+                .map((p) => `${p.x.toFixed(2)},${p.y.toFixed(2)}`)
+                .join(" ");
+            const depth = projected.reduce((sum, p) => sum + p.depth, 0) / (projected.length || 1);
+            // Lambert-ish shading from a light above and to the viewer's left.
+            const [nx, ny, nz] = faces[index].normal;
+            const shade = Math.max(0, nx * -0.3 + ny * 0.55 + nz * 0.78);
+            return { points, depth, shade };
+        })
+        // Painter's algorithm: the zone is convex, so far-to-near ordering hides back faces.
+        .sort((left, right) => left.depth - right.depth);
+
+    return { faces: projectedFaces, toScreen: (vector) => place(project(vector)) };
 }
 
 /**
@@ -104,6 +123,7 @@ export function BrillouinZone({
     latticeType,
     imgSrc,
     description,
+    path,
 }: BrillouinZoneProps) {
     const theme = useTheme();
     const faces = useMemo(
@@ -113,7 +133,35 @@ export function BrillouinZone({
                 : computeBrillouinZoneFaces(latticeType ?? ""),
         [reciprocalVectors, latticeType],
     );
-    const projected = useMemo(() => (faces ? projectFaces(faces) : null), [faces]);
+    const scene = useMemo(() => (faces ? buildScene(faces) : null), [faces]);
+    const projected = scene?.faces ?? null;
+
+    /**
+     * Each point once, at its first appearance, so a path returning to Γ is not labelled twice.
+     * Labels are pushed away from the zone centre: high-symmetry points sit in one irreducible
+     * wedge, so a fixed offset would stack them all on top of each other.
+     */
+    const drawnPath = useMemo(() => {
+        if (!scene || !path?.length) return null;
+        const origin = scene.toScreen([0, 0, 0]);
+        const seen = new Set<string>();
+        const points = path.map((item) => {
+            const { x, y } = scene.toScreen(item.coordinates);
+            const isFirst = !seen.has(item.point);
+            seen.add(item.point);
+            const [dx, dy] = [x - origin.x, y - origin.y];
+            const distance = Math.hypot(dx, dy) || 1;
+            return {
+                x,
+                y,
+                label: isFirst ? item.point : "",
+                labelX: x + (dx / distance) * LABEL_OFFSET,
+                // Γ sits at the origin, where there is no outward direction — nudge it up.
+                labelY: distance > 1 ? y + (dy / distance) * LABEL_OFFSET : y - LABEL_OFFSET,
+            };
+        });
+        return { points, polyline: points.map((p) => `${p.x},${p.y}`).join(" ") };
+    }, [scene, path]);
 
     if (!projected) {
         if (!imgSrc) return null;
@@ -131,6 +179,7 @@ export function BrillouinZone({
 
     const faceColor = theme.palette.primary.main;
     const edgeColor = theme.palette.mode === "dark" ? "#0d1117" : "#ffffff";
+    const pathColor = theme.palette.secondary.main;
 
     return (
         <Box className="brillouin-zone" data-tid="brillouin-zone" sx={{ my: 1 }}>
@@ -139,19 +188,77 @@ export function BrillouinZone({
                 height={SIZE}
                 viewBox={`0 0 ${SIZE} ${SIZE}`}
                 role="img"
-                aria-label={`First Brillouin zone of a ${latticeType} lattice`}
+                aria-label={
+                    drawnPath
+                        ? `K-path through the first Brillouin zone of a ${latticeType} lattice`
+                        : `First Brillouin zone of a ${latticeType} lattice`
+                }
             >
                 {projected.map((face) => (
                     <polygon
                         key={face.points}
                         points={face.points}
+                        // The path runs through the zone, so the solid is dimmed to let it read.
+                        fillOpacity={
+                            (drawnPath ? 0.15 : 0.25) + (drawnPath ? 0.35 : 0.6) * face.shade
+                        }
                         fill={faceColor}
-                        fillOpacity={0.25 + 0.6 * face.shade}
                         stroke={edgeColor}
                         strokeWidth={1}
                         strokeLinejoin="round"
                     />
                 ))}
+                {drawnPath ? (
+                    <g data-tid="brillouin-zone-path">
+                        <polyline
+                            points={drawnPath.polyline}
+                            fill="none"
+                            stroke={edgeColor}
+                            strokeOpacity={0.65}
+                            strokeWidth={4}
+                            strokeLinejoin="round"
+                            strokeLinecap="round"
+                        />
+                        <polyline
+                            points={drawnPath.polyline}
+                            fill="none"
+                            stroke={pathColor}
+                            strokeWidth={2}
+                            strokeLinejoin="round"
+                            strokeLinecap="round"
+                        />
+                        {drawnPath.points.map((point) => (
+                            <circle
+                                key={`${point.x},${point.y}`}
+                                cx={point.x}
+                                cy={point.y}
+                                r={2.5}
+                                fill={pathColor}
+                                stroke={edgeColor}
+                                strokeWidth={1}
+                            />
+                        ))}
+                        {drawnPath.points
+                            .filter((point) => point.label)
+                            .map((point) => (
+                                <text
+                                    key={point.label}
+                                    x={point.labelX}
+                                    y={point.labelY}
+                                    fontSize={11}
+                                    fontWeight={700}
+                                    textAnchor="middle"
+                                    dominantBaseline="middle"
+                                    fill={pathColor}
+                                    stroke={edgeColor}
+                                    strokeWidth={2.5}
+                                    paintOrder="stroke"
+                                >
+                                    {point.label}
+                                </text>
+                            ))}
+                    </g>
+                ) : null}
             </svg>
             <Typography variant="caption" color="text.secondary" component="div">
                 First Brillouin zone — {latticeType} lattice
