@@ -1,9 +1,9 @@
 /* eslint-disable no-param-reassign -- Wode unit helpers mutate; class built only for those APIs */
-import Accordion from "@mat3ra/cove/dist/mui/components/accordion/Accordion";
-import TabsMenu from "@mat3ra/cove/dist/mui/components/tabs/TabsMenu";
 import { Application } from "@mat3ra/ade";
 import { Application as ApplicationAve } from "@mat3ra/ave";
 import { type NameResultSchema, safeMakeObject } from "@mat3ra/code/dist/js/utils/object";
+import Accordion from "@mat3ra/cove/dist/mui/components/accordion/Accordion";
+import TabsMenu from "@mat3ra/cove/dist/mui/components/tabs/TabsMenu";
 import type { ApplicationSchema, SubworkflowSchema } from "@mat3ra/esse/dist/js/types";
 import type { Model as ModeModel } from "@mat3ra/mode";
 import { Model } from "@mat3ra/move";
@@ -36,7 +36,7 @@ import type {
     WorkflowDesignerUser,
 } from "../../types/context";
 import { useWorkflowComponents } from "../../WorkflowComponentsContext";
-import { UndoSnackbar, type UndoSnackbarState } from "../common/UndoSnackbar";
+import { type UndoSnackbarState, UndoSnackbar } from "../common/UndoSnackbar";
 import UnitModal from "../units/UnitModal";
 import { ImportantSettings } from "./ImportantSettings";
 import { SubworkflowExecutionUnitDetailsRow } from "./SubworkflowExecutionUnitDetailsRow";

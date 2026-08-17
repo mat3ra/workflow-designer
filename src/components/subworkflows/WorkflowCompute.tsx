@@ -23,6 +23,45 @@ export type WorkflowComputeProps = {
     clusters?: WorkflowDesignerCluster[];
 };
 
+/**
+ * Restates the compute selection in the units people reason about — total cores, wall time,
+ * cluster — instead of leaving nodes and cores-per-node to be multiplied by eye.
+ */
+function summarizeCompute(compute: object | null | undefined, clusters: WorkflowDesignerCluster[]) {
+    if (!compute) return null;
+    const { nodes, ppn, timeLimit, queue, cluster } = compute as {
+        nodes?: number | string;
+        ppn?: number | string;
+        timeLimit?: string;
+        queue?: string;
+        cluster?: { fqdn?: string } | string;
+    };
+
+    const nodeCount = Number(nodes);
+    const coresPerNode = Number(ppn);
+    const parts: string[] = [];
+
+    if (
+        Number.isFinite(nodeCount) &&
+        Number.isFinite(coresPerNode) &&
+        nodeCount * coresPerNode > 0
+    ) {
+        const totalCores = nodeCount * coresPerNode;
+        parts.push(
+            `${totalCores} core${totalCores === 1 ? "" : "s"}` +
+                (nodeCount > 1 ? ` (${nodeCount} × ${coresPerNode})` : ""),
+        );
+    }
+    if (timeLimit) parts.push(`up to ${timeLimit}`);
+    if (queue) parts.push(`queue ${queue}`);
+
+    const clusterName =
+        typeof cluster === "string" ? cluster : cluster?.fqdn ?? clusters[0]?.fqdn ?? "";
+    if (clusterName) parts.push(`on ${clusterName}`);
+
+    return parts.length > 0 ? parts.join(" · ") : null;
+}
+
 export default function WorkflowCompute({
     compute,
     onToggle,
@@ -33,6 +72,8 @@ export default function WorkflowCompute({
     currentUser,
     clusters = [],
 }: WorkflowComputeProps) {
+    const summary = summarizeCompute(compute, clusters);
+
     return (
         <Box>
             <Stack direction="row" spacing={1.5} alignItems="flex-start" sx={{ mb: 1 }}>
@@ -73,6 +114,17 @@ export default function WorkflowCompute({
                     }}
                 />
             )}
+            {summary ? (
+                <Typography
+                    variant="caption"
+                    color="text.secondary"
+                    component="div"
+                    data-tid="compute-summary"
+                    sx={{ mt: 1 }}
+                >
+                    Requests {summary}
+                </Typography>
+            ) : null}
         </Box>
     );
 }

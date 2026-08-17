@@ -14,12 +14,16 @@ import React, { useCallback, useMemo, useState } from "react";
 
 import { useWorkflowComponents } from "../../WorkflowComponentsContext";
 import { brillouinZoneComponentForProvider } from "../common/brillouinZoneForProvider";
+import {
+    FieldDefaultsContext,
+    ImportantSettingsFieldTemplate,
+} from "./ImportantSettingsFieldTemplate";
 import { mergeUiSchemaWithDefaultFieldStyles } from "./importantSettingsFormUtils";
 import {
+    type SettingsGroup,
     getDefaultData,
     getScopeIndex,
     getSettingsGroups,
-    type SettingsGroup,
 } from "./importantSettingsGroups";
 
 interface ImportantSettingsProps {
@@ -66,6 +70,26 @@ function SettingsGroupCard({ group, onContextChanged }: SettingsGroupCardProps) 
         applyToGroup(defaultData, false);
     }, [applyToGroup, defaultData]);
 
+    const formData = firstProvider.getData() as Record<string, unknown> | undefined;
+
+    /** Restores a single field, leaving the user's other edits in this group intact. */
+    const onResetField = useCallback(
+        (fieldName: string) => {
+            if (!defaultData) return;
+            const next = { ...(formData ?? {}), [fieldName]: defaultData[fieldName] };
+            const stillEdited = Object.keys(defaultData).some(
+                (key) => JSON.stringify(next[key]) !== JSON.stringify(defaultData[key]),
+            );
+            applyToGroup(next, stillEdited);
+        },
+        [applyToGroup, defaultData, formData],
+    );
+
+    const fieldDefaults = useMemo(
+        () => ({ defaults: defaultData, formData, onResetField }),
+        [defaultData, formData, onResetField],
+    );
+
     return (
         <Paper
             variant="outlined"
@@ -105,36 +129,39 @@ function SettingsGroupCard({ group, onContextChanged }: SettingsGroupCardProps) 
                 }
             />
 
-            <RJSForm
-                schema={firstProvider.jsonSchema}
-                validator={ajv}
-                uiSchema={
-                    /*
-                     * The compact field styles suit the subworkflow-wide panels (a couple of
-                     * scalars each). Unit-scoped providers — k-grids, k-paths — carry their own
-                     * uiSchema and need RJSF's labelled layout, so they are passed through.
-                     */
-                    group.scopeKey === "subworkflow"
-                        ? mergeUiSchemaWithDefaultFieldStyles(
-                              (firstProvider as any).uiSchema,
-                              firstProvider.name,
-                          )
-                        : (firstProvider as any).uiSchema
-                }
-                formData={firstProvider.getData()}
-                experimental_defaultFormStateBehavior={{
-                    mergeDefaultsIntoFormData: "useDefaultIfFormDataUndefined",
-                }}
-                onChange={({ formData }: { formData?: unknown }) => {
-                    const rootSchema = firstProvider.jsonSchema;
-                    if (!ajv.isValid(rootSchema, formData, rootSchema)) {
-                        return;
+            <FieldDefaultsContext.Provider value={fieldDefaults}>
+                <RJSForm
+                    schema={firstProvider.jsonSchema}
+                    validator={ajv}
+                    templates={{ FieldTemplate: ImportantSettingsFieldTemplate }}
+                    uiSchema={
+                        /*
+                         * The compact field styles suit the subworkflow-wide panels (a couple of
+                         * scalars each). Unit-scoped providers — k-grids, k-paths — carry their own
+                         * uiSchema and need RJSF's labelled layout, so they are passed through.
+                         */
+                        group.scopeKey === "subworkflow"
+                            ? mergeUiSchemaWithDefaultFieldStyles(
+                                  (firstProvider as any).uiSchema,
+                                  firstProvider.name,
+                              )
+                            : (firstProvider as any).uiSchema
                     }
-                    applyToGroup(formData, true);
-                }}
-            >
-                {" "}
-            </RJSForm>
+                    formData={formData}
+                    experimental_defaultFormStateBehavior={{
+                        mergeDefaultsIntoFormData: "useDefaultIfFormDataUndefined",
+                    }}
+                    onChange={({ formData }: { formData?: unknown }) => {
+                        const rootSchema = firstProvider.jsonSchema;
+                        if (!ajv.isValid(rootSchema, formData, rootSchema)) {
+                            return;
+                        }
+                        applyToGroup(formData, true);
+                    }}
+                >
+                    {" "}
+                </RJSForm>
+            </FieldDefaultsContext.Provider>
         </Paper>
     );
 }

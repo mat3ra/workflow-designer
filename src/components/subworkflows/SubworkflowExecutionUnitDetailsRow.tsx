@@ -1,5 +1,5 @@
-import Accordion from "@mat3ra/cove/dist/mui/components/accordion/Accordion";
 import type { NameResultSchema } from "@mat3ra/code/dist/js/utils/object";
+import Accordion from "@mat3ra/cove/dist/mui/components/accordion/Accordion";
 import { UnitType } from "@mat3ra/wode/dist/js/enums";
 import type { AnySubworkflowUnit } from "@mat3ra/wode/dist/js/units/factory";
 import Grid from "@mui/material/Grid";

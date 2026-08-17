@@ -1,6 +1,6 @@
-import Checkbox from "@mat3ra/cove/dist/mui/components/checkbox/Checkbox";
 import { Results } from "@mat3ra/ave";
 import type { NameResultSchema } from "@mat3ra/code/dist/js/utils/object";
+import Checkbox from "@mat3ra/cove/dist/mui/components/checkbox/Checkbox";
 import type { ExecutionUnitSchema } from "@mat3ra/esse/dist/js/types";
 import { ApplicationRegistry } from "@mat3ra/standata";
 import Box from "@mui/material/Box";

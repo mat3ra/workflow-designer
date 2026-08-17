@@ -86,8 +86,15 @@ included. Reset therefore reads `getDefaultData()` (protected at compile time on
 schema defaults preferred where a provider declares them properly. Fixing the patch config in
 wode would make the schema route work and let the cast go.
 
-Still open in this portion: field-level modified/reset (1.3), domain widgets for k-grid and
-k-path (1.5), and the Compute form summary line (1.6).
+Items 1.3 and 1.6 followed: changed fields now carry a "default X · reset field" line
+(an RJSF `FieldTemplate` reading defaults through context), where resetting one field leaves
+the group's other edits intact and the group badge clears only once everything is back to
+default; and the Compute tab restates the selection as "Requests N cores · up to T · queue Q
+· on <cluster>" rather than leaving nodes × cores-per-node to be multiplied by eye.
+
+Still open in this portion: domain widgets for k-grid and k-path (1.5) — the k-grid already
+renders as labelled dimensions/shifts columns, so the remaining value there is the k-path
+segment-chip editor.
 
 - **Contract to preserve:** provider API (`provider.jsonSchema`, `uiSchema`, `getData()`,
   `setData()`, `setIsEdited()`), `unit.savePersistentContext()`, and the
