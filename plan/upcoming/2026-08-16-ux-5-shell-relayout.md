@@ -9,8 +9,8 @@
 
 ## Status (2026-08-17)
 
-Items **1.5 (rollout)**, **1.1 (steps rail)** and part of **1.4 (header consolidation)** are
-built on `claude/ux-improvements-msn5h2`; 1.2 (canvas) and 1.3 (inspector) are not.
+Items **1.5 (rollout)**, **1.1 (steps rail)**, part of **1.4 (header consolidation)** and part
+of **1.2 (node cards)** are built; 1.3 (inspector) is not.
 
 **Rollout first, deliberately.** `layoutVariant: "classic" | "studio"` is plumbed
 `WorkflowDesignerContainer` → `Workflow` → the layout component, defaulting to `classic`, so
@@ -53,9 +53,20 @@ and, in the space the name freed, what the step actually computes with —
 `espresso · DFT/GGA/PBE · pseudopotential/us`. Not done in 1.4: the validation chip that selects
 the offending unit (the full `WorkflowValidationAlert` still renders), and the breadcrumb.
 
-**Not built:** 1.2 (canvas node cards, edge "+"), 1.3 (the selection-driven inspector, which
-needs portion 4's editor for its Input tab), the rest of 1.4 above, and drag-reorder, which has
-no container callback today: `onUpdateUnitIndex` moves the selection, not the order.
+**Node cards (1.2), partly.** With the flowchart ID hidden the card subheader was empty, so a
+canvas showed unit names and nothing else. A card now states the engine and flavor it runs —
+`espresso 6.3 · pw_scf`, which is what separates `pw_scf` from `pw_bands` at a glance — beside
+the unit type's own icon, tinted with the type accent so colour is not the only signal of kind
+(colour-vision deficiency and greyscale both flatten a stripe; the icon survives them).
+`CardHeader` also takes `isModified` for the modified dot, ready for a host that aggregates
+`provider.isEdited`. All in [wove#12](https://github.com/mat3ra/wove/pull/12), preferring
+`theme.designer.*` and falling back to what the card resolved to before.
+
+**Not built:** the edge "+" of 1.2 and the Fit/Tidy controls, which need the canvas work this
+portion still owes; 1.3 (the selection-driven inspector, the bulk of the portion's estimate,
+which needs portion 4's editor released for its Input tab); the rest of 1.4 above; and
+drag-reorder, which has no container callback today — `onUpdateUnitIndex` moves the selection,
+not the order.
 
 ## 1. Work items
 
