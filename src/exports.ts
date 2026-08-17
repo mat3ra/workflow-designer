@@ -5,8 +5,22 @@ export { default as Convergence } from "./components/workflows/Convergence";
 export type { ConvergenceProps } from "./components/workflows/ConvergenceProps";
 export { default as UnitModal } from "./components/units/UnitModal";
 export { default as UnitPaste } from "./components/units/UnitPaste";
+export { default as StepLibrary } from "./components/units/StepLibrary";
+export type { StepLibraryProps } from "./components/units/StepLibrary";
+export {
+    filterLibraryEntries,
+    getLibraryApplications,
+    toLibraryEntries,
+} from "./components/units/stepLibraryEntries";
+export type { LibraryEntry } from "./components/units/stepLibraryEntries";
 export { default as UnitTypeSelect } from "./components/units/UnitTypeSelect";
 export type { UnitTypeSelectProps } from "./components/units/UnitTypeSelectProps";
+export {
+    UNIT_TYPE_CATALOG,
+    getUnitTypeDescriptor,
+    getUnitTypeLabel,
+} from "./components/units/unitTypeCatalog";
+export type { UnitTypeDescriptor } from "./components/units/unitTypeCatalog";
 export {
     isWodeSubworkflowInstance,
     applySubworkflowUpdateToWorkflow,

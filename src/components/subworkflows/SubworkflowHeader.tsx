@@ -15,7 +15,7 @@ import React, { useCallback, useMemo, useState } from "react";
 
 import type { SubworkflowDesignerUpdate } from "../../utils/subworkflowDesignerUpdate";
 import { useWorkflowComponents } from "../../WorkflowComponentsContext";
-import UnitPaste from "../units/UnitPaste";
+import StepLibrary from "../units/StepLibrary";
 import UnitTypeSelect from "../units/UnitTypeSelect";
 import Convergence from "../workflows/Convergence";
 
@@ -81,11 +81,11 @@ export default function SubworkflowHeader({
         null,
     );
     const [unitTypeSelectOpen, setUnitTypeSelectOpen] = useState(false);
-    const [unitPasteOpen, setUnitPasteOpen] = useState(false);
+    const [stepLibraryOpen, setStepLibraryOpen] = useState(false);
 
     const closeConvergenceDialog = useCallback(() => setConvergenceSubworkflow(null), []);
     const closeUnitTypeSelectDialog = useCallback(() => setUnitTypeSelectOpen(false), []);
-    const closeUnitPasteDialog = useCallback(() => setUnitPasteOpen(false), []);
+    const closeStepLibraryDialog = useCallback(() => setStepLibraryOpen(false), []);
 
     const pagerProps = useMemo(
         () => ({
@@ -120,10 +120,10 @@ export default function SubworkflowHeader({
                 },
                 {
                     isShown: editable,
-                    content: "Add subworkflow",
+                    content: "Add step",
                     onClick: (_action, _event) => {
                         if (editable) {
-                            setUnitTypeSelectOpen(true);
+                            setStepLibraryOpen(true);
                         }
                     },
                     icon: <IconByName name="shapes.addCircle" />,
@@ -131,14 +131,14 @@ export default function SubworkflowHeader({
                 },
                 {
                     isShown: editable,
-                    content: "Paste subworkflow",
+                    content: "Add empty unit",
                     onClick: (_action, _event) => {
                         if (editable) {
-                            setUnitPasteOpen(true);
+                            setUnitTypeSelectOpen(true);
                         }
                     },
-                    icon: <IconByName name="actions.copy" />,
-                    id: "paste-subworkflow",
+                    icon: <IconByName name="shapes.addCircle" />,
+                    id: "add-unit-type",
                 },
                 {
                     isShown: editable,
@@ -252,12 +252,12 @@ export default function SubworkflowHeader({
                     unitTypes={[UnitType.subworkflow as any, UnitType.map as any]}
                 />
             ) : null}
-            {unitPasteOpen ? (
-                <UnitPaste
-                    onClose={closeUnitPasteDialog}
+            {stepLibraryOpen ? (
+                <StepLibrary
+                    onClose={closeStepLibraryDialog}
                     onSubmit={(config, prependOrPasteIndex) => {
                         onUnitAddSubworkflowFromConfig(config, prependOrPasteIndex, unitIndex);
-                        closeUnitPasteDialog();
+                        closeStepLibraryDialog();
                     }}
                 />
             ) : null}

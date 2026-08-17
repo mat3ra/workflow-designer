@@ -9,6 +9,38 @@
   subworkflow" / "Paste subworkflow" — raw JSON textarea in
   `src/components/units/UnitPaste.tsx`).
 
+## Status (2026-08-17)
+
+Items 1.1 and 1.2 are built on `claude/ux-improvements-msn5h2`, against the classic layout —
+the edge "+" affordance is the only part that waits on portion 5, and the dialogs are wired to
+the existing header actions in the meantime.
+
+**Unit palette (1.1).** `UnitTypeSelect` was a dropdown of the raw enum strings, with the
+explanation of what each type does parked behind an info popover — the one thing the dialog
+exists to decide was the one thing it did not show. It is now a list of described cards
+(`src/components/units/unitTypeCatalog.ts` holds the descriptions, plus a colour and glyph per
+type, ready to become the portion-2 type colours), so "Subworkflow — a named group of units,
+run as one step of the workflow" is readable before choosing.
+
+**Step library (1.2).** The header kebab offered "Add subworkflow" (created an empty one) and
+"Paste subworkflow" (a bare JSON textarea). Both are replaced by **Add step**
+(`src/components/units/StepLibrary.tsx`): 76 ready-made steps from
+`SubworkflowStandata`, searchable across step name, application and unit names, filterable by
+application, with a preview pane listing the exact units that will be inserted. Paste JSON
+survives as the second tab for configs the library does not carry, now with a JSON-parse error
+message instead of a silent failure. Adding an empty unit is still reachable, as **Add empty
+unit**. Search and shaping live in `stepLibraryEntries.ts` so they are covered by
+`tests/stepLibrary.tests.ts` without a DOM.
+
+"My subworkflows" (the account-saved tab) is **not** built: the overview §8 question — whether
+a fetch API exists for it — is still open, and the tab would need a webapp-side injection to
+mean anything. The library and paste tabs stand on their own until then.
+
+Verified in the standalone demo: the kebab reads "Add convergence · Add step · Add empty unit ·
+Remove subworkflow · Collapse all"; the library lists 76 entries, narrows to 19 on "band", and
+previews the 4 units of the selected step; the unit picker shows Subworkflow and Map with their
+descriptions. `UnitPaste` stays exported for consumers that embed it directly.
+
 ## 1. Work items
 
 ### 1.1 Unit palette

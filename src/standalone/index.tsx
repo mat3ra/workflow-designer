@@ -16,12 +16,14 @@ import { ApplicationRegistry, MaterialStandata, WorkflowStandata } from "@mat3ra
 import { ApplicationDriver } from "@mat3ra/standata/dist/js/ApplicationDriver";
 import { Workflow as WodeWorkflow } from "@mat3ra/wode";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
 import Container from "@mui/material/Container";
 import CssBaseline from "@mui/material/CssBaseline";
 import Divider from "@mui/material/Divider";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
+import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Stack from "@mui/material/Stack";
@@ -54,11 +56,55 @@ const demoTheme = createTheme({
 // ---------------------------------------------------------------------------
 // Stub UI components injected into WorkflowDesignerContainer as React props
 // ---------------------------------------------------------------------------
-function EntityHeaderStub({ name }: any) {
+/**
+ * Stands in for the web app's entity header. Renders the actions dropdown as well as the name,
+ * so header-driven flows (add step, add unit, convergence) are reachable in the demo.
+ */
+function EntityHeaderStub({ name, dropdownProps, saveBtnProps }: any) {
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const actions = (dropdownProps?.actions ?? []).filter(
+        (action: any) => action?.isShown && !action?.isDivider,
+    );
+
     return (
-        <Typography variant="h6" fontWeight={600}>
-            {String(name ?? "")}
-        </Typography>
+        <Stack direction="row" alignItems="center" spacing={1} sx={{ px: 2, py: 1 }}>
+            <Typography variant="h6" fontWeight={600} sx={{ flexGrow: 1 }}>
+                {String(name ?? "")}
+            </Typography>
+            {saveBtnProps?.isShown ? (
+                <Button size="small" variant="contained" onClick={() => saveBtnProps.onSave(true)}>
+                    Save
+                </Button>
+            ) : null}
+            {dropdownProps?.isShown && actions.length > 0 ? (
+                <>
+                    <Button
+                        size="small"
+                        data-tid="header-actions"
+                        onClick={(event) => setAnchorEl(event.currentTarget)}
+                    >
+                        Actions ▾
+                    </Button>
+                    <Menu
+                        open={Boolean(anchorEl)}
+                        anchorEl={anchorEl}
+                        onClose={() => setAnchorEl(null)}
+                    >
+                        {actions.map((action: any) => (
+                            <MenuItem
+                                key={action.id ?? String(action.content)}
+                                onClick={() => {
+                                    setAnchorEl(null);
+                                    action.onClick?.(action, null);
+                                }}
+                            >
+                                {action.content}
+                            </MenuItem>
+                        ))}
+                    </Menu>
+                </>
+            ) : null}
+        </Stack>
     );
 }
 function EntityNameStub() {
