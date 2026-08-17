@@ -73,7 +73,10 @@ export default function StepLibrary({
     const selected = visibleEntries.find((entry) => entry.key === selectedKey) ?? visibleEntries[0];
 
     const handleSubmit = () => {
-        const position = prepend ? 0 : 1;
+        // The container reads this as `prepend`: truthy inserts before the current step. Keep the
+        // 0-append / 1-prepend encoding `UnitPaste` established, which its own dropdown spelled
+        // out as "append to current" / "prepend to current".
+        const position = prepend ? 1 : 0;
         if (tab === "paste") {
             try {
                 onSubmit(JSON.parse(pasted), position);

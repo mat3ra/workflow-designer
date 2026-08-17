@@ -16,6 +16,27 @@ export interface LibraryFilter {
     application?: string;
 }
 
+/**
+ * Fills in a subworkflow's application from its own units.
+ *
+ * `SubworkflowStandata` stores the application as a bare `{ name }` stub, while every unit
+ * inside carries the full record (version, build, shortName…). wode builds an `Application` from
+ * the subworkflow's copy and validates it while rendering, so inserting a library entry as-is
+ * throws `IN_MEMORY_ENTITY_DATA_INVALID` and takes the designer down with it. Workflow standata
+ * does not have this problem — its subworkflows carry the full record — which is why loading a
+ * workflow works and inserting the same step did not.
+ */
+export function normalizeLibraryConfig(config: Record<string, any>): Record<string, any> {
+    const application = config?.application;
+    if (!application?.name || application.version) {
+        return config;
+    }
+    const fromUnit = (config.units ?? [])
+        .map((unit: any) => unit?.application)
+        .find((candidate: any) => candidate?.name === application.name && candidate?.version);
+    return fromUnit ? { ...config, application: fromUnit } : config;
+}
+
 /** Turns raw standata subworkflow configs into entries the dialog can list and preview. */
 export function toLibraryEntries(configs: Array<Record<string, any>>): LibraryEntry[] {
     return configs.map((config, index) => ({
@@ -23,7 +44,7 @@ export function toLibraryEntries(configs: Array<Record<string, any>>): LibraryEn
         name: String(config?.name ?? `Subworkflow ${index + 1}`),
         application: String(config?.application?.name ?? ""),
         unitNames: (config?.units ?? []).map((unit: any) => String(unit?.name ?? unit?.type ?? "")),
-        config,
+        config: normalizeLibraryConfig(config),
     }));
 }
 

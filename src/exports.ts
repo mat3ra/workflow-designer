@@ -1,6 +1,21 @@
 export { Workflow } from "./components/workflows/Workflow";
 export type { WorkflowProps } from "./components/workflows/Workflow";
 export { WorkflowDefaultLayout } from "./components/workflows/WorkflowDefaultLayout";
+export { WorkflowStudioLayout } from "./components/workflows/WorkflowStudioLayout";
+export { WorkflowUnitPanel } from "./components/workflows/WorkflowUnitPanel";
+export { default as WorkflowStepsRail } from "./components/workflows/WorkflowStepsRail";
+export type { WorkflowStepsRailProps } from "./components/workflows/WorkflowStepsRail";
+export {
+    DEFAULT_WORKFLOW_LAYOUT_VARIANT,
+    resolveWorkflowLayoutVariant,
+} from "./components/workflows/workflowLayoutVariant";
+export type { WorkflowLayoutVariant } from "./components/workflows/workflowLayoutVariant";
+export {
+    formatStepNumber,
+    formatStepSummary,
+    getWorkflowSteps,
+} from "./components/workflows/workflowSteps";
+export type { WorkflowStep } from "./components/workflows/workflowSteps";
 export { default as Convergence } from "./components/workflows/Convergence";
 export type { ConvergenceProps } from "./components/workflows/ConvergenceProps";
 export { default as UnitModal } from "./components/units/UnitModal";

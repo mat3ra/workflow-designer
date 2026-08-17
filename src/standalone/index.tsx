@@ -182,6 +182,7 @@ function App() {
     );
     const selectedMaterial = allMaterials[materialIndex];
     const [isDirty, setIsDirty] = useState(false);
+    const [layoutVariant, setLayoutVariant] = useState<"classic" | "studio">("classic");
 
     // Re-key the designer when either selection changes so it re-mounts cleanly
     const designerKey = `${workflowIndex}-${materialIndex}`;
@@ -275,6 +276,22 @@ function App() {
                         </Select>
                     </FormControl>
 
+                    <FormControl size="small" sx={{ minWidth: 130 }}>
+                        <InputLabel id="layout-select-label">Layout</InputLabel>
+                        <Select
+                            labelId="layout-select-label"
+                            id="layout-select"
+                            value={layoutVariant}
+                            label="Layout"
+                            onChange={(e) =>
+                                setLayoutVariant(e.target.value as "classic" | "studio")
+                            }
+                        >
+                            <MenuItem value="classic">Classic</MenuItem>
+                            <MenuItem value="studio">Studio</MenuItem>
+                        </Select>
+                    </FormControl>
+
                     {isDirty && (
                         <Chip
                             label="● Unsaved changes"
@@ -297,7 +314,7 @@ function App() {
             {/* ---- Designer ---- */}
             <Box sx={{ height: "calc(100vh - 72px)", overflow: "auto" }}>
                 <WorkflowDesignerContainer
-                    key={designerKey}
+                    key={`${designerKey}-${layoutVariant}`}
                     initialWorkflow={wodeWorkflow}
                     defaultMaterial={selectedMaterial}
                     editable
@@ -343,6 +360,7 @@ function App() {
                     generateEntityId={() => crypto.randomUUID()}
                     openDocumentationDialog={undefined}
                     onDirtyChange={setIsDirty}
+                    layoutVariant={layoutVariant}
                 />
             </Box>
         </Box>

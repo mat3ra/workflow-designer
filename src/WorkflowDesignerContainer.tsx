@@ -1,5 +1,5 @@
-import type { DropdownAction } from "@mat3ra/cove/dist/mui/components/dropdown";
 import type { Template } from "@mat3ra/ade";
+import type { DropdownAction } from "@mat3ra/cove/dist/mui/components/dropdown";
 import type { SubworkflowSchema } from "@mat3ra/esse/dist/js/types";
 import { Utils } from "@mat3ra/utils";
 import { type MaterialsSet, type OrderedMaterial, Subworkflow, Workflow } from "@mat3ra/wode";
@@ -9,8 +9,9 @@ import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
-import { UndoSnackbar, type UndoSnackbarState } from "./components/common/UndoSnackbar";
+import { type UndoSnackbarState, UndoSnackbar } from "./components/common/UndoSnackbar";
 import { Workflow as WoveWorkflowDesigner } from "./components/workflows/Workflow";
+import type { WorkflowLayoutVariant } from "./components/workflows/workflowLayoutVariant";
 import type {
     WorkflowDesignerAccount,
     WorkflowDesignerCluster,
@@ -34,6 +35,8 @@ type WorkflowDesignerContainerBaseProps = {
     /** From CoreWorkflow / webapp entity at the shell boundary. */
     workflowHistory: WorkflowDesignerHistory;
     isStandalone: boolean;
+    /** Shell variant for the designer; see {@link WorkflowLayoutVariant}. Defaults to `classic`. */
+    layoutVariant?: WorkflowLayoutVariant;
     adjustable: boolean;
     showHeader: boolean;
     showMetadata: boolean;
@@ -96,6 +99,7 @@ export default function WorkflowDesignerContainer(containerProps: WorkflowDesign
         showHistory,
         workflowHistory,
         isStandalone,
+        layoutVariant,
         adjustable,
         showHeader,
         showMetadata,
@@ -406,6 +410,7 @@ export default function WorkflowDesignerContainer(containerProps: WorkflowDesign
                 showHistory={showHistory}
                 workflowHistory={workflowHistory}
                 isStandalone={isStandalone}
+                layoutVariant={layoutVariant}
                 adjustable={adjustable}
                 metaProperties={metaProperties}
                 extraActions={extraActions}

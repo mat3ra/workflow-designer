@@ -41,6 +41,22 @@ Remove subworkflow · Collapse all"; the library lists 76 entries, narrows to 19
 previews the 4 units of the selected step; the unit picker shows Subworkflow and Map with their
 descriptions. `UnitPaste` stays exported for consumers that embed it directly.
 
+### Two defects in the first cut, found while building portion 5 (2026-08-17)
+
+The first version rendered correctly but **could not actually insert** — verification had
+stopped at the dialog. Both are fixed, with the insert exercised end to end in both layouts.
+
+1. **`SubworkflowStandata` entries are not directly insertable.** They store the subworkflow's
+   application as a bare `{ name: "espresso" }` stub, while every unit inside carries the full
+   record. wode builds an `Application` from the subworkflow's copy and validates it while
+   rendering, so inserting one threw `IN_MEMORY_ENTITY_DATA_INVALID` and blanked the designer.
+   Workflow standata does not have this problem — its subworkflows carry the full record — which
+   is why loading a workflow works and inserting the same step did not. `normalizeLibraryConfig`
+   now fills the application in from the units, which is worth fixing in standata itself.
+2. **The position argument was inverted.** `UnitPaste` established `0 = append to current`,
+   `1 = prepend to current`, and the container reads the value as `prepend`; the library passed
+   `1` for "after", so every insert landed before the current step.
+
 ## 1. Work items
 
 ### 1.1 Unit palette

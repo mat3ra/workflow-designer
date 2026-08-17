@@ -1,5 +1,5 @@
-import TabsMenu from "@mat3ra/cove/dist/mui/components/tabs/TabsMenu";
 import type { Template } from "@mat3ra/ade";
+import TabsMenu from "@mat3ra/cove/dist/mui/components/tabs/TabsMenu";
 import type { SubworkflowSchema } from "@mat3ra/esse/dist/js/types";
 import { type OrderedMaterial, type Workflow as WodeWorkflow } from "@mat3ra/wode";
 import { UnitType } from "@mat3ra/wode/dist/js/enums";

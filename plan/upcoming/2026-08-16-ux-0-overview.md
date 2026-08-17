@@ -1,7 +1,7 @@
 # Workflow Designer UX Improvements — Overview (main plan)
 
 - **Ticket:** [SOF-8024](https://mat3ra.atlassian.net/browse/SOF-8024)
-- **Status:** in progress — portions 1, 3 and 6 built on this branch; see §0.
+- **Status:** in progress — portions 1, 3 and 6 built on this branch, 5 started; see §0.
 - **Updated:** 2026-08-17
 - **Review inputs:** [`docs/ux/README.md`](../../docs/ux/README.md) (issue inventory
   W1–W12), [`docs/ux/mockups.html`](../../docs/ux/mockups.html) (Mockups A–E),
@@ -16,7 +16,7 @@
 | 2 | Design language | not started — token *definition* is unblocked, adoption waits on brand palette sign-off |
 | 3 | Important settings | **done** — 1.1–1.6, including the k-path chain editor and the path drawn on the zone |
 | 4 | Input editor | not started — largely `@mat3ra/ave`, which this repo does not yet attach |
-| 5 | Shell relayout | not started — the largest portion, and the one the edge "+" of portion 6 waits on |
+| 5 | Shell relayout | **in progress** — `layoutVariant` rollout and the steps rail built; canvas, inspector and header consolidation remain |
 | 6 | Add flows | **done** for the classic layout — unit palette and step library; "My subworkflows" waits on §8's open question |
 
 Upstream, opened out of this work and not yet released:
