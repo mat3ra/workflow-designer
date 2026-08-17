@@ -42,10 +42,19 @@ the build. Two of them caught mistakes in the first draft (a white label at 3.86
 at 2.60). The suite also had to be **wired into `npm test`**: cove's existing
 `tests/schemaUtils.tests.ts` had never been executed, because `test` ran only lint and transpile.
 
-Still open: **3.3 adoption** — un-pinning `oldLightMaterialUITheme` in
-`WorkflowDefaultLayout`, replacing the `#cecece` border and `text-<status>` classes, wove reading
-`theme.designer.*` for node cards and wires, and the demo dropping its invented palette. The
-studio layout already picks up the ambient theme, since it never pinned the legacy one.
+**Adoption started where it needed no sign-off.** wove now reads the tokens for the two places
+that were plainly wrong in dark mode ([wove#12](https://github.com/mat3ra/wove/pull/12)): a unit
+card's resting border was the literal string `"white"` — it is meant to be *invisible*, reserving
+the width the selected border takes, and white is only invisible on a white surface, so every
+unselected card wore a bright 4px frame on a dark canvas; and the flowchart's dot grid was a
+hardcoded `"000"`, invisible on a dark background. Both prefer `theme.designer.*` and fall back
+to what they resolved to before, so they work against the currently published cove.
+
+Still open in **3.3**: un-pinning `oldLightMaterialUITheme` in `WorkflowDefaultLayout` (gated —
+that is the change that alters the classic layout for every host), replacing the `#cecece` border
+and `text-<status>` classes, node cards reading the unit-type accents, and the demo dropping its
+invented palette. The studio layout already picks up the ambient theme, since it never pinned the
+legacy one.
 
 ## 1. What exists today (audited in `@mat3ra/cove` `dist/theme`)
 
