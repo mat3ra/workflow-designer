@@ -127,6 +127,17 @@ export type WorkflowDefaultLayoutProps = {
     onSubworkflowActiveTabIndexChange: (subworkflowId: string, tabIndex: number) => void;
     /** See {@link SubworkflowProps.hideComputeSubTab}. */
     hideComputeSubTab?: boolean;
+    /** See {@link SubworkflowProps.useUnitInspector}. */
+    useUnitInspector?: boolean;
+    /**
+     * Renders under the host's theme instead of forcing cove's old light one.
+     *
+     * The designer has always pinned itself to `oldLightMaterialUITheme`, which
+     * is why a dark host frames a white canvas: the shell is dark, and this
+     * subtree is not. Opt-in, because hosts that expect the light designer today
+     * would otherwise be restyled without asking.
+     */
+    useHostTheme?: boolean;
 };
 
 export function WorkflowDefaultLayout(props: WorkflowDefaultLayoutProps) {
@@ -184,6 +195,8 @@ export function WorkflowDefaultLayout(props: WorkflowDefaultLayoutProps) {
         subworkflowActiveTabIndexById,
         onSubworkflowActiveTabIndexChange,
         hideComputeSubTab,
+        useUnitInspector,
+        useHostTheme = false,
     } = props;
 
     const { EntityHeaderComponent, MetadataComponent, HistoryComponent } = useWorkflowComponents();
@@ -211,179 +224,181 @@ export function WorkflowDefaultLayout(props: WorkflowDefaultLayoutProps) {
 
     const { pseudoUploadReduxDialog, unitTypeReduxDialog } = dialogs;
 
-    return (
-        <ThemeProvider theme={oldLightMaterialUITheme}>
-            <div className="workflow-with-name-and-metadata">
-                {showHeader && (
-                    <EntityHeaderComponent
-                        isCompact={isHeaderCompact}
-                        icon={ENTITY_ICONS.workflow}
-                        name={String(entity.name ?? "")}
-                        subtitle={{
-                            applications: entity.usedApplicationNames.join(", "),
-                        }}
-                        description={get(entity, "description") as string | undefined}
-                        isLoading={isLoading}
-                        editable={Boolean(editable)}
-                        onNameUpdate={onNameUpdate}
-                        iconCls={iconCls}
-                        id="workflow-designer-header"
-                        pagerProps={getPagerProps()}
-                        saveBtnProps={getSaveBtnProps()}
-                        dropdownProps={getDropdownProps()}
-                        descriptionEditorTitle="Workflow Description"
-                        item={entity}
-                        isDescriptionEditable={isDescriptionEditable}
-                        onDescriptionUpdate={onDescriptionUpdate}
-                    />
-                )}
+    const content = (
+        <div className="workflow-with-name-and-metadata">
+            {showHeader && (
+                <EntityHeaderComponent
+                    isCompact={isHeaderCompact}
+                    icon={ENTITY_ICONS.workflow}
+                    name={String(entity.name ?? "")}
+                    subtitle={{
+                        applications: entity.usedApplicationNames.join(", "),
+                    }}
+                    description={get(entity, "description") as string | undefined}
+                    isLoading={isLoading}
+                    editable={Boolean(editable)}
+                    onNameUpdate={onNameUpdate}
+                    iconCls={iconCls}
+                    id="workflow-designer-header"
+                    pagerProps={getPagerProps()}
+                    saveBtnProps={getSaveBtnProps()}
+                    dropdownProps={getDropdownProps()}
+                    descriptionEditorTitle="Workflow Description"
+                    item={entity}
+                    isDescriptionEditable={isDescriptionEditable}
+                    onDescriptionUpdate={onDescriptionUpdate}
+                />
+            )}
 
-                <Grid container sx={{ backgroundColor: "background.paper" }}>
-                    <Grid
-                        {...leftColumnGridProps}
-                        item
-                        sx={{
-                            borderRight: "1px solid #cecece",
-                            backgroundColor: "background.default",
-                        }}
-                    >
-                        <Box className="workflow-flowchart-container" sx={{ height: "100%", p: 2 }}>
-                            <WorkflowUnitsFlowchart
+            <Grid container sx={{ backgroundColor: "background.paper" }}>
+                <Grid
+                    {...leftColumnGridProps}
+                    item
+                    sx={{
+                        borderRight: "1px solid #cecece",
+                        backgroundColor: "background.default",
+                    }}
+                >
+                    <Box className="workflow-flowchart-container" sx={{ height: "100%", p: 2 }}>
+                        <WorkflowUnitsFlowchart
+                            editable={Boolean(editable)}
+                            onUnitRemove={handleUnitRemove}
+                            onSubworkflowUnitUpdate={onSubworkflowUnitUpdate}
+                            workflow={entity}
+                            activeUnit={unit}
+                            onClick={onUnitSelect}
+                            isCardContentExpanded={areWorkflowContentExpanded}
+                            headerStatusCls={headerStatusCls}
+                        />
+                    </Box>
+                </Grid>
+                <Grid
+                    className="workflow-subworkflow-container"
+                    item
+                    sx={{ display: "flex", flexDirection: "column" }}
+                    {...rightColumnGridProps}
+                >
+                    <WorkflowValidationAlert workflow={entity} />
+                    {unit.type === UnitType.subworkflow && (
+                        <>
+                            <SubworkflowHeader
+                                unit={unit}
+                                adjustable={Boolean(adjustable)}
                                 editable={Boolean(editable)}
+                                subworkflow={subworkflow}
                                 onUnitRemove={handleUnitRemove}
-                                onSubworkflowUnitUpdate={onSubworkflowUnitUpdate}
-                                workflow={entity}
-                                activeUnit={unit}
-                                onClick={onUnitSelect}
-                                isCardContentExpanded={areWorkflowContentExpanded}
                                 headerStatusCls={headerStatusCls}
+                                onUnitNameUpdate={onUnitNameUpdate}
+                                unitIndex={unitIndex}
+                                onUnitAdd={onUnitAdd}
+                                onUnitAddSubworkflowFromConfig={onUnitAddSubworkflowFromConfig}
+                                onUpdateUnitIndex={onUpdateUnitIndex}
+                                onSubworkflowUnitUpdate={onSubworkflowUnitUpdate}
+                                areWorkflowContentExpanded={areWorkflowContentExpanded}
+                                toggleExpandWorkflowContent={toggleExpandWorkflowContent}
+                                workflow={entity}
+                                materials={materials}
+                                materialsIndex={materialsIndex}
+                                materialsSet={materialsSet}
+                                jobHasParent={jobHasParent}
                             />
-                        </Box>
-                    </Grid>
-                    <Grid
-                        className="workflow-subworkflow-container"
-                        item
-                        sx={{ display: "flex", flexDirection: "column" }}
-                        {...rightColumnGridProps}
-                    >
-                        <WorkflowValidationAlert workflow={entity} />
-                        {unit.type === UnitType.subworkflow && (
-                            <>
-                                <SubworkflowHeader
-                                    unit={unit}
-                                    adjustable={Boolean(adjustable)}
-                                    editable={Boolean(editable)}
-                                    subworkflow={subworkflow}
-                                    onUnitRemove={handleUnitRemove}
-                                    headerStatusCls={headerStatusCls}
-                                    onUnitNameUpdate={onUnitNameUpdate}
-                                    unitIndex={unitIndex}
-                                    onUnitAdd={onUnitAdd}
-                                    onUnitAddSubworkflowFromConfig={onUnitAddSubworkflowFromConfig}
-                                    onUpdateUnitIndex={onUpdateUnitIndex}
-                                    onSubworkflowUnitUpdate={onSubworkflowUnitUpdate}
-                                    areWorkflowContentExpanded={areWorkflowContentExpanded}
-                                    toggleExpandWorkflowContent={toggleExpandWorkflowContent}
-                                    workflow={entity}
-                                    materials={materials}
-                                    materialsIndex={materialsIndex}
-                                    materialsSet={materialsSet}
-                                    jobHasParent={jobHasParent}
-                                />
-                                {/*
+                            {/*
                                     key={subworkflow.id} remounts when the user picks another flowchart branch.
                                     Inner tab index is held on {@link Workflow} (not Subworkflow) so job.render()
                                     remounts do not reset Important settings, while leaving the job Workflow tab
                                     unmounts Workflow and returns to Overview on the next visit.
                                 */}
-                                {subworkflow ? (
-                                    <Subworkflow
-                                        key={subworkflow.id}
-                                        className="card-body"
-                                        subworkflow={subworkflow}
-                                        activeTabIndex={
-                                            subworkflowActiveTabIndexById[subworkflow.id] ?? 0
-                                        }
-                                        hideComputeSubTab={hideComputeSubTab}
-                                        onActiveTabIndexChange={(tabIndex) =>
-                                            onSubworkflowActiveTabIndexChange(
-                                                subworkflow.id,
-                                                tabIndex,
-                                            )
-                                        }
-                                        onUpdate={onSubworkflowUnitUpdate}
-                                        isStandalone={isStandalone}
-                                        isMethodDataLoading={isMethodDataLoading}
-                                        editable={Boolean(editable)}
-                                        adjustable={Boolean(adjustable)}
-                                        onMaterialSwitch={onMaterialSwitch}
-                                        materials={materials}
-                                        materialsIndex={materialsIndex}
-                                        metaProperties={metaProperties}
-                                        onOutputUpdateRequest={onOutputUpdateRequest}
-                                        accountUsers={accountUsers}
-                                        accountUsersIsLoading={accountUsersIsLoading}
-                                        currentUser={profile.user.entity}
-                                        clusters={clusters}
-                                        pseudoUploadReduxDialog={pseudoUploadReduxDialog}
-                                        unitTypeReduxDialog={unitTypeReduxDialog}
-                                        profile={profile}
-                                        publicAccount={publicAccount}
-                                        createMetaProperty={createMetaProperty}
-                                        jobProperties={jobProperties}
-                                    />
-                                ) : null}
-                            </>
-                        )}
-                        {unit.type === UnitType.map && (
-                            <React.Suspense fallback={null}>
-                                <MapWorkflowDesigner
+                            {subworkflow ? (
+                                <Subworkflow
+                                    key={subworkflow.id}
                                     className="card-body"
-                                    unit={unit}
-                                    workflow={mapWorkflow}
-                                    onUpdate={onUnitUpdate}
-                                    onWorkflowUpdate={onMapWorkflowUpdate}
+                                    subworkflow={subworkflow}
+                                    activeTabIndex={
+                                        subworkflowActiveTabIndexById[subworkflow.id] ?? 0
+                                    }
+                                    hideComputeSubTab={hideComputeSubTab}
+                                    useUnitInspector={useUnitInspector}
+                                    onActiveTabIndexChange={(tabIndex) =>
+                                        onSubworkflowActiveTabIndexChange(subworkflow.id, tabIndex)
+                                    }
+                                    onUpdate={onSubworkflowUnitUpdate}
+                                    isStandalone={isStandalone}
+                                    isMethodDataLoading={isMethodDataLoading}
                                     editable={Boolean(editable)}
                                     adjustable={Boolean(adjustable)}
                                     onMaterialSwitch={onMaterialSwitch}
                                     materials={materials}
                                     materialsIndex={materialsIndex}
-                                    iconCls={iconCls}
+                                    metaProperties={metaProperties}
                                     onOutputUpdateRequest={onOutputUpdateRequest}
-                                    parentWorkflow={entity}
                                     accountUsers={accountUsers}
                                     accountUsersIsLoading={accountUsersIsLoading}
                                     currentUser={profile.user.entity}
-                                    publicAccount={publicAccount}
-                                    profile={profile}
                                     clusters={clusters}
-                                    dialogs={dialogs}
-                                    templates={templates}
-                                    isDescriptionEditable={isDescriptionEditable}
-                                    metaProperties={metaProperties}
+                                    pseudoUploadReduxDialog={pseudoUploadReduxDialog}
+                                    unitTypeReduxDialog={unitTypeReduxDialog}
+                                    profile={profile}
+                                    publicAccount={publicAccount}
+                                    createMetaProperty={createMetaProperty}
+                                    jobProperties={jobProperties}
                                 />
-                            </React.Suspense>
-                        )}
-                        {unit.type === UnitType.error && (
-                            <Box className="card-body" sx={{ p: 2 }}>
-                                <ErrorUnitContent unit={unit as ErrorUnit} />
-                            </Box>
-                        )}
-                    </Grid>
+                            ) : null}
+                        </>
+                    )}
+                    {unit.type === UnitType.map && (
+                        <React.Suspense fallback={null}>
+                            <MapWorkflowDesigner
+                                className="card-body"
+                                unit={unit}
+                                workflow={mapWorkflow}
+                                onUpdate={onUnitUpdate}
+                                onWorkflowUpdate={onMapWorkflowUpdate}
+                                editable={Boolean(editable)}
+                                adjustable={Boolean(adjustable)}
+                                onMaterialSwitch={onMaterialSwitch}
+                                materials={materials}
+                                materialsIndex={materialsIndex}
+                                iconCls={iconCls}
+                                onOutputUpdateRequest={onOutputUpdateRequest}
+                                parentWorkflow={entity}
+                                accountUsers={accountUsers}
+                                accountUsersIsLoading={accountUsersIsLoading}
+                                currentUser={profile.user.entity}
+                                publicAccount={publicAccount}
+                                profile={profile}
+                                clusters={clusters}
+                                dialogs={dialogs}
+                                templates={templates}
+                                isDescriptionEditable={isDescriptionEditable}
+                                metaProperties={metaProperties}
+                            />
+                        </React.Suspense>
+                    )}
+                    {unit.type === UnitType.error && (
+                        <Box className="card-body" sx={{ p: 2 }}>
+                            <ErrorUnitContent unit={unit as ErrorUnit} />
+                        </Box>
+                    )}
                 </Grid>
-                <Divider />
-                {showMetadata && (
-                    <MetadataComponent
-                        tags={get(entity, "tags", []) as string[]}
-                        editable={Boolean(editable)}
-                        isSetPublicVisible={isSetPublicVisible}
-                        onUpdateTags={onUpdateTags}
-                        publicAccount={publicAccount.entity}
-                    />
-                )}
-                <Divider />
-                {showHistory && <HistoryComponent items={workflowHistory as any} />}
-            </div>
-        </ThemeProvider>
+            </Grid>
+            <Divider />
+            {showMetadata && (
+                <MetadataComponent
+                    tags={get(entity, "tags", []) as string[]}
+                    editable={Boolean(editable)}
+                    isSetPublicVisible={isSetPublicVisible}
+                    onUpdateTags={onUpdateTags}
+                    publicAccount={publicAccount.entity}
+                />
+            )}
+            <Divider />
+            {showHistory && <HistoryComponent items={workflowHistory as any} />}
+        </div>
+    );
+
+    return useHostTheme ? (
+        content
+    ) : (
+        <ThemeProvider theme={oldLightMaterialUITheme}>{content}</ThemeProvider>
     );
 }

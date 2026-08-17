@@ -69,6 +69,10 @@ type WorkflowDesignerContainerBaseProps = {
     openDocumentationDialog?: (searchText: string) => void;
     /** Fires when unsaved-changes state flips; lets the shell mark Save / guard navigation. */
     onDirtyChange?: (isDirty: boolean) => void;
+    /** See {@link SubworkflowProps.useUnitInspector}. */
+    useUnitInspector?: boolean;
+    /** See {@link WorkflowDefaultLayoutProps.useHostTheme}. */
+    useHostTheme?: boolean;
 };
 
 export type WorkflowDesignerContainerProps = WorkflowDesignerContainerBaseProps;
@@ -121,6 +125,8 @@ export default function WorkflowDesignerContainer(containerProps: WorkflowDesign
         getDefaultComputeConfig,
         generateEntityId,
         onDirtyChange,
+        useUnitInspector,
+        useHostTheme,
     } = containerProps;
 
     const workflowComponents: WorkflowComponents = useMemo(
@@ -394,6 +400,8 @@ export default function WorkflowDesignerContainer(containerProps: WorkflowDesign
         <WorkflowComponentsContext.Provider value={workflowComponents}>
             <UndoSnackbar state={removeUndoState} onClose={() => setRemoveUndoState(null)} />
             <WoveWorkflowDesigner
+                useUnitInspector={useUnitInspector}
+                useHostTheme={useHostTheme}
                 workflow={workflow}
                 isDirty={isDirty}
                 jobHasParent={Boolean((state.job || {}).parentJob)}

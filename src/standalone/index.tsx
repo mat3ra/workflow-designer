@@ -136,6 +136,8 @@ function App() {
     );
     const selectedMaterial = allMaterials[materialIndex];
     const [isDirty, setIsDirty] = useState(false);
+    // Phase 3.3 surface, opt-in: the demo is where it gets reviewed before a host flips it on.
+    const [useUnitInspector, setUseUnitInspector] = useState(true);
 
     // Re-key the designer when either selection changes so it re-mounts cleanly
     const designerKey = `${workflowIndex}-${materialIndex}`;
@@ -239,6 +241,14 @@ function App() {
                         />
                     )}
                     <Chip
+                        label={useUnitInspector ? "Unit inspector: on" : "Unit inspector: off"}
+                        size="small"
+                        variant={useUnitInspector ? "filled" : "outlined"}
+                        color="primary"
+                        onClick={() => setUseUnitInspector((on) => !on)}
+                        data-tid="unit-inspector-toggle"
+                    />
+                    <Chip
                         label={`${allWorkflowJsons.length} workflows · ${allMaterials.length} materials`}
                         size="small"
                         variant="outlined"
@@ -251,7 +261,9 @@ function App() {
             {/* ---- Designer ---- */}
             <Box sx={{ height: "calc(100vh - 72px)", overflow: "auto" }}>
                 <WorkflowDesignerContainer
-                    key={designerKey}
+                    key={`${designerKey}-${useUnitInspector}`}
+                    useUnitInspector={useUnitInspector}
+                    useHostTheme
                     initialWorkflow={wodeWorkflow}
                     defaultMaterial={selectedMaterial}
                     editable

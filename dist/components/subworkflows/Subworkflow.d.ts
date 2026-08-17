@@ -34,6 +34,15 @@ export type SubworkflowProps = {
      * will actually run with.
      */
     hideComputeSubTab?: boolean;
+    /**
+     * Clicking a unit in the flowchart opens its settings in a side drawer,
+     * instead of the reader leaving for the Settings tab and finding that unit
+     * among all the others.
+     *
+     * Opt-in per host: the tabs stay exactly as they are, so a host with tests or
+     * documentation against them is unaffected until it flips this.
+     */
+    useUnitInspector?: boolean;
 };
 export declare const TAB_NAVIGATION_CONFIG: {
     readonly overview: {
@@ -57,5 +66,5 @@ export declare const TAB_NAVIGATION_CONFIG: {
         readonly href: "sw-compute";
     };
 };
-export declare function Subworkflow({ subworkflow, onUpdate, isStandalone, editable, adjustable, metaProperties, onOutputUpdateRequest, isMethodDataLoading, accountUsers, accountUsersIsLoading, currentUser, clusters, materials, materialsIndex, onMaterialSwitch, profile, publicAccount, createMetaProperty, pseudoUploadReduxDialog, unitTypeReduxDialog, className, jobProperties, activeTabIndex, onActiveTabIndexChange, hideComputeSubTab, }: SubworkflowProps): React.JSX.Element;
+export declare function Subworkflow({ subworkflow, onUpdate, isStandalone, editable, adjustable, metaProperties, onOutputUpdateRequest, isMethodDataLoading, accountUsers, accountUsersIsLoading, currentUser, clusters, materials, materialsIndex, onMaterialSwitch, profile, publicAccount, createMetaProperty, pseudoUploadReduxDialog, unitTypeReduxDialog, className, jobProperties, activeTabIndex, onActiveTabIndexChange, useUnitInspector, hideComputeSubTab, }: SubworkflowProps): React.JSX.Element;
 //# sourceMappingURL=Subworkflow.d.ts.map

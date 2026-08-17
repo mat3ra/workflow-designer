@@ -109,6 +109,10 @@ export type WorkflowProps = {
      * which one the job will run with.
      */
     hideComputeSubTab?: boolean;
+    /** See {@link SubworkflowProps.useUnitInspector}. */
+    useUnitInspector?: boolean;
+    /** See {@link WorkflowDefaultLayoutProps.useHostTheme}. */
+    useHostTheme?: boolean;
 };
 
 const noop = (): undefined => undefined;
@@ -171,6 +175,8 @@ export function Workflow({
     isDescriptionEditable,
     jobProperties,
     hideComputeSubTab = false,
+    useUnitInspector = false,
+    useHostTheme = false,
     showUnitStatus = false,
 }: WorkflowProps) {
     const [unitIndex, setUnitIndex] = useState(0);
@@ -502,6 +508,8 @@ export function Workflow({
                     createMetaProperty={createMetaProperty}
                     jobProperties={jobProperties}
                     hideComputeSubTab={hideComputeSubTab}
+                    useUnitInspector={useUnitInspector}
+                    useHostTheme={useHostTheme}
                     subworkflowActiveTabIndexById={subworkflowActiveTabIndexById}
                     onSubworkflowActiveTabIndexChange={onSubworkflowActiveTabIndexChange}
                 />

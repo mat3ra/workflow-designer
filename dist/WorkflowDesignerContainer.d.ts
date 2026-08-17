@@ -50,6 +50,10 @@ type WorkflowDesignerContainerBaseProps = {
     openDocumentationDialog?: (searchText: string) => void;
     /** Fires when unsaved-changes state flips; lets the shell mark Save / guard navigation. */
     onDirtyChange?: (isDirty: boolean) => void;
+    /** See {@link SubworkflowProps.useUnitInspector}. */
+    useUnitInspector?: boolean;
+    /** See {@link WorkflowDefaultLayoutProps.useHostTheme}. */
+    useHostTheme?: boolean;
 };
 export type WorkflowDesignerContainerProps = WorkflowDesignerContainerBaseProps;
 export default function WorkflowDesignerContainer(containerProps: WorkflowDesignerContainerProps): React.JSX.Element;

@@ -53,7 +53,7 @@ interface ImportantSettingsForUnitProps {
     onContextChanged: () => void;
 }
 
-function ImportantSettingsForUnit({
+export function ImportantSettingsForUnit({
     unit,
     unitIndex,
     onContextChanged,

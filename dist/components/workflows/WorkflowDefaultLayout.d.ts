@@ -87,6 +87,17 @@ export type WorkflowDefaultLayoutProps = {
     onSubworkflowActiveTabIndexChange: (subworkflowId: string, tabIndex: number) => void;
     /** See {@link SubworkflowProps.hideComputeSubTab}. */
     hideComputeSubTab?: boolean;
+    /** See {@link SubworkflowProps.useUnitInspector}. */
+    useUnitInspector?: boolean;
+    /**
+     * Renders under the host's theme instead of forcing cove's old light one.
+     *
+     * The designer has always pinned itself to `oldLightMaterialUITheme`, which
+     * is why a dark host frames a white canvas: the shell is dark, and this
+     * subtree is not. Opt-in, because hosts that expect the light designer today
+     * would otherwise be restyled without asking.
+     */
+    useHostTheme?: boolean;
 };
 export declare function WorkflowDefaultLayout(props: WorkflowDefaultLayoutProps): React.JSX.Element;
 //# sourceMappingURL=WorkflowDefaultLayout.d.ts.map

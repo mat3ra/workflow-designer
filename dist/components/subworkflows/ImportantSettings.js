@@ -33,7 +33,7 @@ function getProviderTitle(provider) {
             return provider.name;
     }
 }
-function ImportantSettingsForUnit({ unit, unitIndex, onContextChanged, }) {
+export function ImportantSettingsForUnit({ unit, unitIndex, onContextChanged, }) {
     const [formRevision, setFormRevision] = React.useState(0);
     const { SubworkflowFormTitleComponent, BrillouinZoneImageComponent } = useWorkflowComponents();
     return (_jsxs(Box, { my: 2, className: "important-settings-for-unit ImportantSettingsForUnit", id: unit.flowchartId, "data-tid": unit.name, children: [_jsx(SubworkflowFormTitleComponent, { title: `Unit ${unitIndex}: ${unit.name}` }), _jsx(Box, { ml: 3, children: getUnitImportantSettingsProviders(unit).map((provider, index) => {

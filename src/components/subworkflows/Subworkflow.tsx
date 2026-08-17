@@ -38,6 +38,7 @@ import type {
 import { useWorkflowComponents } from "../../WorkflowComponentsContext";
 import { UndoSnackbar, type UndoSnackbarState } from "../common/UndoSnackbar";
 import UnitModal from "../units/UnitModal";
+import UnitInspectorDrawer from "./UnitInspectorDrawer";
 import { ImportantSettings } from "./ImportantSettings";
 import { SubworkflowExecutionUnitDetailsRow } from "./SubworkflowExecutionUnitDetailsRow";
 import { SubworkflowMethodPanel } from "./SubworkflowMethodPanel";
@@ -79,6 +80,15 @@ export type SubworkflowProps = {
      * will actually run with.
      */
     hideComputeSubTab?: boolean;
+    /**
+     * Clicking a unit in the flowchart opens its settings in a side drawer,
+     * instead of the reader leaving for the Settings tab and finding that unit
+     * among all the others.
+     *
+     * Opt-in per host: the tabs stay exactly as they are, so a host with tests or
+     * documentation against them is unaffected until it flips this.
+     */
+    useUnitInspector?: boolean;
 };
 
 export const TAB_NAVIGATION_CONFIG = {
@@ -133,6 +143,7 @@ export function Subworkflow({
     jobProperties,
     activeTabIndex,
     onActiveTabIndexChange,
+    useUnitInspector = false,
     hideComputeSubTab = false,
 }: SubworkflowProps) {
     const { getDefaultComputeConfig } = useWorkflowComponents();
@@ -305,15 +316,23 @@ export function Subworkflow({
         [applyToSubworkflow],
     );
 
+    const [isInspectorOpen, setIsInspectorOpen] = useState(false);
+
     const onUnitSelect = useCallback(
         (unit: { flowchartId: string }) => {
             const index = subworkflow.units.findIndex((u) => u.flowchartId === unit.flowchartId);
             if (index > -1) {
                 setUnitIndex((prev) => (index !== prev ? index : prev));
+                if (useUnitInspector) setIsInspectorOpen(true);
             }
         },
-        [subworkflow.units],
+        [subworkflow.units, useUnitInspector],
     );
+
+    // The selected index survives units being added or removed; the drawer must
+    // not go on showing settings for a unit that is no longer there.
+    const inspectedUnit =
+        isInspectorOpen && useUnitInspector ? subworkflow.unitsInstances[unitIndex] ?? null : null;
 
     const setTabIndex = useCallback(
         (index: number) => {
@@ -355,6 +374,14 @@ export function Subworkflow({
     return (
         <Stack data-tid="subworkflow" height="100%" className={className}>
             <UndoSnackbar state={removeUndoState} onClose={() => setRemoveUndoState(null)} />
+            {useUnitInspector ? (
+                <UnitInspectorDrawer
+                    unit={inspectedUnit}
+                    unitIndex={unitIndex}
+                    onClose={() => setIsInspectorOpen(false)}
+                    onContextChanged={onImportantSettingsContextChanged}
+                />
+            ) : null}
             <TabsMenu
                 tabs={tabs}
                 activeTabIndex={visibleTabIndex}

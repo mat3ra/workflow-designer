@@ -82,7 +82,11 @@ export type WorkflowProps = {
      * which one the job will run with.
      */
     hideComputeSubTab?: boolean;
+    /** See {@link SubworkflowProps.useUnitInspector}. */
+    useUnitInspector?: boolean;
+    /** See {@link WorkflowDefaultLayoutProps.useHostTheme}. */
+    useHostTheme?: boolean;
 };
-export declare function Workflow({ workflow, metaProperties, onUpdate, onOutputUpdateRequest, onUpdateTags, extraActions, onSave, isDirty, onNameUpdate, iconCls, onUnitAdd, onUnitAddSubworkflowFromConfig, onUnitRemove, onUnitUpdate, onSubworkflowUnitUpdate, materials, materialsIndex, jobHasParent, onMaterialSwitch, showHeaderPager, onHeaderPagerUpdate, dialogs, createMetaProperty, accountUsers, accountUsersIsLoading, profile, publicAccount, clusters, templates, isStandalone, isHeaderCompact, editable, adjustable, isLoading, showHeader, isMethodDataLoading, materialsSet, isMap, isSetPublicVisible, showMetadata, showHistory, workflowHistory, onIsMultiMaterialChanged, onRender, renderAtJobLevel, workflowRenderGeneration, isDescriptionEditable, jobProperties, hideComputeSubTab, showUnitStatus, }: WorkflowProps): React.JSX.Element;
+export declare function Workflow({ workflow, metaProperties, onUpdate, onOutputUpdateRequest, onUpdateTags, extraActions, onSave, isDirty, onNameUpdate, iconCls, onUnitAdd, onUnitAddSubworkflowFromConfig, onUnitRemove, onUnitUpdate, onSubworkflowUnitUpdate, materials, materialsIndex, jobHasParent, onMaterialSwitch, showHeaderPager, onHeaderPagerUpdate, dialogs, createMetaProperty, accountUsers, accountUsersIsLoading, profile, publicAccount, clusters, templates, isStandalone, isHeaderCompact, editable, adjustable, isLoading, showHeader, isMethodDataLoading, materialsSet, isMap, isSetPublicVisible, showMetadata, showHistory, workflowHistory, onIsMultiMaterialChanged, onRender, renderAtJobLevel, workflowRenderGeneration, isDescriptionEditable, jobProperties, hideComputeSubTab, useUnitInspector, useHostTheme, showUnitStatus, }: WorkflowProps): React.JSX.Element;
 export {};
 //# sourceMappingURL=Workflow.d.ts.map

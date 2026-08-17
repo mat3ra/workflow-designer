@@ -108,6 +108,8 @@ function App() {
     });
     const selectedMaterial = allMaterials[materialIndex];
     const [isDirty, setIsDirty] = useState(false);
+    // Phase 3.3 surface, opt-in: the demo is where it gets reviewed before a host flips it on.
+    const [useUnitInspector, setUseUnitInspector] = useState(true);
     // Re-key the designer when either selection changes so it re-mounts cleanly
     const designerKey = `${workflowIndex}-${materialIndex}`;
     const handleSave = useCallback(async () => {
@@ -141,7 +143,7 @@ function App() {
                                     }, children: allMaterials.map((mat, i) => {
                                         var _a, _b;
                                         return (_jsx(MenuItem, { value: i, children: (_b = (_a = mat === null || mat === void 0 ? void 0 : mat.name) !== null && _a !== void 0 ? _a : mat === null || mat === void 0 ? void 0 : mat.formula) !== null && _b !== void 0 ? _b : `Material ${i + 1}` }, i));
-                                    }) })] }), isDirty && (_jsx(Chip, { label: "\u25CF Unsaved changes", size: "small", variant: "outlined", color: "warning", "data-tid": "dirty-indicator" })), _jsx(Chip, { label: `${allWorkflowJsons.length} workflows · ${allMaterials.length} materials`, size: "small", variant: "outlined", color: "secondary", sx: { ml: "auto" } })] }) }), _jsx(Box, { sx: { height: "calc(100vh - 72px)", overflow: "auto" }, children: _jsx(WorkflowDesignerContainer, { initialWorkflow: wodeWorkflow, defaultMaterial: selectedMaterial, editable: true, showHistory: false, workflowHistory: { list: [], loading: false }, isStandalone: true, adjustable: true, showHeader: true, showMetadata: false, accountUsers: [], accountUsersIsLoading: false, profile: {
+                                    }) })] }), isDirty && (_jsx(Chip, { label: "\u25CF Unsaved changes", size: "small", variant: "outlined", color: "warning", "data-tid": "dirty-indicator" })), _jsx(Chip, { label: useUnitInspector ? "Unit inspector: on" : "Unit inspector: off", size: "small", variant: useUnitInspector ? "filled" : "outlined", color: "primary", onClick: () => setUseUnitInspector((on) => !on), "data-tid": "unit-inspector-toggle" }), _jsx(Chip, { label: `${allWorkflowJsons.length} workflows · ${allMaterials.length} materials`, size: "small", variant: "outlined", color: "secondary", sx: { ml: "auto" } })] }) }), _jsx(Box, { sx: { height: "calc(100vh - 72px)", overflow: "auto" }, children: _jsx(WorkflowDesignerContainer, { useUnitInspector: useUnitInspector, useHostTheme: true, initialWorkflow: wodeWorkflow, defaultMaterial: selectedMaterial, editable: true, showHistory: false, workflowHistory: { list: [], loading: false }, isStandalone: true, adjustable: true, showHeader: true, showMetadata: false, accountUsers: [], accountUsersIsLoading: false, profile: {
                         user: { entity: { id: "1" } },
                         account: { entity: { id: "1" } },
                         personalAccount: { entity: { id: "1" } },
@@ -154,7 +156,7 @@ function App() {
                         nodes: 1,
                         queue: "D",
                         timeLimit: "01:00:00",
-                    }), generateEntityId: () => crypto.randomUUID(), openDocumentationDialog: undefined, onDirtyChange: setIsDirty }, designerKey) })] }));
+                    }), generateEntityId: () => crypto.randomUUID(), openDocumentationDialog: undefined, onDirtyChange: setIsDirty }, `${designerKey}-${useUnitInspector}`) })] }));
 }
 // ---------------------------------------------------------------------------
 // Mount

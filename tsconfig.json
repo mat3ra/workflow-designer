@@ -19,6 +19,9 @@
         "noImplicitThis": false,
         "alwaysStrict": false,
         "paths": {
+            "@mat3ra/workflow-designer/*": [
+                "./*"
+            ],
             "@mat3ra/wode": [
                 "node_modules/@mat3ra/wode"
             ],
