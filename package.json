@@ -65,7 +65,7 @@
         "@mat3ra/ive": "2026.8.19-0",
         "@mat3ra/move": "2026.8.19-0",
         "@mat3ra/prove": "2026.8.19-0",
-        "@mat3ra/wove": "https://github.com/mat3ra/wove/releases/download/wip-7c4cd4a/wove.tgz",
+        "@mat3ra/wove": "2026.8.19-0",
         "@mat3ra/utils": "2026.8.18-1",
         "@mui/icons-material": "^5.11.9",
         "@mui/lab": "^5.0.0-alpha.120",
