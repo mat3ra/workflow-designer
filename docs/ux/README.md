@@ -26,6 +26,7 @@ Captures of what has been built so far, alongside the originals:
 | [`2026-08-17-step-library.jpg`](./current-state/2026-08-17-step-library.jpg) | W8: adding a step by picking one, instead of pasting JSON |
 | [`2026-08-17-input-variables.jpg`](./current-state/2026-08-17-input-variables.jpg) | W4: the context a template renders with, grouped by origin, and a typo named on its line |
 | [`2026-08-17-node-cards.jpg`](./current-state/2026-08-17-node-cards.jpg) | W2, W3, W11: unit cards saying what they run instead of a UUID, readable at default zoom |
+| [`2026-08-17-brillouin-zone-rhl.png`](./current-state/2026-08-17-brillouin-zone-rhl.png) | W5: the zone computed from the material's own lattice, the k-path drawn through it, and the symmetry points the path does not visit (L1, P2) shown faintly |
 
 Portion status lives in the plan overview's §0 table.
 

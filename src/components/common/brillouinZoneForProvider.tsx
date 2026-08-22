@@ -91,6 +91,15 @@ export function brillouinZoneComponentForProvider(
         return cached;
     }
     const providerLattice = readProviderLattice(provider as ProviderWithMaterial);
+    // Every point the lattice offers, so the zone shows where a path *could* go and not only
+    // where it does; the default path reaches all of them for FCC or HEX, but a rhombohedral or
+    // monoclinic lattice has several it never touches.
+    const allSymmetryPoints = providerLattice
+        ? [...providerLattice.symmetryPoints.entries()].map(([point, coordinates]) => ({
+              point,
+              coordinates,
+          }))
+        : undefined;
     const component: React.ComponentType<BrillouinZoneProps> = providerLattice
         ? (props) => (
               <BrillouinZone
@@ -98,6 +107,7 @@ export function brillouinZoneComponentForProvider(
                   {...props}
                   reciprocalVectors={providerLattice.reciprocalVectors}
                   path={readPath(provider as ProviderWithMaterial, providerLattice.symmetryPoints)}
+                  symmetryPoints={allSymmetryPoints}
               />
           )
         : BrillouinZone;

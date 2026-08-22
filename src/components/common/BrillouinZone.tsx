@@ -30,6 +30,13 @@ export interface BrillouinZoneProps {
     description?: string;
     /** The k-path currently being edited, drawn inside the zone and labelled at each point. */
     path?: BrillouinZonePathPoint[];
+    /**
+     * Every high-symmetry point of this lattice. Those the path does not visit are drawn faintly,
+     * so the picture also answers where a path *could* go — for FCC or HEX the default path
+     * happens to reach all of them, but a rhombohedral or monoclinic lattice has several it never
+     * touches, and those were invisible.
+     */
+    symmetryPoints?: BrillouinZonePathPoint[];
 }
 
 /** Fixed three-quarter view; the zone is a static illustration, not an interactive scene. */
@@ -124,6 +131,7 @@ export function BrillouinZone({
     imgSrc,
     description,
     path,
+    symmetryPoints,
 }: BrillouinZoneProps) {
     const theme = useTheme();
     const faces = useMemo(
@@ -141,27 +149,42 @@ export function BrillouinZone({
      * Labels are pushed away from the zone centre: high-symmetry points sit in one irreducible
      * wedge, so a fixed offset would stack them all on top of each other.
      */
-    const drawnPath = useMemo(() => {
-        if (!scene || !path?.length) return null;
+    const place = useMemo(() => {
+        if (!scene) return null;
         const origin = scene.toScreen([0, 0, 0]);
-        const seen = new Set<string>();
-        const points = path.map((item) => {
+        return (item: BrillouinZonePathPoint, label: string) => {
             const { x, y } = scene.toScreen(item.coordinates);
-            const isFirst = !seen.has(item.point);
-            seen.add(item.point);
             const [dx, dy] = [x - origin.x, y - origin.y];
             const distance = Math.hypot(dx, dy) || 1;
             return {
                 x,
                 y,
-                label: isFirst ? item.point : "",
+                label,
                 labelX: x + (dx / distance) * LABEL_OFFSET,
                 // Γ sits at the origin, where there is no outward direction — nudge it up.
                 labelY: distance > 1 ? y + (dy / distance) * LABEL_OFFSET : y - LABEL_OFFSET,
             };
+        };
+    }, [scene]);
+
+    const drawnPath = useMemo(() => {
+        if (!place || !path?.length) return null;
+        const seen = new Set<string>();
+        const points = path.map((item) => {
+            const isFirst = !seen.has(item.point);
+            seen.add(item.point);
+            return place(item, isFirst ? item.point : "");
         });
         return { points, polyline: points.map((p) => `${p.x},${p.y}`).join(" ") };
-    }, [scene, path]);
+    }, [place, path]);
+
+    /** Symmetry points the path never reaches — drawn, but quietly. */
+    const unvisitedPoints = useMemo(() => {
+        if (!place || !symmetryPoints?.length) return null;
+        const visited = new Set((path ?? []).map((item) => item.point));
+        const rest = symmetryPoints.filter((item) => !visited.has(item.point));
+        return rest.length ? rest.map((item) => place(item, item.point)) : null;
+    }, [place, symmetryPoints, path]);
 
     if (!projected) {
         if (!imgSrc) return null;
@@ -190,7 +213,8 @@ export function BrillouinZone({
                 role="img"
                 aria-label={
                     drawnPath
-                        ? `K-path through the first Brillouin zone of a ${latticeType} lattice`
+                        ? `K-path through the first Brillouin zone of a ${latticeType} lattice, ` +
+                          `with its high-symmetry points labelled`
                         : `First Brillouin zone of a ${latticeType} lattice`
                 }
             >
@@ -208,6 +232,35 @@ export function BrillouinZone({
                         strokeLinejoin="round"
                     />
                 ))}
+                {unvisitedPoints ? (
+                    <g data-tid="brillouin-zone-symmetry-points" opacity={0.55}>
+                        {unvisitedPoints.map((point) => (
+                            <React.Fragment key={point.label}>
+                                <circle
+                                    cx={point.x}
+                                    cy={point.y}
+                                    r={1.8}
+                                    fill={edgeColor}
+                                    stroke={pathColor}
+                                    strokeWidth={1}
+                                />
+                                <text
+                                    x={point.labelX}
+                                    y={point.labelY}
+                                    fontSize={9}
+                                    textAnchor="middle"
+                                    dominantBaseline="middle"
+                                    fill={pathColor}
+                                    stroke={edgeColor}
+                                    strokeWidth={2}
+                                    paintOrder="stroke"
+                                >
+                                    {point.label}
+                                </text>
+                            </React.Fragment>
+                        ))}
+                    </g>
+                ) : null}
                 {drawnPath ? (
                     <g data-tid="brillouin-zone-path">
                         <polyline

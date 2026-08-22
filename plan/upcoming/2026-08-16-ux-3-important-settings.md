@@ -109,6 +109,15 @@ heading and its "coordinates are derived at render time" note — both restated 
 or described the implementation. Matched by schema shape, so q-path and i-path providers get
 the same editor.
 
+**All of the lattice's high-symmetry points are drawn (2026-08-17).** The first version labelled
+only the points the *path visits*, which for FCC, HEX, CUB, TET, BCC, TRI and ORC happens to be
+all of them — the default path reaches every point `made` knows. It is not true for the
+low-symmetry lattices: rhombohedral misses L1 and P2, monoclinic misses four, base-centred
+monoclinic six. Those were invisible, so the picture could not tell you where a path *could* go.
+Unvisited points now render as small faint markers with quiet labels, the path's own points stay
+solid and bold. Verified across FCC, HEX and RHL — sapphire shows exactly L1 and P2 as the extra
+pair (`docs/ux/current-state/2026-08-17-brillouin-zone-rhl.png`).
+
 **The path is drawn inside the Brillouin zone**, labelled at each high-symmetry point — the
 thing a per-lattice PNG could never do, and the reason the zone was worth computing rather than
 fetching. `BrillouinZone` now exposes the projection it fits the solid with, so the path lands
