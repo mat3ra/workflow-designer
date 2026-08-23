@@ -1,0 +1,28 @@
+# Netlify build for the standalone demo (src/standalone), the same bundle the
+# GitHub Pages job publishes. Connect this repo in the Netlify UI ("Add new site
+# → Import an existing project") and these settings drive the build — no token
+# needs to live anywhere.
+#
+# Linking the repo also turns on Deploy Previews: every pull request gets its own
+# URL built from this file, which is what GitHub Pages cannot do (its deploy job
+# only runs on `main`).
+
+[build]
+    command = "npm run build:standalone"
+    publish = "build"
+
+[build.environment]
+    NODE_VERSION = "20"
+    # The workspace resolves @mat3ra peers across a range of React/MUI versions;
+    # the CI install uses the same flag.
+    NPM_FLAGS = "--legacy-peer-deps"
+    # GitHub Pages serves the demo under /workflow-designer/; a Netlify site
+    # serves it from the domain root.
+    VITE_BASE_PATH = "/"
+
+# The demo is a single page — anything else 404s to the shell rather than to
+# Netlify's error page.
+[[redirects]]
+    from = "/*"
+    to = "/index.html"
+    status = 200
