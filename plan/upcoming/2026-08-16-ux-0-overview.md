@@ -2,7 +2,10 @@
 
 - **Ticket:** [SOF-8024](https://mat3ra.atlassian.net/browse/SOF-8024)
 - **Status:** in progress — portions 1, 3 and 6 built on this branch, 4 and 5 started; see §0.
-- **Updated:** 2026-08-17
+- **Updated:** 2026-08-27
+- **Related plans:** [`2026-08-27-viewer-0-overview.md`](./2026-08-27-viewer-0-overview.md)
+  (SOF-8035) — isolating a read-only viewer from the designer, building on the steps
+  model, studio layout, and tokens from this stream.
 - **Review inputs:** [`docs/ux/README.md`](../../docs/ux/README.md) (issue inventory
   W1–W12), [`docs/ux/mockups.html`](../../docs/ux/mockups.html) (Mockups A–E),
   [`docs/ux/current-state/`](../../docs/ux/current-state/) (captures).
