@@ -7,3 +7,4 @@ dist/
 *.tsbuildinfo
 .nyc_output/
 coverage/
+plan/context/session/

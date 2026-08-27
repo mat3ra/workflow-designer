@@ -80,6 +80,15 @@ Real energy = functional.compute_energy(density);
 - Use `///` for single-line doc comments.
 - Use `//` for inline implementation comments.
 - Never use bare `/* ... */` for documentation; use `/** ... */`.
+- Functions that will be user-facing need docstrings with signatures, descriptions;
+- Functions or methods that are used internally and have short logic and well-named do not need one-line docstrings.
+
+```python
+# ❌ INCORRECT: useless one-line docstring
+def final_lattice_vectors(self, text):
+    """Same cell as the initial structure. See `_lattice_vectors`."""
+    return self._lattice_vectors(text)
+```
 
 ### 1.6. Linter
 
@@ -93,6 +102,39 @@ Use pre-commit to run linters and formatters automatically.
 
 Use GitHub Actions to run tests and linters automatically.
 
+#### 1.8.1. Building a WIP test release of a `@mat3ra/*` package
+
+`@mat3ra/*` packages don't commit their build output (`dist/`) to git, and don't have a
+local/manual publish path — CI is the only thing that builds and publishes a tarball. To let
+a consumer install a not-yet-merged commit of a `@mat3ra/*` package (e.g. to test a fix in
+`code` from a branch in `made` before `code`'s PR merges), publish a **WIP pre-release**:
+
+1. **Push a commit with `[release]` anywhere in its message** to the package repo (any
+   branch). Its `.github/workflows/release-wip.yml` calls a reusable workflow in
+   [`mat3ra/actions`](https://github.com/mat3ra/actions) that builds, packs, and publishes the
+   package as a GitHub **pre-release** tarball asset tagged `wip-<short-commit-sha>` (e.g.
+   `wip-e8ed741`). Each commit gets its own immutable tag — the asset URL never changes
+   content under you.
+2. **Install it in a consumer** — no local tooling or cloned `mat3ra/actions` needed, just a
+   URL in `package.json` in place of a normal semver range:
+
+   ```json
+   "@mat3ra/code": "https://github.com/mat3ra/code/releases/download/wip-e8ed741/code.tgz"
+   ```
+
+   Then a plain `npm install` resolves it like any other tarball dependency.
+3. **Re-publishing on the same commit** (e.g. re-running the workflow) uploads over that
+   commit's existing asset rather than minting a new tag. Because the URL doesn't change, a
+   plain `npm install` in the consumer won't refetch it — npm caches by URL and
+   `package-lock.json` pins the old `integrity` hash. Force it explicitly:
+   `npm install @mat3ra/<pkg>@<url> --force`.
+4. Once the source commit's real PR merges and a normal registry version is published,
+   switch the consumer back to a semver range/pin — the WIP tarball URL is only for testing
+   pre-merge changes.
+
+Full details (tag scheme, cleanup of stale pre-releases, the exact reusable workflow
+contract): see [`mat3ra/actions`](https://github.com/mat3ra/actions)'s README.
+
 ## 2. !!! IMPORTANT !!!: Code Editing & Development HARD RULES
 
 ### 2.1. HARD RULE 1: Never commit without explicit ask from user
@@ -101,7 +143,7 @@ NEVER commit changes using `git commit` without the user's explicit ask. Leave f
 
 ### 2.2. HARD RULE 2: use `<PROJECT_DIRECTORY>/agents/workdir/` for ALL scratch files.
 
-NEVER create any throwaway files at the top level of the project directory (`<PROJECT_DIRECTORY>`). The top level of `<PROJECT_DIRECTORY>` must remain clean and contain only tracked project files. All throw-away scripts — debug helpers, patch scripts, test snippets, one-off analysis scripts — MUST go in `<PROJECT_DIRECTORY>/agents/workdir/tmp/`. Create that directory if it does not exist. Examples of files that belong in `<PROJECT_DIRECTORY>/agents/workdir/tmp/`: `debug_*.py`, `fix_*.py`, `patch_*.py`, `print_*.py`, `test_*.py` / `test_*.cpp` that are not formal tests in `tests/`, any other ephemeral script written to inspect or patch source code. Any potentially reusable agent artifacts should be either in `<PROJECT_DIRECTORY>/agents/workdir/reusable` (if they're intended to be used in the current project only) or in the repository's top-level `plan/` folder (see section 6) if they're plan or context documents intended to persist. NO EXCEPTIONS.
+NEVER create any throwaway files at the top level of the project directory (`<PROJECT_DIRECTORY>`). The top level of `<PROJECT_DIRECTORY>` must remain clean and contain only tracked project files. All throw-away scripts — debug helpers, patch scripts, test snippets, one-off analysis scripts — MUST go in `<PROJECT_DIRECTORY>/agents/workdir/tmp/`. Create that directory if it does not exist. Use well-named subfolders for each work item, so it's structured and easy to understand. Examples of files that belong in `<PROJECT_DIRECTORY>/agents/workdir/tmp/`: `debug_*.py`, `fix_*.py`, `patch_*.py`, `print_*.py`, `test_*.py` / `test_*.cpp` that are not formal tests in `tests/`, any other ephemeral script written to inspect or patch source code. Any potentially reusable agent artifacts should be either in `<PROJECT_DIRECTORY>/agents/workdir/reusable` (if they're intended to be used in the current project only) or in `<PROJECT_DIRECTORY>/agents/plan` (if they're intended to be used in multiple projects). NO EXCEPTIONS.
 
 ### 2.3. HARD RULE 3: Always setup and use a virtual environment
 
@@ -160,7 +202,7 @@ Also:
 
 ## 5. Concrete Review Examples
 
-When conducting PR reviews, look for these specific architectural and hygiene violations to flag. 
+When conducting PR reviews, look for these specific architectural and hygiene violations to flag.
 
 ### 5.1. Magic Numbers for Tolerance
 
@@ -175,7 +217,7 @@ Real empty_band_tolerance = std::max(5.0 * tolerance_, 1.0e-5);
 The `5.0` multiplier and `1.0e-5` lower bound should be defined centrally.
 ```cpp
 Real empty_band_tolerance = std::max(
-    math::tolerances::empty_band_relaxation_factor * tolerance_, 
+    math::tolerances::empty_band_relaxation_factor * tolerance_,
     math::tolerances::empty_band_relaxation_floor
 );
 ```
@@ -237,16 +279,19 @@ it is part of doing the work — not bookkeeping to be done later:
 - `plan/implemented/` — shipped. Kept as the record of why the code looks the way it does. On the
   way in, add a `## Status` section at the top recording what shipped, divergences from the plan,
   and what remains open (real open items also get an entry in `upcoming/`).
-- `plan/context/` — reference material that is not a plan: investigations, measurements,
-  background, and context dumps written to retain state when switching models, machines, or
-  sessions.
+- `plan/context/` — reference material that is not a plan: investigations, measurements and
+  background. Split by durability: tracked files are durable reference, meant for someone who
+  was not there, while `plan/context/session/` is gitignored working notes — handoffs, running
+  investigation logs, and the state dumps written when switching models, machines or sessions.
+  When a session note contains something durable, promote the *finding* into a tracked document
+  rather than the file; a handoff moved wholesale is still a handoff.
 
 Never edit a document in `implemented/` to match the code — rewriting history loses the reason a
 decision was made, which is the only thing the document is still good for; correct it with a
-`## Status` note instead. Name documents `<yyyy-mm-dd>-<short-title>.md`, all lowercase, with the
-creation date (e.g. `2026-08-16-containerized-venv-plan.md`). The tracking ticket (Jira) is
+`## Status` note instead. Name documents `<yyyy-mm-dd>-<short-title>.md`, all lowercase, with
+the creation date (e.g. `2026-08-16-containerized-venv-plan.md`). The tracking ticket (Jira) is
 linked from the document header, not the filename — repositories are public while the tracker is
-not, so ticket keys in filenames carry no meaning for outside readers. Each header also carries
-an **Updated** stamp, bumped on every edit. The canonical `plan/README.md` to copy when
-introducing the folder to a repository lives in `mat3ra/agents` under
-`templates/plan/README.md`.
+not, so ticket keys in filenames carry no meaning for outside readers. File the ticket before or
+together with the plan; each header also carries an **Updated** stamp, bumped on every edit. The
+canonical `plan/README.md` to copy when introducing the folder to a repository lives in
+`mat3ra/agents` under `templates/plan/README.md`.
