@@ -39,7 +39,11 @@ export interface BrillouinZoneProps {
     symmetryPoints?: BrillouinZonePathPoint[];
 }
 
-/** Fixed three-quarter view; the zone is a static illustration, not an interactive scene. */
+/**
+ * Fixed three-quarter view; the zone is a static illustration, not an interactive scene.
+ * Screen-up is +z, the c axis: a lattice type is named for what that axis does (HEX's six-fold
+ * axis, TET's long axis), so drawing it anywhere but vertical is drawing the solid on its side.
+ */
 const VIEW_YAW = Math.PI / 5;
 const VIEW_PITCH = Math.PI / 7;
 const SIZE = 240;
@@ -56,16 +60,44 @@ interface ProjectedPoint {
 function project([x, y, z]: Vector3): ProjectedPoint {
     const cosYaw = Math.cos(VIEW_YAW);
     const sinYaw = Math.sin(VIEW_YAW);
-    const rotatedX = x * cosYaw + z * sinYaw;
-    const rotatedZ = -x * sinYaw + z * cosYaw;
+    // Yaw turns the zone about its c axis, which therefore stays vertical on screen.
+    const rotatedX = x * cosYaw + y * sinYaw;
+    const rotatedY = -x * sinYaw + y * cosYaw;
 
     const cosPitch = Math.cos(VIEW_PITCH);
     const sinPitch = Math.sin(VIEW_PITCH);
-    const rotatedY = y * cosPitch - rotatedZ * sinPitch;
 
-    // SVG's y axis grows downward, hence the negation.
-    return { x: rotatedX, y: -rotatedY, depth: y * sinPitch + rotatedZ * cosPitch };
+    // SVG's y axis grows downward, hence the negation. Depth grows toward the viewer.
+    return {
+        x: rotatedX,
+        y: -(z * cosPitch - rotatedY * sinPitch),
+        depth: rotatedY * cosPitch + z * sinPitch,
+    };
 }
+
+/**
+ * Direction from the zone toward the viewer — the gradient of {@link ProjectedPoint.depth}.
+ * The zone is convex, so the faces it shows are exactly those whose outward normal points this
+ * way; drawing the rest through translucent front faces is what made a cube read as a wireframe.
+ */
+const VIEW_DIRECTION: Vector3 = [
+    -Math.sin(VIEW_YAW) * Math.cos(VIEW_PITCH),
+    Math.cos(VIEW_YAW) * Math.cos(VIEW_PITCH),
+    Math.sin(VIEW_PITCH),
+];
+
+/** Whether a face turns its outward side toward the viewer. */
+export function isFacingViewer(normal: Vector3): boolean {
+    return (
+        normal[0] * VIEW_DIRECTION[0] +
+            normal[1] * VIEW_DIRECTION[1] +
+            normal[2] * VIEW_DIRECTION[2] >
+        0
+    );
+}
+
+/** {@link project}, exposed so the view's orientation can be asserted without a DOM. */
+export const projectForTesting = project;
 
 interface ProjectedFace {
     points: string;
@@ -85,6 +117,7 @@ interface Scene {
  */
 function buildScene(faces: BrillouinZoneFace[]): Scene {
     const projectedByFace = faces.map((face) => face.vertices.map(project));
+    // Every face, not just the visible ones: the fit must not shift when a face turns away.
     const all = projectedByFace.flat();
     const minX = Math.min(...all.map((p) => p.x));
     const maxX = Math.max(...all.map((p) => p.x));
@@ -110,9 +143,12 @@ function buildScene(faces: BrillouinZoneFace[]): Scene {
             // Lambert-ish shading from a light above and to the viewer's left.
             const [nx, ny, nz] = faces[index].normal;
             const shade = Math.max(0, nx * -0.3 + ny * 0.55 + nz * 0.78);
-            return { points, depth, shade };
+            return { points, depth, shade, normal: faces[index].normal };
         })
-        // Painter's algorithm: the zone is convex, so far-to-near ordering hides back faces.
+        // The zone is convex: the faces turned away cannot be seen past the ones in front, and
+        // showing them through a translucent front is what made a cube read as a wireframe.
+        .filter((face) => isFacingViewer(face.normal))
+        // Painter's algorithm, so shared edges stack near-over-far rather than arbitrarily.
         .sort((left, right) => left.depth - right.depth);
 
     return { faces: projectedFaces, toScreen: (vector) => place(project(vector)) };
