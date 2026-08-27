@@ -13,7 +13,7 @@ import JSONSchemasInterface from "@mat3ra/esse/dist/js/esse/JSONSchemasInterface
 import esseSchemas from "@mat3ra/esse/dist/js/schemas.json";
 import { Material } from "@mat3ra/made";
 import { ApplicationRegistry, MaterialStandata, WorkflowStandata } from "@mat3ra/standata";
-import { ApplicationDriver } from "@mat3ra/standata/dist/js/ApplicationDriver";
+import StandataDriver from "@mat3ra/standata/dist/js/StandataDriver";
 import { Workflow as WodeWorkflow } from "@mat3ra/wode";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -38,7 +38,7 @@ import WorkflowDesignerContainer from "../WorkflowDesignerContainer";
 // Bootstrap — must run before any component renders
 // ---------------------------------------------------------------------------
 JSONSchemasInterface.setSchemas(esseSchemas as any);
-ApplicationRegistry.setDriver(new ApplicationDriver());
+ApplicationRegistry.setDriver(new StandataDriver());
 
 // ---------------------------------------------------------------------------
 // Theme
