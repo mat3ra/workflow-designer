@@ -3,6 +3,7 @@ import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React, { useMemo } from "react";
 
+import { separateLabels } from "./brillouinZoneLabels";
 import {
     type BrillouinZoneFace,
     type Vector3,
@@ -48,8 +49,12 @@ const VIEW_YAW = Math.PI / 5;
 const VIEW_PITCH = Math.PI / 7;
 const SIZE = 240;
 const PADDING = 20;
+/** The drawing scales to its container up to this, so crowded labels get room to separate. */
+const MAX_RENDERED_SIZE = 420;
 /** How far a k-point's label sits from its marker, radially outward from the zone centre. */
 const LABEL_OFFSET = 10;
+const PATH_LABEL_SIZE = 11;
+const UNVISITED_LABEL_SIZE = 9;
 
 interface ProjectedPoint {
     x: number;
@@ -203,24 +208,61 @@ export function BrillouinZone({
         };
     }, [scene]);
 
-    const drawnPath = useMemo(() => {
-        if (!place || !path?.length) return null;
+    /**
+     * The path and the points it skips are laid out together: both crowd into the same irreducible
+     * wedge, so separating them separately would just move the collisions between the two sets.
+     */
+    const drawn = useMemo(() => {
+        if (!place) return { path: null, unvisited: null };
         const seen = new Set<string>();
-        const points = path.map((item) => {
+        const pathPoints = (path ?? []).map((item) => {
             const isFirst = !seen.has(item.point);
             seen.add(item.point);
             return place(item, isFirst ? item.point : "");
         });
-        return { points, polyline: points.map((p) => `${p.x},${p.y}`).join(" ") };
-    }, [place, path]);
-
-    /** Symmetry points the path never reaches — drawn, but quietly. */
-    const unvisitedPoints = useMemo(() => {
-        if (!place || !symmetryPoints?.length) return null;
         const visited = new Set((path ?? []).map((item) => item.point));
-        const rest = symmetryPoints.filter((item) => !visited.has(item.point));
-        return rest.length ? rest.map((item) => place(item, item.point)) : null;
-    }, [place, symmetryPoints, path]);
+        const unvisitedPoints = (symmetryPoints ?? [])
+            .filter((item) => !visited.has(item.point))
+            .map((item) => place(item, item.point));
+
+        const all = [...pathPoints, ...unvisitedPoints];
+        const fontSizes = all.map((_, index) =>
+            index < pathPoints.length ? PATH_LABEL_SIZE : UNVISITED_LABEL_SIZE,
+        );
+        const separated = separateLabels(all, fontSizes);
+        const points = separated.slice(0, pathPoints.length);
+        const unvisited = separated.slice(pathPoints.length);
+        return {
+            path:
+                points.length > 1
+                    ? { points, polyline: points.map((p) => `${p.x},${p.y}`).join(" ") }
+                    : null,
+            unvisited: unvisited.length ? unvisited : null,
+        };
+    }, [place, path, symmetryPoints]);
+    const drawnPath = drawn.path;
+    const unvisitedPoints = drawn.unvisited;
+
+    /**
+     * The window on the drawing, widened to hold anything that falls outside the zone.
+     *
+     * The fit is computed from the zone's own faces, so a marker beyond them used to be clipped at
+     * the edge — silently, which is the worst way to show it. Points outside the first Brillouin
+     * zone are not physically expected (they indicate symmetry points expressed in a different
+     * basis than the reciprocal vectors, which happens for the monoclinic lattices); the picture's
+     * job is to show that plainly rather than crop the evidence.
+     */
+    const viewBox = useMemo(() => {
+        const marks = [...(drawnPath?.points ?? []), ...(unvisitedPoints ?? [])];
+        let [x0, y0, x1, y1] = [0, 0, SIZE, SIZE];
+        marks.forEach(({ x, y, labelX, labelY }) => {
+            x0 = Math.min(x0, x, labelX - LABEL_OFFSET);
+            y0 = Math.min(y0, y, labelY - LABEL_OFFSET);
+            x1 = Math.max(x1, x, labelX + LABEL_OFFSET);
+            y1 = Math.max(y1, y, labelY + LABEL_OFFSET);
+        });
+        return `${x0.toFixed(1)} ${y0.toFixed(1)} ${(x1 - x0).toFixed(1)} ${(y1 - y0).toFixed(1)}`;
+    }, [drawnPath, unvisitedPoints]);
 
     if (!projected) {
         if (!imgSrc) return null;
@@ -238,14 +280,20 @@ export function BrillouinZone({
 
     const faceColor = theme.palette.primary.main;
     const edgeColor = theme.palette.mode === "dark" ? "#0d1117" : "#ffffff";
-    const pathColor = theme.palette.secondary.main;
+    /**
+     * The path is the point of the picture, so it is not left to `secondary.main` — which is a
+     * mid grey in the current theme, and the least visible thing on the zone. These two are
+     * measured against every ground the path crosses (the halo below it, the page, and the faces
+     * at the ≤0.5 opacity they drop to whenever a path is drawn); both clear WCAG 3:1 for
+     * non-text throughout, where grey bottoms out at 1.87.
+     */
+    const pathColor = theme.palette.mode === "dark" ? "#f5a623" : "#8d3200";
 
     return (
         <Box className="brillouin-zone" data-tid="brillouin-zone" sx={{ my: 1 }}>
             <svg
-                width={SIZE}
-                height={SIZE}
-                viewBox={`0 0 ${SIZE} ${SIZE}`}
+                viewBox={viewBox}
+                style={{ width: "100%", maxWidth: MAX_RENDERED_SIZE, height: "auto" }}
                 role="img"
                 aria-label={
                     drawnPath
@@ -283,7 +331,7 @@ export function BrillouinZone({
                                 <text
                                     x={point.labelX}
                                     y={point.labelY}
-                                    fontSize={9}
+                                    fontSize={UNVISITED_LABEL_SIZE}
                                     textAnchor="middle"
                                     dominantBaseline="middle"
                                     fill={pathColor}
@@ -334,7 +382,7 @@ export function BrillouinZone({
                                     key={point.label}
                                     x={point.labelX}
                                     y={point.labelY}
-                                    fontSize={11}
+                                    fontSize={PATH_LABEL_SIZE}
                                     fontWeight={700}
                                     textAnchor="middle"
                                     dominantBaseline="middle"
