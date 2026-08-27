@@ -1,13 +1,15 @@
 import { type NameResultSchema, safeMakeObject } from "@mat3ra/code/dist/js/utils/object";
-import { buildNamedEntitySchema } from "@mat3ra/code/dist/js/utils/schemas";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
+import Typography from "@mui/material/Typography";
 import { Form } from "@rjsf/mui";
 import validator from "@rjsf/validator-ajv8";
 import React, { useMemo, useState } from "react";
 
 import type { WorkflowDesignerExecutionUnitSchema } from "../../types/context";
+import { RenderErrorBoundary } from "../common/RenderErrorBoundary";
+import { buildUnitPropertiesSchema, getUnitResults } from "./unitPropertiesSchema";
 
 const uiSchema = {
     "ui:options": {
@@ -28,10 +30,6 @@ interface UnitPropertiesProps {
     allowedResults: NameResultSchema[];
 }
 
-const getUnitResults = (unit: WorkflowDesignerExecutionUnitSchema) => {
-    return (unit.results || []).map(safeMakeObject);
-};
-
 function UnitProperties({
     unit,
     onUnitResultsChanged,
@@ -40,14 +38,9 @@ function UnitProperties({
 }: UnitPropertiesProps) {
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState<NameResultSchema[]>(getUnitResults(unit));
-    const schema = useMemo(() => {
-        const safeAllowedResults = allowedResults ?? [];
-        return buildNamedEntitySchema(
-            safeAllowedResults,
-            { name: safeAllowedResults[0]?.name || "" },
-            "Property",
-        );
-    }, [allowedResults]);
+    // `null` when the built schema carries a `$ref` with nothing to resolve it to — see
+    // `buildUnitPropertiesSchema`. RJSF would throw on it mid-render and unmount the designer.
+    const schema = useMemo(() => buildUnitPropertiesSchema(allowedResults), [allowedResults]);
 
     const handleSubmit = (e: { formData?: NameResultSchema[] }) => {
         const nextFormData = (e.formData || formData).map(safeMakeObject);
@@ -67,19 +60,21 @@ function UnitProperties({
 
     return (
         <Box data-tid="properties">
-            {editable && isEditing ? (
-                <Form
-                    schema={schema}
-                    validator={validator}
-                    formData={formData}
-                    onChange={handleChange}
-                    onSubmit={handleSubmit}
-                    uiSchema={uiSchema}
-                    liveOmit
-                    omitExtraData
-                    showErrorList={false}
-                    id="edit-properties-form"
-                />
+            {editable && isEditing && schema ? (
+                <RenderErrorBoundary label="the unit properties form">
+                    <Form
+                        schema={schema}
+                        validator={validator}
+                        formData={formData}
+                        onChange={handleChange}
+                        onSubmit={handleSubmit}
+                        uiSchema={uiSchema}
+                        liveOmit
+                        omitExtraData
+                        showErrorList={false}
+                        id="edit-properties-form"
+                    />
+                </RenderErrorBoundary>
             ) : (
                 getUnitResults(unit).map((result, index) => (
                     <Chip
@@ -90,7 +85,12 @@ function UnitProperties({
                     />
                 ))
             )}
-            {editable && !isEditing ? (
+            {editable && !isEditing && !schema ? (
+                <Typography variant="caption" color="text.secondary" component="div" sx={{ mt: 1 }}>
+                    This executable declares no properties to choose from.
+                </Typography>
+            ) : null}
+            {editable && !isEditing && schema ? (
                 <Button
                     variant="contained"
                     color="primary"
