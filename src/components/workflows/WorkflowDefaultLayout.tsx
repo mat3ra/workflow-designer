@@ -198,8 +198,11 @@ export function WorkflowDefaultLayout(props: WorkflowDefaultLayoutProps) {
         mapWorkflow = entity.workflowInstances.find((w) => w.id === unit.workflowId);
     }
 
-    const leftColumnGridProps = isMap ? { md: 12, lg: true } : { md: 12, lg: 4 };
-    const rightColumnGridProps = isMap ? { md: 12, lg: true } : { md: 12, lg: 8 };
+    // `xs` matters as much as the rest: a Grid item with no breakpoint at or below the current
+    // one falls back to auto sizing, so under `md` (900px) the panels stopped filling the row and
+    // shrank to their content — the tabs ended up in a ~470px column beside empty space.
+    const leftColumnGridProps = isMap ? { xs: 12, lg: true } : { xs: 12, lg: 4 };
+    const rightColumnGridProps = isMap ? { xs: 12, lg: true } : { xs: 12, lg: 8 };
 
     const { pseudoUploadReduxDialog, unitTypeReduxDialog } = dialogs;
 
