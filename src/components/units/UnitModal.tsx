@@ -75,7 +75,9 @@ export default function UnitModal({
                     <Grid container>
                         <Grid item container justifyContent="space-between">
                             <Grid item>
-                                <Typography variant="h5">Unit settings</Typography>
+                                <Typography variant="h5">
+                                    {`${unit.name} — ${unit.type} unit`}
+                                </Typography>
                             </Grid>
                             <Grid item>
                                 <IconButton id={`${id}-close-button`} onClick={onClose}>
@@ -88,11 +90,9 @@ export default function UnitModal({
                                 editable={editable}
                                 value={unit.name}
                                 subtitle={{ type: unit.type }}
-                                description={unit.flowchartId}
                                 onUpdate={(name) => onNameUpdate(name)}
                                 icon={ENTITY_ICONS.unit}
                                 status={getUnitStatusCls(unit.status)}
-                                descriptionLabel="flowchartId"
                             />
                         </Grid>
                     </Grid>

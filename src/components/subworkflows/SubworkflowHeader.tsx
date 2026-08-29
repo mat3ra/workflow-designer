@@ -1,3 +1,4 @@
+import Dropdown from "@mat3ra/cove/dist/mui/components/dropdown";
 import IconByName from "@mat3ra/cove/dist/mui/components/icon/IconByName";
 import { showWarningAlert } from "@mat3ra/cove/dist/other/alerts";
 import {
@@ -11,17 +12,34 @@ import {
 import { UnitType } from "@mat3ra/wode/dist/js/enums";
 import type { AnyWorkflowUnit } from "@mat3ra/wode/dist/js/units/factory";
 import type { WorkflowRenderContext } from "@mat3ra/wode/dist/js/Workflow";
+import Box from "@mui/material/Box";
+import Chip from "@mui/material/Chip";
+import Stack from "@mui/material/Stack";
 import React, { useCallback, useMemo, useState } from "react";
 
 import type { SubworkflowDesignerUpdate } from "../../utils/subworkflowDesignerUpdate";
 import { useWorkflowComponents } from "../../WorkflowComponentsContext";
-import UnitPaste from "../units/UnitPaste";
+import StepLibrary from "../units/StepLibrary";
 import UnitTypeSelect from "../units/UnitTypeSelect";
 import Convergence from "../workflows/Convergence";
 
 type SubworkflowExternalContextForConvergence = WorkflowRenderContext & {
     workflowHasRelaxation: boolean;
 };
+
+/**
+ * What the step computes with — engine, theory level, method — which the header had room for
+ * only once it stopped repeating the step's name.
+ */
+function summarizeMethod(subworkflow?: WodeSubworkflow): string[] {
+    const model = (subworkflow as unknown as { model?: Record<string, any> })?.model;
+    const method = model?.method;
+    return [
+        subworkflow?.application?.name,
+        [model?.type, model?.subtype, model?.functional].filter(Boolean).join("/").toUpperCase(),
+        [method?.type, method?.subtype].filter(Boolean).join("/"),
+    ].filter((value): value is string => Boolean(value));
+}
 
 export type SubworkflowHeaderProps = {
     unit: AnyWorkflowUnit;
@@ -53,6 +71,12 @@ export type SubworkflowHeaderProps = {
     materialsIndex?: number;
     materialsSet?: MaterialsSet;
     jobHasParent?: boolean;
+    /**
+     * Whether this header has to say which step is open. False when the shell already does —
+     * the studio layout's rail both names the steps and switches between them — in which case
+     * the header keeps only its actions and states the model instead of repeating the name.
+     */
+    showStepIdentity?: boolean;
 };
 
 export default function SubworkflowHeader({
@@ -75,17 +99,18 @@ export default function SubworkflowHeader({
     materialsIndex,
     materialsSet,
     jobHasParent = false,
+    showStepIdentity = true,
 }: SubworkflowHeaderProps) {
     const { EntityHeaderComponent } = useWorkflowComponents();
     const [convergenceSubworkflow, setConvergenceSubworkflow] = useState<WodeSubworkflow | null>(
         null,
     );
     const [unitTypeSelectOpen, setUnitTypeSelectOpen] = useState(false);
-    const [unitPasteOpen, setUnitPasteOpen] = useState(false);
+    const [stepLibraryOpen, setStepLibraryOpen] = useState(false);
 
     const closeConvergenceDialog = useCallback(() => setConvergenceSubworkflow(null), []);
     const closeUnitTypeSelectDialog = useCallback(() => setUnitTypeSelectOpen(false), []);
-    const closeUnitPasteDialog = useCallback(() => setUnitPasteOpen(false), []);
+    const closeStepLibraryDialog = useCallback(() => setStepLibraryOpen(false), []);
 
     const pagerProps = useMemo(
         () => ({
@@ -120,10 +145,10 @@ export default function SubworkflowHeader({
                 },
                 {
                     isShown: editable,
-                    content: "Add subworkflow",
+                    content: "Add step",
                     onClick: (_action, _event) => {
                         if (editable) {
-                            setUnitTypeSelectOpen(true);
+                            setStepLibraryOpen(true);
                         }
                     },
                     icon: <IconByName name="shapes.addCircle" />,
@@ -131,14 +156,14 @@ export default function SubworkflowHeader({
                 },
                 {
                     isShown: editable,
-                    content: "Paste subworkflow",
+                    content: "Add empty unit",
                     onClick: (_action, _event) => {
                         if (editable) {
-                            setUnitPasteOpen(true);
+                            setUnitTypeSelectOpen(true);
                         }
                     },
-                    icon: <IconByName name="actions.copy" />,
-                    id: "paste-subworkflow",
+                    icon: <IconByName name="shapes.addCircle" />,
+                    id: "add-unit-type",
                 },
                 {
                     isShown: editable,
@@ -188,19 +213,43 @@ export default function SubworkflowHeader({
 
     return (
         <>
-            <EntityHeaderComponent
-                isCompact
-                icon={`entities.workflow.unitType.${unit.type}`}
-                name={unit.name}
-                subtitle={subworkflow?.application?.name ?? unit.name}
-                onNameUpdate={onUnitNameUpdate}
-                editable={editable}
-                iconCls={`text-${headerStatusCls(unit)}`}
-                id="workflow-designer-subworkflow-header"
-                pagerProps={pagerProps}
-                dropdownProps={dropdownProps}
-                isDescriptionEditorHidden
-            />
+            {showStepIdentity ? (
+                <EntityHeaderComponent
+                    isCompact
+                    icon={`entities.workflow.unitType.${unit.type}`}
+                    name={unit.name}
+                    subtitle={subworkflow?.application?.name ?? unit.name}
+                    onNameUpdate={onUnitNameUpdate}
+                    editable={editable}
+                    iconCls={`text-${headerStatusCls(unit)}`}
+                    id="workflow-designer-subworkflow-header"
+                    pagerProps={pagerProps}
+                    dropdownProps={dropdownProps}
+                    isDescriptionEditorHidden
+                />
+            ) : (
+                <Stack
+                    direction="row"
+                    alignItems="center"
+                    spacing={1}
+                    id="workflow-designer-subworkflow-header"
+                    data-tid="subworkflow-header-compact"
+                    sx={{ px: 2, py: 1 }}
+                >
+                    {summarizeMethod(subworkflow).map((chip) => (
+                        <Chip key={chip} label={chip} size="small" variant="outlined" />
+                    ))}
+                    <Box sx={{ flexGrow: 1 }} />
+                    {dropdownProps.isShown ? (
+                        <Dropdown
+                            id="workflow-designer-subworkflow-actions"
+                            actions={dropdownProps.actions}
+                            buttonContent={dropdownProps.buttonContent}
+                            className={dropdownProps.className}
+                        />
+                    ) : null}
+                </Stack>
+            )}
             {convergenceSubworkflow ? (
                 <Convergence
                     subworkflow={convergenceSubworkflow}
@@ -252,12 +301,12 @@ export default function SubworkflowHeader({
                     unitTypes={[UnitType.subworkflow as any, UnitType.map as any]}
                 />
             ) : null}
-            {unitPasteOpen ? (
-                <UnitPaste
-                    onClose={closeUnitPasteDialog}
+            {stepLibraryOpen ? (
+                <StepLibrary
+                    onClose={closeStepLibraryDialog}
                     onSubmit={(config, prependOrPasteIndex) => {
                         onUnitAddSubworkflowFromConfig(config, prependOrPasteIndex, unitIndex);
-                        closeUnitPasteDialog();
+                        closeStepLibraryDialog();
                     }}
                 />
             ) : null}

@@ -1,5 +1,5 @@
-import type { DropdownAction } from "@mat3ra/cove/dist/mui/components/dropdown";
 import type { Template } from "@mat3ra/ade";
+import type { DropdownAction } from "@mat3ra/cove/dist/mui/components/dropdown";
 import type { SubworkflowSchema } from "@mat3ra/esse/dist/js/types";
 import { Utils } from "@mat3ra/utils";
 import { type MaterialsSet, type OrderedMaterial, Subworkflow, Workflow } from "@mat3ra/wode";
@@ -7,9 +7,11 @@ import { UnitType } from "@mat3ra/wode/dist/js/enums";
 import type { AnyWorkflowUnit } from "@mat3ra/wode/dist/js/units/factory";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
-import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
+import { type UndoSnackbarState, UndoSnackbar } from "./components/common/UndoSnackbar";
 import { Workflow as WoveWorkflowDesigner } from "./components/workflows/Workflow";
+import type { WorkflowLayoutVariant } from "./components/workflows/workflowLayoutVariant";
 import type {
     WorkflowDesignerAccount,
     WorkflowDesignerCluster,
@@ -33,6 +35,8 @@ type WorkflowDesignerContainerBaseProps = {
     /** From CoreWorkflow / webapp entity at the shell boundary. */
     workflowHistory: WorkflowDesignerHistory;
     isStandalone: boolean;
+    /** Shell variant for the designer; see {@link WorkflowLayoutVariant}. Defaults to `classic`. */
+    layoutVariant?: WorkflowLayoutVariant;
     adjustable: boolean;
     showHeader: boolean;
     showMetadata: boolean;
@@ -66,6 +70,8 @@ type WorkflowDesignerContainerBaseProps = {
     generateEntityId: () => string;
     // Pre-computed booleans / callbacks
     openDocumentationDialog?: (searchText: string) => void;
+    /** Fires when unsaved-changes state flips; lets the shell mark Save / guard navigation. */
+    onDirtyChange?: (isDirty: boolean) => void;
 };
 
 export type WorkflowDesignerContainerProps = WorkflowDesignerContainerBaseProps;
@@ -93,6 +99,7 @@ export default function WorkflowDesignerContainer(containerProps: WorkflowDesign
         showHistory,
         workflowHistory,
         isStandalone,
+        layoutVariant,
         adjustable,
         showHeader,
         showMetadata,
@@ -117,6 +124,7 @@ export default function WorkflowDesignerContainer(containerProps: WorkflowDesign
         BrillouinZoneImageComponent,
         getDefaultComputeConfig,
         generateEntityId,
+        onDirtyChange,
     } = containerProps;
 
     const workflowComponents: WorkflowComponents = useMemo(
@@ -156,10 +164,36 @@ export default function WorkflowDesignerContainer(containerProps: WorkflowDesign
         };
     });
     const [renderGeneration, setRenderGeneration] = useState(0);
+    const [removeUndoState, setRemoveUndoState] = useState<UndoSnackbarState>(null);
+    const [isDirty, setIsDirty] = useState(false);
 
     /** Latest workflow for save; avoids stale reads when `onSave` used `setState(prev => …)`. */
     const workflowRef = useRef(state.workflow);
     workflowRef.current = state.workflow;
+
+    /**
+     * Unsaved-changes baseline. Captured after the first `workflow.render()` pass (not from
+     * `initialWorkflow`) because rendering injects context into units, which would otherwise
+     * read as an immediate phantom edit.
+     */
+    const dirtyBaselineRef = useRef<string | null>(null);
+    const onDirtyChangeRef = useRef(onDirtyChange);
+    onDirtyChangeRef.current = onDirtyChange;
+
+    useEffect(() => {
+        const currentJson = JSON.stringify(state.workflow.toJSON());
+        if (dirtyBaselineRef.current === null) {
+            dirtyBaselineRef.current = currentJson;
+            return;
+        }
+        const nextDirty = currentJson !== dirtyBaselineRef.current;
+        setIsDirty((prev) => {
+            if (prev !== nextDirty) {
+                onDirtyChangeRef.current?.(nextDirty);
+            }
+            return nextDirty;
+        });
+    }, [state.workflow, renderGeneration]);
 
     /**
      * Sole entry point for `workflow.render()` in the workflow designer UI tree.
@@ -191,6 +225,14 @@ export default function WorkflowDesignerContainer(containerProps: WorkflowDesign
 
     const onSave = useCallback(
         (omitRedirect: boolean) => {
+            // Reset the unsaved-changes baseline optimistically; save errors surface via alerts.
+            dirtyBaselineRef.current = JSON.stringify(workflowRef.current.toJSON());
+            setIsDirty((prev) => {
+                if (prev) {
+                    onDirtyChangeRef.current?.(false);
+                }
+                return false;
+            });
             saveWorkflow({ workflow: workflowRef.current, omitRedirect }).catch(() => {
                 /* errors reported inside saveWorkflow */
             });
@@ -263,10 +305,22 @@ export default function WorkflowDesignerContainer(containerProps: WorkflowDesign
             if (flowchartId == null) {
                 return;
             }
+            const { current } = workflowRef;
+            const removedUnit = current.unitInstances.find((u) => u.flowchartId === flowchartId);
+            const snapshot = current.toJSON();
             setState((prev) => {
                 const workflow = prev.workflow.clone();
                 workflow.removeUnit(flowchartId);
                 return { ...prev, workflow };
+            });
+            setRemoveUndoState({
+                message: `Removed "${removedUnit?.name ?? "unit"}"`,
+                onUndo: () => {
+                    const restored = new Workflow(snapshot);
+                    workflowRef.current = restored;
+                    setState((prev) => ({ ...prev, workflow: restored }));
+                    renderWorkflow();
+                },
             });
             renderWorkflow();
         },
@@ -342,8 +396,10 @@ export default function WorkflowDesignerContainer(containerProps: WorkflowDesign
 
     return (
         <WorkflowComponentsContext.Provider value={workflowComponents}>
+            <UndoSnackbar state={removeUndoState} onClose={() => setRemoveUndoState(null)} />
             <WoveWorkflowDesigner
                 workflow={workflow}
+                isDirty={isDirty}
                 jobHasParent={Boolean((state.job || {}).parentJob)}
                 isSetPublicVisible={state.isSetPublicVisible || false}
                 isLoading={isLoading}
@@ -354,6 +410,7 @@ export default function WorkflowDesignerContainer(containerProps: WorkflowDesign
                 showHistory={showHistory}
                 workflowHistory={workflowHistory}
                 isStandalone={isStandalone}
+                layoutVariant={layoutVariant}
                 adjustable={adjustable}
                 metaProperties={metaProperties}
                 extraActions={extraActions}

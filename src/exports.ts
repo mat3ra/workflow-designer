@@ -1,12 +1,41 @@
 export { Workflow } from "./components/workflows/Workflow";
 export type { WorkflowProps } from "./components/workflows/Workflow";
 export { WorkflowDefaultLayout } from "./components/workflows/WorkflowDefaultLayout";
+export { WorkflowStudioLayout } from "./components/workflows/WorkflowStudioLayout";
+export { WorkflowUnitPanel } from "./components/workflows/WorkflowUnitPanel";
+export { default as WorkflowStepsRail } from "./components/workflows/WorkflowStepsRail";
+export type { WorkflowStepsRailProps } from "./components/workflows/WorkflowStepsRail";
+export {
+    DEFAULT_WORKFLOW_LAYOUT_VARIANT,
+    resolveWorkflowLayoutVariant,
+} from "./components/workflows/workflowLayoutVariant";
+export type { WorkflowLayoutVariant } from "./components/workflows/workflowLayoutVariant";
+export {
+    formatStepNumber,
+    formatStepSummary,
+    getWorkflowSteps,
+} from "./components/workflows/workflowSteps";
+export type { WorkflowStep } from "./components/workflows/workflowSteps";
 export { default as Convergence } from "./components/workflows/Convergence";
 export type { ConvergenceProps } from "./components/workflows/ConvergenceProps";
 export { default as UnitModal } from "./components/units/UnitModal";
 export { default as UnitPaste } from "./components/units/UnitPaste";
+export { default as StepLibrary } from "./components/units/StepLibrary";
+export type { StepLibraryProps } from "./components/units/StepLibrary";
+export {
+    filterLibraryEntries,
+    getLibraryApplications,
+    toLibraryEntries,
+} from "./components/units/stepLibraryEntries";
+export type { LibraryEntry } from "./components/units/stepLibraryEntries";
 export { default as UnitTypeSelect } from "./components/units/UnitTypeSelect";
 export type { UnitTypeSelectProps } from "./components/units/UnitTypeSelectProps";
+export {
+    UNIT_TYPE_CATALOG,
+    getUnitTypeDescriptor,
+    getUnitTypeLabel,
+} from "./components/units/unitTypeCatalog";
+export type { UnitTypeDescriptor } from "./components/units/unitTypeCatalog";
 export {
     isWodeSubworkflowInstance,
     applySubworkflowUpdateToWorkflow,

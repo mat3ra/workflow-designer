@@ -1,9 +1,9 @@
 /* eslint-disable no-param-reassign -- Wode unit helpers mutate; class built only for those APIs */
-import Accordion from "@mat3ra/cove/dist/mui/components/accordion/Accordion";
-import TabsMenu from "@mat3ra/cove/dist/mui/components/tabs/TabsMenu";
 import { Application } from "@mat3ra/ade";
 import { Application as ApplicationAve } from "@mat3ra/ave";
 import { type NameResultSchema, safeMakeObject } from "@mat3ra/code/dist/js/utils/object";
+import Accordion from "@mat3ra/cove/dist/mui/components/accordion/Accordion";
+import TabsMenu from "@mat3ra/cove/dist/mui/components/tabs/TabsMenu";
 import type { ApplicationSchema, SubworkflowSchema } from "@mat3ra/esse/dist/js/types";
 import type { Model as ModeModel } from "@mat3ra/mode";
 import { Model } from "@mat3ra/move";
@@ -36,6 +36,7 @@ import type {
     WorkflowDesignerUser,
 } from "../../types/context";
 import { useWorkflowComponents } from "../../WorkflowComponentsContext";
+import { type UndoSnackbarState, UndoSnackbar } from "../common/UndoSnackbar";
 import UnitModal from "../units/UnitModal";
 import { ImportantSettings } from "./ImportantSettings";
 import { SubworkflowExecutionUnitDetailsRow } from "./SubworkflowExecutionUnitDetailsRow";
@@ -75,17 +76,17 @@ export type SubworkflowProps = {
 
 export const TAB_NAVIGATION_CONFIG = {
     overview: {
-        itemName: "Overview",
+        itemName: "Units",
         className: "",
         href: "sw-overview",
     },
     importantSettings: {
-        itemName: "Important settings",
+        itemName: "Settings",
         className: "",
         href: "sw-important-settings",
     },
     detailedView: {
-        itemName: "Detailed view",
+        itemName: "Outputs",
         className: "",
         href: "sw-detailed-view",
     },
@@ -124,6 +125,7 @@ export function Subworkflow({
 }: SubworkflowProps) {
     const { getDefaultComputeConfig } = useWorkflowComponents();
     const [unitIndex, setUnitIndex] = useState(0);
+    const [removeUndoState, setRemoveUndoState] = useState<UndoSnackbarState>(null);
 
     const applyToSubworkflow = useCallback(
         (fn: (sw: WodeSubworkflow) => void) => {
@@ -206,11 +208,17 @@ export function Subworkflow({
 
     const onUnitRemove = useCallback(
         (flowchartId: string) => {
+            const removedUnit = subworkflow.getUnit(flowchartId);
+            const snapshot = subworkflow.toJSON();
             applyToSubworkflow((sw) => {
                 sw.removeUnit(flowchartId);
             });
+            setRemoveUndoState({
+                message: `Removed unit "${removedUnit?.name ?? flowchartId}"`,
+                onUndo: () => onUpdate(snapshot),
+            });
         },
-        [applyToSubworkflow],
+        [applyToSubworkflow, subworkflow, onUpdate],
     );
 
     const onUnitClone = useCallback(
@@ -325,6 +333,7 @@ export function Subworkflow({
 
     return (
         <Stack data-tid="subworkflow" height="100%" className={className}>
+            <UndoSnackbar state={removeUndoState} onClose={() => setRemoveUndoState(null)} />
             <TabsMenu
                 tabs={tabs}
                 activeTabIndex={activeTabIndex}
@@ -337,6 +346,29 @@ export function Subworkflow({
                     sx={{ height: "100%" }}
                 >
                     <Stack spacing={3} height="100%">
+                        {/* Flowchart first: the units are the tab's subject; details are secondary
+                            and default-collapsed (SOF-8024, quick win 1.6). */}
+                        <UnitsFlowchartContainer
+                            units={subworkflow.unitsInstances}
+                            onUnitAdd={onUnitAdd}
+                            isStandalone={isStandalone}
+                            editable={editable}
+                            adjustable={adjustable}
+                            onUnitClone={onUnitClone}
+                            onUnitRemove={onUnitRemove}
+                            onUnitUpdate={onUnitUpdate}
+                            materials={materials}
+                            materialsIndex={materialsIndex}
+                            onMaterialSwitch={onMaterialSwitch}
+                            subworkflow={subworkflow}
+                            onOutputUpdateRequest={onOutputUpdateRequest}
+                            publicAccount={publicAccount}
+                            unitIndex={unitIndex}
+                            onUnitSelect={onUnitSelect}
+                            unitTypeReduxDialog={unitTypeReduxDialog}
+                            jobProperties={jobProperties}
+                            UnitModalComponent={UnitModal}
+                        />
                         <AccordionComponent
                             header="Details"
                             id="subworkflow-accordion"
@@ -378,27 +410,6 @@ export function Subworkflow({
                                 />
                             </Stack>
                         </AccordionComponent>
-                        <UnitsFlowchartContainer
-                            units={subworkflow.unitsInstances}
-                            onUnitAdd={onUnitAdd}
-                            isStandalone={isStandalone}
-                            editable={editable}
-                            adjustable={adjustable}
-                            onUnitClone={onUnitClone}
-                            onUnitRemove={onUnitRemove}
-                            onUnitUpdate={onUnitUpdate}
-                            materials={materials}
-                            materialsIndex={materialsIndex}
-                            onMaterialSwitch={onMaterialSwitch}
-                            subworkflow={subworkflow}
-                            onOutputUpdateRequest={onOutputUpdateRequest}
-                            publicAccount={publicAccount}
-                            unitIndex={unitIndex}
-                            onUnitSelect={onUnitSelect}
-                            unitTypeReduxDialog={unitTypeReduxDialog}
-                            jobProperties={jobProperties}
-                            UnitModalComponent={UnitModal}
-                        />
                     </Stack>
                 </TabPanel>
                 <TabPanel

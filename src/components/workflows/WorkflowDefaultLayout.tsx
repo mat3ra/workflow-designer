@@ -1,9 +1,9 @@
 /* eslint-disable react/jsx-props-no-spreading */
+import type { Template } from "@mat3ra/ade";
 import type { DropdownAction } from "@mat3ra/cove/dist/mui/components/dropdown";
 import { ENTITY_ICONS } from "@mat3ra/cove/dist/mui/components/icon/entityIcons";
 import ThemeProvider from "@mat3ra/cove/dist/theme/provider";
 import oldLightMaterialUITheme from "@mat3ra/cove/dist/theme/theme";
-import type { Template } from "@mat3ra/ade";
 import {
     type ErrorUnit,
     type MaterialsSet,
@@ -36,12 +36,7 @@ import { useWorkflowComponents } from "../../WorkflowComponentsContext";
 import { Subworkflow } from "../subworkflows/Subworkflow";
 import SubworkflowHeader from "../subworkflows/SubworkflowHeader";
 import type { WorkflowProps } from "./Workflow";
-import { WorkflowValidationAlert } from "./WorkflowValidationAlert";
-
-// TODO: avoid cycle dependencies (Map imports Workflow)
-const MapWorkflowDesigner = React.lazy(() =>
-    import("./Map").then((module) => ({ default: module.MapWorkflowDesigner })),
-) as unknown as React.FC<any>;
+import { WorkflowUnitPanel } from "./WorkflowUnitPanel";
 
 export type WorkflowDefaultLayoutProps = {
     entity: WodeWorkflow;
@@ -203,8 +198,11 @@ export function WorkflowDefaultLayout(props: WorkflowDefaultLayoutProps) {
         mapWorkflow = entity.workflowInstances.find((w) => w.id === unit.workflowId);
     }
 
-    const leftColumnGridProps = isMap ? { md: 12, lg: true } : { md: 12, lg: 4 };
-    const rightColumnGridProps = isMap ? { md: 12, lg: true } : { md: 12, lg: 8 };
+    // `xs` matters as much as the rest: a Grid item with no breakpoint at or below the current
+    // one falls back to auto sizing, so under `md` (900px) the panels stopped filling the row and
+    // shrank to their content — the tabs ended up in a ~470px column beside empty space.
+    const leftColumnGridProps = isMap ? { xs: 12, lg: true } : { xs: 12, lg: 4 };
+    const rightColumnGridProps = isMap ? { xs: 12, lg: true } : { xs: 12, lg: 8 };
 
     const { pseudoUploadReduxDialog, unitTypeReduxDialog } = dialogs;
 
@@ -263,108 +261,12 @@ export function WorkflowDefaultLayout(props: WorkflowDefaultLayoutProps) {
                         sx={{ display: "flex", flexDirection: "column" }}
                         {...rightColumnGridProps}
                     >
-                        <WorkflowValidationAlert workflow={entity} />
-                        {unit.type === UnitType.subworkflow && (
-                            <>
-                                <SubworkflowHeader
-                                    unit={unit}
-                                    adjustable={Boolean(adjustable)}
-                                    editable={Boolean(editable)}
-                                    subworkflow={subworkflow}
-                                    onUnitRemove={handleUnitRemove}
-                                    headerStatusCls={headerStatusCls}
-                                    onUnitNameUpdate={onUnitNameUpdate}
-                                    unitIndex={unitIndex}
-                                    onUnitAdd={onUnitAdd}
-                                    onUnitAddSubworkflowFromConfig={onUnitAddSubworkflowFromConfig}
-                                    onUpdateUnitIndex={onUpdateUnitIndex}
-                                    onSubworkflowUnitUpdate={onSubworkflowUnitUpdate}
-                                    areWorkflowContentExpanded={areWorkflowContentExpanded}
-                                    toggleExpandWorkflowContent={toggleExpandWorkflowContent}
-                                    workflow={entity}
-                                    materials={materials}
-                                    materialsIndex={materialsIndex}
-                                    materialsSet={materialsSet}
-                                    jobHasParent={jobHasParent}
-                                />
-                                {/*
-                                    key={subworkflow.id} remounts when the user picks another flowchart branch.
-                                    Inner tab index is held on {@link Workflow} (not Subworkflow) so job.render()
-                                    remounts do not reset Important settings, while leaving the job Workflow tab
-                                    unmounts Workflow and returns to Overview on the next visit.
-                                */}
-                                {subworkflow ? (
-                                    <Subworkflow
-                                        key={subworkflow.id}
-                                        className="card-body"
-                                        subworkflow={subworkflow}
-                                        activeTabIndex={
-                                            subworkflowActiveTabIndexById[subworkflow.id] ?? 0
-                                        }
-                                        onActiveTabIndexChange={(tabIndex) =>
-                                            onSubworkflowActiveTabIndexChange(
-                                                subworkflow.id,
-                                                tabIndex,
-                                            )
-                                        }
-                                        onUpdate={onSubworkflowUnitUpdate}
-                                        isStandalone={isStandalone}
-                                        isMethodDataLoading={isMethodDataLoading}
-                                        editable={Boolean(editable)}
-                                        adjustable={Boolean(adjustable)}
-                                        onMaterialSwitch={onMaterialSwitch}
-                                        materials={materials}
-                                        materialsIndex={materialsIndex}
-                                        metaProperties={metaProperties}
-                                        onOutputUpdateRequest={onOutputUpdateRequest}
-                                        accountUsers={accountUsers}
-                                        accountUsersIsLoading={accountUsersIsLoading}
-                                        currentUser={profile.user.entity}
-                                        clusters={clusters}
-                                        pseudoUploadReduxDialog={pseudoUploadReduxDialog}
-                                        unitTypeReduxDialog={unitTypeReduxDialog}
-                                        profile={profile}
-                                        publicAccount={publicAccount}
-                                        createMetaProperty={createMetaProperty}
-                                        jobProperties={jobProperties}
-                                    />
-                                ) : null}
-                            </>
-                        )}
-                        {unit.type === UnitType.map && (
-                            <React.Suspense fallback={null}>
-                                <MapWorkflowDesigner
-                                    className="card-body"
-                                    unit={unit}
-                                    workflow={mapWorkflow}
-                                    onUpdate={onUnitUpdate}
-                                    onWorkflowUpdate={onMapWorkflowUpdate}
-                                    editable={Boolean(editable)}
-                                    adjustable={Boolean(adjustable)}
-                                    onMaterialSwitch={onMaterialSwitch}
-                                    materials={materials}
-                                    materialsIndex={materialsIndex}
-                                    iconCls={iconCls}
-                                    onOutputUpdateRequest={onOutputUpdateRequest}
-                                    parentWorkflow={entity}
-                                    accountUsers={accountUsers}
-                                    accountUsersIsLoading={accountUsersIsLoading}
-                                    currentUser={profile.user.entity}
-                                    publicAccount={publicAccount}
-                                    profile={profile}
-                                    clusters={clusters}
-                                    dialogs={dialogs}
-                                    templates={templates}
-                                    isDescriptionEditable={isDescriptionEditable}
-                                    metaProperties={metaProperties}
-                                />
-                            </React.Suspense>
-                        )}
-                        {unit.type === UnitType.error && (
-                            <Box className="card-body" sx={{ p: 2 }}>
-                                <ErrorUnitContent unit={unit as ErrorUnit} />
-                            </Box>
-                        )}
+                        <WorkflowUnitPanel
+                            {...props}
+                            unit={unit}
+                            subworkflow={subworkflow}
+                            mapWorkflow={mapWorkflow}
+                        />
                     </Grid>
                 </Grid>
                 <Divider />

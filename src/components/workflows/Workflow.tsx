@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
+import type { Template } from "@mat3ra/ade";
 import type { DropdownAction } from "@mat3ra/cove/dist/mui/components/dropdown";
 import IconByName from "@mat3ra/cove/dist/mui/components/icon";
-import type { Template } from "@mat3ra/ade";
 import { type MaterialsSet, type OrderedMaterial, Workflow as WodeWorkflow } from "@mat3ra/wode";
 import { UnitType } from "@mat3ra/wode/dist/js/enums";
 import type { AnyWorkflowUnit } from "@mat3ra/wode/dist/js/units/factory";
@@ -25,17 +25,27 @@ import type {
 import type { SubworkflowDesignerUpdate } from "../../utils/subworkflowDesignerUpdate";
 import { WorkflowDefaultLayout } from "./WorkflowDefaultLayout";
 import { getWorkflowDesignerTabResetKey } from "./workflowDesignerTabState";
+import { type WorkflowLayoutVariant, resolveWorkflowLayoutVariant } from "./workflowLayoutVariant";
+import { WorkflowStudioLayout } from "./WorkflowStudioLayout";
 
 type WorkflowDialogs = WorkflowDesignerDialogs;
 
 export type WorkflowProps = {
     workflow: WodeWorkflow;
+    /**
+     * Shell to render the designer in. `classic` is the two-column layout every consumer has
+     * today and stays the default; `studio` is the steps-rail shell (SOF-8024 portion 5), opted
+     * into per host until parity is signed off.
+     */
+    layoutVariant?: WorkflowLayoutVariant;
     metaProperties?: WorkflowDesignerMetaProperty[];
     onUpdate?: (workflow: WodeWorkflow) => void;
     onOutputUpdateRequest?: (...args: unknown[]) => void;
     onUpdateTags?: (tags: string[]) => void;
     extraActions?: DropdownAction[];
     onSave?: (omitRedirect: boolean) => void;
+    /** Unsaved changes exist; surfaces on the Save affordance. */
+    isDirty?: boolean;
     onNameUpdate?: (name: string) => void;
     iconCls?: string;
     onUnitAdd?: (unitType: UnitType, prepend?: boolean, unitIndex?: number) => void;
@@ -113,6 +123,7 @@ export function Workflow({
     onUpdateTags,
     extraActions = [],
     onSave,
+    isDirty = false,
     onNameUpdate,
     iconCls,
     onUnitAdd = noop,
@@ -151,6 +162,7 @@ export function Workflow({
     onRender,
     renderAtJobLevel = false,
     workflowRenderGeneration,
+    layoutVariant,
     isDescriptionEditable,
     jobProperties,
 }: WorkflowProps) {
@@ -394,11 +406,17 @@ export function Workflow({
         return {
             isShown: Boolean(editable && isStandalone),
             isLoading,
+            isDirty,
             onSave: (omitRedirect?: boolean) => {
                 onSave?.(omitRedirect ?? false);
             },
         };
-    }, [editable, isLoading, isStandalone, onSave]);
+    }, [editable, isLoading, isStandalone, onSave, isDirty]);
+
+    const LayoutComponent =
+        resolveWorkflowLayoutVariant(layoutVariant) === "studio"
+            ? WorkflowStudioLayout
+            : WorkflowDefaultLayout;
 
     const getDropdownProps = useCallback(() => {
         return {
@@ -411,7 +429,7 @@ export function Workflow({
 
     return (
         <Box data-workflow-render-generation={workflowRenderGeneration}>
-            <WorkflowDefaultLayout
+            <LayoutComponent
                 entity={workflow}
                 unitIndex={unitIndex}
                 isMap={isMap}

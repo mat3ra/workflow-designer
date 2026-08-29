@@ -1,0 +1,412 @@
+import Box from "@mui/material/Box";
+import { useTheme } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
+import React, { useMemo } from "react";
+
+import { separateLabels } from "./brillouinZoneLabels";
+import {
+    type BrillouinZoneFace,
+    type Vector3,
+    computeBrillouinZoneFaces,
+    computeBrillouinZoneFacesFromReciprocalVectors,
+} from "./brillouinZoneGeometry";
+
+/** A leg of the k-path, in the same cartesian reciprocal units as the zone's own vectors. */
+export interface BrillouinZonePathPoint {
+    point: string;
+    coordinates: Vector3;
+}
+
+export interface BrillouinZoneProps {
+    /**
+     * Reciprocal vectors of the material's own lattice
+     * (`new ReciprocalLattice(material.lattice).reciprocalVectors`). Preferred: exact for this
+     * material. wove's component contract does not carry them, so the call site supplies them.
+     */
+    reciprocalVectors?: [Vector3, Vector3, Vector3];
+    /** Bravais lattice type, e.g. `FCC` — used only when {@link reciprocalVectors} is absent. */
+    latticeType?: string;
+    /** Web-app asset path wove derives from the lattice; used only as a last fallback. */
+    imgSrc?: string;
+    description?: string;
+    /** The k-path currently being edited, drawn inside the zone and labelled at each point. */
+    path?: BrillouinZonePathPoint[];
+    /**
+     * Every high-symmetry point of this lattice. Those the path does not visit are drawn faintly,
+     * so the picture also answers where a path *could* go — for FCC or HEX the default path
+     * happens to reach all of them, but a rhombohedral or monoclinic lattice has several it never
+     * touches, and those were invisible.
+     */
+    symmetryPoints?: BrillouinZonePathPoint[];
+}
+
+/**
+ * Fixed three-quarter view; the zone is a static illustration, not an interactive scene.
+ * Screen-up is +z, the c axis: a lattice type is named for what that axis does (HEX's six-fold
+ * axis, TET's long axis), so drawing it anywhere but vertical is drawing the solid on its side.
+ */
+const VIEW_YAW = Math.PI / 5;
+const VIEW_PITCH = Math.PI / 7;
+const SIZE = 240;
+const PADDING = 20;
+/** The drawing scales to its container up to this, so crowded labels get room to separate. */
+const MAX_RENDERED_SIZE = 420;
+/** How far a k-point's label sits from its marker, radially outward from the zone centre. */
+const LABEL_OFFSET = 10;
+const PATH_LABEL_SIZE = 11;
+const UNVISITED_LABEL_SIZE = 9;
+
+interface ProjectedPoint {
+    x: number;
+    y: number;
+    depth: number;
+}
+
+function project([x, y, z]: Vector3): ProjectedPoint {
+    const cosYaw = Math.cos(VIEW_YAW);
+    const sinYaw = Math.sin(VIEW_YAW);
+    // Yaw turns the zone about its c axis, which therefore stays vertical on screen.
+    const rotatedX = x * cosYaw + y * sinYaw;
+    const rotatedY = -x * sinYaw + y * cosYaw;
+
+    const cosPitch = Math.cos(VIEW_PITCH);
+    const sinPitch = Math.sin(VIEW_PITCH);
+
+    // SVG's y axis grows downward, hence the negation. Depth grows toward the viewer.
+    return {
+        x: rotatedX,
+        y: -(z * cosPitch - rotatedY * sinPitch),
+        depth: rotatedY * cosPitch + z * sinPitch,
+    };
+}
+
+/**
+ * Direction from the zone toward the viewer — the gradient of {@link ProjectedPoint.depth}.
+ * The zone is convex, so the faces it shows are exactly those whose outward normal points this
+ * way; drawing the rest through translucent front faces is what made a cube read as a wireframe.
+ */
+const VIEW_DIRECTION: Vector3 = [
+    -Math.sin(VIEW_YAW) * Math.cos(VIEW_PITCH),
+    Math.cos(VIEW_YAW) * Math.cos(VIEW_PITCH),
+    Math.sin(VIEW_PITCH),
+];
+
+/** Whether a face turns its outward side toward the viewer. */
+export function isFacingViewer(normal: Vector3): boolean {
+    return (
+        normal[0] * VIEW_DIRECTION[0] +
+            normal[1] * VIEW_DIRECTION[1] +
+            normal[2] * VIEW_DIRECTION[2] >
+        0
+    );
+}
+
+/** {@link project}, exposed so the view's orientation can be asserted without a DOM. */
+export const projectForTesting = project;
+
+interface ProjectedFace {
+    points: string;
+    depth: number;
+    shade: number;
+}
+
+interface Scene {
+    faces: ProjectedFace[];
+    /** Maps any point of reciprocal space into the same view the zone was drawn in. */
+    toScreen: (vector: Vector3) => { x: number; y: number };
+}
+
+/**
+ * Fits the zone to the viewport once and hands the same transform back, so anything else drawn
+ * in reciprocal space — the k-path, its labels — lands where the zone puts it.
+ */
+function buildScene(faces: BrillouinZoneFace[]): Scene {
+    const projectedByFace = faces.map((face) => face.vertices.map(project));
+    // Every face, not just the visible ones: the fit must not shift when a face turns away.
+    const all = projectedByFace.flat();
+    const minX = Math.min(...all.map((p) => p.x));
+    const maxX = Math.max(...all.map((p) => p.x));
+    const minY = Math.min(...all.map((p) => p.y));
+    const maxY = Math.max(...all.map((p) => p.y));
+    const span = Math.max(maxX - minX, maxY - minY) || 1;
+    const scaleFactor = (SIZE - 2 * PADDING) / span;
+    const offsetX = PADDING + (SIZE - 2 * PADDING - (maxX - minX) * scaleFactor) / 2;
+    const offsetY = PADDING + (SIZE - 2 * PADDING - (maxY - minY) * scaleFactor) / 2;
+
+    const place = (p: ProjectedPoint) => ({
+        x: offsetX + (p.x - minX) * scaleFactor,
+        y: offsetY + (p.y - minY) * scaleFactor,
+    });
+
+    const projectedFaces = projectedByFace
+        .map((projected, index) => {
+            const points = projected
+                .map(place)
+                .map((p) => `${p.x.toFixed(2)},${p.y.toFixed(2)}`)
+                .join(" ");
+            const depth = projected.reduce((sum, p) => sum + p.depth, 0) / (projected.length || 1);
+            // Lambert-ish shading from a light above and to the viewer's left.
+            const [nx, ny, nz] = faces[index].normal;
+            const shade = Math.max(0, nx * -0.3 + ny * 0.55 + nz * 0.78);
+            return { points, depth, shade, normal: faces[index].normal };
+        })
+        // The zone is convex: the faces turned away cannot be seen past the ones in front, and
+        // showing them through a translucent front is what made a cube read as a wireframe.
+        .filter((face) => isFacingViewer(face.normal))
+        // Painter's algorithm, so shared edges stack near-over-far rather than arbitrarily.
+        .sort((left, right) => left.depth - right.depth);
+
+    return { faces: projectedFaces, toScreen: (vector) => place(project(vector)) };
+}
+
+/**
+ * Draws the first Brillouin zone for a lattice type instead of fetching a per-lattice PNG.
+ *
+ * Hosts that ship their own artwork keep passing `BrillouinZoneImageComponent`; this is the
+ * default for everyone else, where `imgSrc` points at an asset that does not exist (see
+ * {@link computeBrillouinZoneFaces}). Falls back to the image for lattice types it cannot model.
+ */
+export function BrillouinZone({
+    reciprocalVectors,
+    latticeType,
+    imgSrc,
+    description,
+    path,
+    symmetryPoints,
+}: BrillouinZoneProps) {
+    const theme = useTheme();
+    const faces = useMemo(
+        () =>
+            reciprocalVectors
+                ? computeBrillouinZoneFacesFromReciprocalVectors(reciprocalVectors)
+                : computeBrillouinZoneFaces(latticeType ?? ""),
+        [reciprocalVectors, latticeType],
+    );
+    const scene = useMemo(() => (faces ? buildScene(faces) : null), [faces]);
+    const projected = scene?.faces ?? null;
+
+    /**
+     * Each point once, at its first appearance, so a path returning to Γ is not labelled twice.
+     * Labels are pushed away from the zone centre: high-symmetry points sit in one irreducible
+     * wedge, so a fixed offset would stack them all on top of each other.
+     */
+    const place = useMemo(() => {
+        if (!scene) return null;
+        const origin = scene.toScreen([0, 0, 0]);
+        return (item: BrillouinZonePathPoint, label: string) => {
+            const { x, y } = scene.toScreen(item.coordinates);
+            const [dx, dy] = [x - origin.x, y - origin.y];
+            const distance = Math.hypot(dx, dy) || 1;
+            return {
+                x,
+                y,
+                label,
+                labelX: x + (dx / distance) * LABEL_OFFSET,
+                // Γ sits at the origin, where there is no outward direction — nudge it up.
+                labelY: distance > 1 ? y + (dy / distance) * LABEL_OFFSET : y - LABEL_OFFSET,
+            };
+        };
+    }, [scene]);
+
+    /**
+     * The path and the points it skips are laid out together: both crowd into the same irreducible
+     * wedge, so separating them separately would just move the collisions between the two sets.
+     */
+    const drawn = useMemo(() => {
+        if (!place) return { path: null, unvisited: null };
+        const seen = new Set<string>();
+        const pathPoints = (path ?? []).map((item) => {
+            const isFirst = !seen.has(item.point);
+            seen.add(item.point);
+            return place(item, isFirst ? item.point : "");
+        });
+        const visited = new Set((path ?? []).map((item) => item.point));
+        const unvisitedPoints = (symmetryPoints ?? [])
+            .filter((item) => !visited.has(item.point))
+            .map((item) => place(item, item.point));
+
+        const all = [...pathPoints, ...unvisitedPoints];
+        const fontSizes = all.map((_, index) =>
+            index < pathPoints.length ? PATH_LABEL_SIZE : UNVISITED_LABEL_SIZE,
+        );
+        const separated = separateLabels(all, fontSizes);
+        const points = separated.slice(0, pathPoints.length);
+        const unvisited = separated.slice(pathPoints.length);
+        return {
+            path:
+                points.length > 1
+                    ? { points, polyline: points.map((p) => `${p.x},${p.y}`).join(" ") }
+                    : null,
+            unvisited: unvisited.length ? unvisited : null,
+        };
+    }, [place, path, symmetryPoints]);
+    const drawnPath = drawn.path;
+    const unvisitedPoints = drawn.unvisited;
+
+    /**
+     * The window on the drawing, widened to hold anything that falls outside the zone.
+     *
+     * The fit is computed from the zone's own faces, so a marker beyond them used to be clipped at
+     * the edge — silently, which is the worst way to show it. Points outside the first Brillouin
+     * zone are not physically expected (they indicate symmetry points expressed in a different
+     * basis than the reciprocal vectors, which happens for the monoclinic lattices); the picture's
+     * job is to show that plainly rather than crop the evidence.
+     */
+    const viewBox = useMemo(() => {
+        const marks = [...(drawnPath?.points ?? []), ...(unvisitedPoints ?? [])];
+        let [x0, y0, x1, y1] = [0, 0, SIZE, SIZE];
+        marks.forEach(({ x, y, labelX, labelY }) => {
+            x0 = Math.min(x0, x, labelX - LABEL_OFFSET);
+            y0 = Math.min(y0, y, labelY - LABEL_OFFSET);
+            x1 = Math.max(x1, x, labelX + LABEL_OFFSET);
+            y1 = Math.max(y1, y, labelY + LABEL_OFFSET);
+        });
+        return `${x0.toFixed(1)} ${y0.toFixed(1)} ${(x1 - x0).toFixed(1)} ${(y1 - y0).toFixed(1)}`;
+    }, [drawnPath, unvisitedPoints]);
+
+    if (!projected) {
+        if (!imgSrc) return null;
+        return (
+            <Box className="brillouin-zone brillouin-zone--image">
+                {/* eslint-disable-next-line jsx-a11y/img-redundant-alt */}
+                <img
+                    src={imgSrc}
+                    alt={description || "Brillouin zone"}
+                    style={{ maxWidth: "100%" }}
+                />
+            </Box>
+        );
+    }
+
+    const faceColor = theme.palette.primary.main;
+    const edgeColor = theme.palette.mode === "dark" ? "#0d1117" : "#ffffff";
+    /**
+     * The path is the point of the picture, so it is not left to `secondary.main` — which is a
+     * mid grey in the current theme, and the least visible thing on the zone. These two are
+     * measured against every ground the path crosses (the halo below it, the page, and the faces
+     * at the ≤0.5 opacity they drop to whenever a path is drawn); both clear WCAG 3:1 for
+     * non-text throughout, where grey bottoms out at 1.87.
+     */
+    const pathColor = theme.palette.mode === "dark" ? "#f5a623" : "#8d3200";
+
+    return (
+        <Box className="brillouin-zone" data-tid="brillouin-zone" sx={{ my: 1 }}>
+            <svg
+                viewBox={viewBox}
+                style={{ width: "100%", maxWidth: MAX_RENDERED_SIZE, height: "auto" }}
+                role="img"
+                aria-label={
+                    drawnPath
+                        ? `K-path through the first Brillouin zone of a ${latticeType} lattice, ` +
+                          `with its high-symmetry points labelled`
+                        : `First Brillouin zone of a ${latticeType} lattice`
+                }
+            >
+                {projected.map((face) => (
+                    <polygon
+                        key={face.points}
+                        points={face.points}
+                        // The path runs through the zone, so the solid is dimmed to let it read.
+                        fillOpacity={
+                            (drawnPath ? 0.15 : 0.25) + (drawnPath ? 0.35 : 0.6) * face.shade
+                        }
+                        fill={faceColor}
+                        stroke={edgeColor}
+                        strokeWidth={1}
+                        strokeLinejoin="round"
+                    />
+                ))}
+                {unvisitedPoints ? (
+                    <g data-tid="brillouin-zone-symmetry-points" opacity={0.55}>
+                        {unvisitedPoints.map((point) => (
+                            <React.Fragment key={point.label}>
+                                <circle
+                                    cx={point.x}
+                                    cy={point.y}
+                                    r={1.8}
+                                    fill={edgeColor}
+                                    stroke={pathColor}
+                                    strokeWidth={1}
+                                />
+                                <text
+                                    x={point.labelX}
+                                    y={point.labelY}
+                                    fontSize={UNVISITED_LABEL_SIZE}
+                                    textAnchor="middle"
+                                    dominantBaseline="middle"
+                                    fill={pathColor}
+                                    stroke={edgeColor}
+                                    strokeWidth={2}
+                                    paintOrder="stroke"
+                                >
+                                    {point.label}
+                                </text>
+                            </React.Fragment>
+                        ))}
+                    </g>
+                ) : null}
+                {drawnPath ? (
+                    <g data-tid="brillouin-zone-path">
+                        <polyline
+                            points={drawnPath.polyline}
+                            fill="none"
+                            stroke={edgeColor}
+                            strokeOpacity={0.65}
+                            strokeWidth={4}
+                            strokeLinejoin="round"
+                            strokeLinecap="round"
+                        />
+                        <polyline
+                            points={drawnPath.polyline}
+                            fill="none"
+                            stroke={pathColor}
+                            strokeWidth={2}
+                            strokeLinejoin="round"
+                            strokeLinecap="round"
+                        />
+                        {drawnPath.points.map((point) => (
+                            <circle
+                                key={`${point.x},${point.y}`}
+                                cx={point.x}
+                                cy={point.y}
+                                r={2.5}
+                                fill={pathColor}
+                                stroke={edgeColor}
+                                strokeWidth={1}
+                            />
+                        ))}
+                        {drawnPath.points
+                            .filter((point) => point.label)
+                            .map((point) => (
+                                <text
+                                    key={point.label}
+                                    x={point.labelX}
+                                    y={point.labelY}
+                                    fontSize={PATH_LABEL_SIZE}
+                                    fontWeight={700}
+                                    textAnchor="middle"
+                                    dominantBaseline="middle"
+                                    fill={pathColor}
+                                    stroke={edgeColor}
+                                    strokeWidth={2.5}
+                                    paintOrder="stroke"
+                                >
+                                    {point.label}
+                                </text>
+                            ))}
+                    </g>
+                ) : null}
+            </svg>
+            <Typography variant="caption" color="text.secondary" component="div">
+                First Brillouin zone — {latticeType} lattice
+            </Typography>
+            {description ? (
+                <Typography variant="caption" color="text.secondary" component="div">
+                    {description}
+                </Typography>
+            ) : null}
+        </Box>
+    );
+}
+
+export default BrillouinZone;
