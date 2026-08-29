@@ -35,6 +35,10 @@ import type {
     WorkflowDesignerTabItem,
     WorkflowDesignerUser,
 } from "../../types/context";
+import {
+    alignSubworkflowUnitsToApplication,
+    setSubworkflowApplication,
+} from "../../utils/subworkflowApplication";
 import { useWorkflowComponents } from "../../WorkflowComponentsContext";
 import UnitModal from "../units/UnitModal";
 import { ImportantSettings } from "./ImportantSettings";
@@ -125,9 +129,15 @@ export function Subworkflow({
     const { getDefaultComputeConfig } = useWorkflowComponents();
     const [unitIndex, setUnitIndex] = useState(0);
 
+    /**
+     * Every subworkflow edit goes through here, so this is where the units are kept on the
+     * subworkflow's application: a cloned or pasted unit brings its own, and wode leaves the
+     * serialized `units` behind when it moves the subworkflow to a new application version.
+     */
     const applyToSubworkflow = useCallback(
         (fn: (sw: WodeSubworkflow) => void) => {
             fn(subworkflow);
+            alignSubworkflowUnitsToApplication(subworkflow);
             onUpdate(subworkflow.toJSON());
         },
         [subworkflow, onUpdate],
@@ -175,7 +185,7 @@ export function Subworkflow({
     const onApplicationUpdate = useCallback(
         (application: ApplicationSchema) => {
             applyToSubworkflow((sw) => {
-                sw.setApplication(new Application(application));
+                setSubworkflowApplication(sw, application);
             });
         },
         [applyToSubworkflow],
