@@ -67,6 +67,11 @@ export type WorkflowDesignerMetaProperty = Record<string, unknown>;
 /** Replaces CorePropertyHolder. */
 export type WorkflowDesignerProperty = Record<string, unknown>;
 
+export type WorkflowDesignerJupyterUrls = {
+    notebookUrl: string;
+    labUrl: string;
+};
+
 /** Replaces WebappMetaPropertyHolderSchema — the return type of createMetaProperty. */
 export type WorkflowDesignerMetaPropertySchema = Record<string, unknown>;
 

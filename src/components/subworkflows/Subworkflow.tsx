@@ -30,6 +30,7 @@ import type {
     WorkflowDesignerDialogState,
     WorkflowDesignerMetaProperty,
     WorkflowDesignerMetaPropertySchema,
+    WorkflowDesignerJupyterUrls,
     WorkflowDesignerProfile,
     WorkflowDesignerProperty,
     WorkflowDesignerTabItem,
@@ -69,6 +70,7 @@ export type SubworkflowProps = {
     unitTypeReduxDialog: WorkflowDesignerDialogState;
     className?: string;
     jobProperties?: WorkflowDesignerProperty[];
+    jupyterUrlsByUnitFlowchartId?: Record<string, WorkflowDesignerJupyterUrls>;
     activeTabIndex: number;
     onActiveTabIndexChange: (tabIndex: number) => void;
 };
@@ -119,6 +121,7 @@ export function Subworkflow({
     unitTypeReduxDialog,
     className,
     jobProperties,
+    jupyterUrlsByUnitFlowchartId,
     activeTabIndex,
     onActiveTabIndexChange,
 }: SubworkflowProps) {
@@ -397,6 +400,7 @@ export function Subworkflow({
                             onUnitSelect={onUnitSelect}
                             unitTypeReduxDialog={unitTypeReduxDialog}
                             jobProperties={jobProperties}
+                            jupyterUrlsByUnitFlowchartId={jupyterUrlsByUnitFlowchartId}
                             UnitModalComponent={UnitModal}
                         />
                     </Stack>

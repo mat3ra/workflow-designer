@@ -27,6 +27,7 @@ import type {
     WorkflowDesignerHistory,
     WorkflowDesignerMetaProperty,
     WorkflowDesignerMetaPropertySchema,
+    WorkflowDesignerJupyterUrls,
     WorkflowDesignerProfile,
     WorkflowDesignerProperty,
     WorkflowDesignerUser,
@@ -122,6 +123,7 @@ export type WorkflowDefaultLayoutProps = {
         property: WorkflowDesignerCreateMetaPropertyConfig,
     ) => Promise<WorkflowDesignerMetaPropertySchema | undefined>;
     jobProperties?: WorkflowDesignerProperty[];
+    jupyterUrlsByUnitFlowchartId?: Record<string, WorkflowDesignerJupyterUrls>;
     /** Subworkflow inner tabs (Overview, Important settings, …); owned by {@link Workflow} so remounts of {@link Subworkflow} do not reset them. */
     subworkflowActiveTabIndexById: Record<string, number>;
     onSubworkflowActiveTabIndexChange: (subworkflowId: string, tabIndex: number) => void;
@@ -179,6 +181,7 @@ export function WorkflowDefaultLayout(props: WorkflowDefaultLayoutProps) {
         templates,
         createMetaProperty,
         jobProperties,
+        jupyterUrlsByUnitFlowchartId,
         subworkflowActiveTabIndexById,
         onSubworkflowActiveTabIndexChange,
     } = props;
@@ -327,6 +330,7 @@ export function WorkflowDefaultLayout(props: WorkflowDefaultLayoutProps) {
                                         publicAccount={publicAccount}
                                         createMetaProperty={createMetaProperty}
                                         jobProperties={jobProperties}
+                                        jupyterUrlsByUnitFlowchartId={jupyterUrlsByUnitFlowchartId}
                                     />
                                 ) : null}
                             </>
