@@ -72,8 +72,7 @@ export function UnitModalContent({
                     unit={executionUnit}
                     onOutputUpdateRequest={onOutputUpdateRequest}
                     jobProperties={jobProperties}
-                    jupyterNotebookUrl={jupyterUrls?.notebookUrl}
-                    jupyterLabUrl={jupyterUrls?.labUrl}
+                    jupyterUrls={jupyterUrls}
                 />
             );
         }
