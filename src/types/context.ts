@@ -72,6 +72,12 @@ export type WorkflowDesignerJupyterUrls = {
     labUrl: string;
 };
 
+/** Jupyter endpoint URLs per unit flowchart id, then per repetition (mapped units run once per branch). */
+export type WorkflowDesignerJupyterUrlsByUnit = Record<
+    string,
+    Record<number, WorkflowDesignerJupyterUrls>
+>;
+
 /** Replaces WebappMetaPropertyHolderSchema — the return type of createMetaProperty. */
 export type WorkflowDesignerMetaPropertySchema = Record<string, unknown>;
 

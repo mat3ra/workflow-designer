@@ -19,7 +19,7 @@ import React from "react";
 
 import type {
     WorkflowDesignerAccount,
-    WorkflowDesignerJupyterUrls,
+    WorkflowDesignerJupyterUrlsByUnit,
     WorkflowDesignerProperty,
 } from "../../types/context";
 import { useWorkflowComponents } from "../../WorkflowComponentsContext";
@@ -42,7 +42,7 @@ export interface UnitModalProps {
     onMaterialSwitch: (index: number) => void;
     publicAccount: WorkflowDesignerAccount;
     jobProperties?: WorkflowDesignerProperty[];
-    jupyterUrlsByUnitFlowchartId?: Record<string, WorkflowDesignerJupyterUrls>;
+    jupyterUrlsByUnitFlowchartId?: WorkflowDesignerJupyterUrlsByUnit;
 }
 
 export default function UnitModal({

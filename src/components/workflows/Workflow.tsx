@@ -16,7 +16,7 @@ import type {
     WorkflowDesignerCreateMetaPropertyConfig,
     WorkflowDesignerDialogs,
     WorkflowDesignerHistory,
-    WorkflowDesignerJupyterUrls,
+    WorkflowDesignerJupyterUrlsByUnit,
     WorkflowDesignerMetaProperty,
     WorkflowDesignerMetaPropertySchema,
     WorkflowDesignerProfile,
@@ -94,7 +94,7 @@ export type WorkflowProps = {
     isDescriptionEditable: boolean;
     /** Refined job properties for unit modals in job designer; optional elsewhere. */
     jobProperties?: WorkflowDesignerProperty[];
-    jupyterUrlsByUnitFlowchartId?: Record<string, WorkflowDesignerJupyterUrls>;
+    jupyterUrlsByUnitFlowchartId?: WorkflowDesignerJupyterUrlsByUnit;
 };
 
 const noop = (): undefined => undefined;
