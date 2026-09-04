@@ -1,9 +1,9 @@
 /* eslint-disable react/jsx-props-no-spreading */
+import type { Template } from "@mat3ra/ade";
 import type { DropdownAction } from "@mat3ra/cove/dist/mui/components/dropdown";
 import { ENTITY_ICONS } from "@mat3ra/cove/dist/mui/components/icon/entityIcons";
 import ThemeProvider from "@mat3ra/cove/dist/theme/provider";
 import oldLightMaterialUITheme from "@mat3ra/cove/dist/theme/theme";
-import type { Template } from "@mat3ra/ade";
 import {
     type ErrorUnit,
     type MaterialsSet,
@@ -25,9 +25,9 @@ import type {
     WorkflowDesignerCluster,
     WorkflowDesignerCreateMetaPropertyConfig,
     WorkflowDesignerHistory,
+    WorkflowDesignerJupyterUrlsByUnit,
     WorkflowDesignerMetaProperty,
     WorkflowDesignerMetaPropertySchema,
-    WorkflowDesignerJupyterUrlsByUnit,
     WorkflowDesignerProfile,
     WorkflowDesignerProperty,
     WorkflowDesignerUser,
@@ -361,6 +361,8 @@ export function WorkflowDefaultLayout(props: WorkflowDefaultLayoutProps) {
                                     templates={templates}
                                     isDescriptionEditable={isDescriptionEditable}
                                     metaProperties={metaProperties}
+                                    jobProperties={jobProperties}
+                                    jupyterUrlsByUnitFlowchartId={jupyterUrlsByUnitFlowchartId}
                                 />
                             </React.Suspense>
                         )}
