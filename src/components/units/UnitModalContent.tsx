@@ -8,7 +8,10 @@ import type {
 import { ErrorUnitContent } from "@mat3ra/wove";
 import React from "react";
 
-import type { WorkflowDesignerProperty } from "../../types/context";
+import type {
+    WorkflowDesignerJupyterUrlsByUnit,
+    WorkflowDesignerProperty,
+} from "../../types/context";
 import UnitDetails from "../subworkflows/UnitDetails";
 import { BaseUnit } from "./BaseUnit";
 import UnitPointerField from "./components/UnitPointerField";
@@ -34,6 +37,7 @@ export interface UnitModalContentProps {
     onMaterialSwitch: (index: number) => void;
     /** Job designer passes refined properties for execution-unit monitors; elsewhere defaults to []. */
     jobProperties?: WorkflowDesignerProperty[];
+    jupyterUrlsByUnitFlowchartId?: WorkflowDesignerJupyterUrlsByUnit;
 }
 
 export function UnitModalContent({
@@ -48,6 +52,7 @@ export function UnitModalContent({
     materialsIndex,
     onMaterialSwitch,
     jobProperties = [],
+    jupyterUrlsByUnitFlowchartId,
 }: UnitModalContentProps) {
     const isViewMode = !editable && !adjustable;
 
@@ -58,11 +63,16 @@ export function UnitModalContent({
     if (unit.type === UnitType.execution) {
         const executionUnit = unit as WodeExecutionUnit;
         if (isViewMode) {
+            const jupyterUrls =
+                jupyterUrlsByUnitFlowchartId?.[executionUnit.flowchartId]?.[
+                    executionUnit.repetition
+                ];
             return (
                 <ExecutionUnitViewer
                     unit={executionUnit}
                     onOutputUpdateRequest={onOutputUpdateRequest}
                     jobProperties={jobProperties}
+                    jupyterUrls={jupyterUrls}
                 />
             );
         }

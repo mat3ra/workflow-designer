@@ -1,9 +1,9 @@
 /* eslint-disable no-param-reassign -- Wode unit helpers mutate; class built only for those APIs */
-import Accordion from "@mat3ra/cove/dist/mui/components/accordion/Accordion";
-import TabsMenu from "@mat3ra/cove/dist/mui/components/tabs/TabsMenu";
 import { Application } from "@mat3ra/ade";
 import { Application as ApplicationAve } from "@mat3ra/ave";
 import { type NameResultSchema, safeMakeObject } from "@mat3ra/code/dist/js/utils/object";
+import Accordion from "@mat3ra/cove/dist/mui/components/accordion/Accordion";
+import TabsMenu from "@mat3ra/cove/dist/mui/components/tabs/TabsMenu";
 import type { ApplicationSchema, SubworkflowSchema } from "@mat3ra/esse/dist/js/types";
 import type { Model as ModeModel } from "@mat3ra/mode";
 import { Model } from "@mat3ra/move";
@@ -28,6 +28,7 @@ import type {
     WorkflowDesignerCoreUser,
     WorkflowDesignerCreateMetaPropertyConfig,
     WorkflowDesignerDialogState,
+    WorkflowDesignerJupyterUrlsByUnit,
     WorkflowDesignerMetaProperty,
     WorkflowDesignerMetaPropertySchema,
     WorkflowDesignerProfile,
@@ -69,6 +70,7 @@ export type SubworkflowProps = {
     unitTypeReduxDialog: WorkflowDesignerDialogState;
     className?: string;
     jobProperties?: WorkflowDesignerProperty[];
+    jupyterUrlsByUnitFlowchartId?: WorkflowDesignerJupyterUrlsByUnit;
     activeTabIndex: number;
     onActiveTabIndexChange: (tabIndex: number) => void;
 };
@@ -119,6 +121,7 @@ export function Subworkflow({
     unitTypeReduxDialog,
     className,
     jobProperties,
+    jupyterUrlsByUnitFlowchartId,
     activeTabIndex,
     onActiveTabIndexChange,
 }: SubworkflowProps) {
@@ -397,6 +400,7 @@ export function Subworkflow({
                             onUnitSelect={onUnitSelect}
                             unitTypeReduxDialog={unitTypeReduxDialog}
                             jobProperties={jobProperties}
+                            jupyterUrlsByUnitFlowchartId={jupyterUrlsByUnitFlowchartId}
                             UnitModalComponent={UnitModal}
                         />
                     </Stack>

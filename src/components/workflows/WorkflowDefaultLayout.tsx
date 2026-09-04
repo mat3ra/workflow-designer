@@ -1,9 +1,9 @@
 /* eslint-disable react/jsx-props-no-spreading */
+import type { Template } from "@mat3ra/ade";
 import type { DropdownAction } from "@mat3ra/cove/dist/mui/components/dropdown";
 import { ENTITY_ICONS } from "@mat3ra/cove/dist/mui/components/icon/entityIcons";
 import ThemeProvider from "@mat3ra/cove/dist/theme/provider";
 import oldLightMaterialUITheme from "@mat3ra/cove/dist/theme/theme";
-import type { Template } from "@mat3ra/ade";
 import {
     type ErrorUnit,
     type MaterialsSet,
@@ -25,6 +25,7 @@ import type {
     WorkflowDesignerCluster,
     WorkflowDesignerCreateMetaPropertyConfig,
     WorkflowDesignerHistory,
+    WorkflowDesignerJupyterUrlsByUnit,
     WorkflowDesignerMetaProperty,
     WorkflowDesignerMetaPropertySchema,
     WorkflowDesignerProfile,
@@ -122,6 +123,7 @@ export type WorkflowDefaultLayoutProps = {
         property: WorkflowDesignerCreateMetaPropertyConfig,
     ) => Promise<WorkflowDesignerMetaPropertySchema | undefined>;
     jobProperties?: WorkflowDesignerProperty[];
+    jupyterUrlsByUnitFlowchartId?: WorkflowDesignerJupyterUrlsByUnit;
     /** Subworkflow inner tabs (Overview, Important settings, …); owned by {@link Workflow} so remounts of {@link Subworkflow} do not reset them. */
     subworkflowActiveTabIndexById: Record<string, number>;
     onSubworkflowActiveTabIndexChange: (subworkflowId: string, tabIndex: number) => void;
@@ -179,6 +181,7 @@ export function WorkflowDefaultLayout(props: WorkflowDefaultLayoutProps) {
         templates,
         createMetaProperty,
         jobProperties,
+        jupyterUrlsByUnitFlowchartId,
         subworkflowActiveTabIndexById,
         onSubworkflowActiveTabIndexChange,
     } = props;
@@ -327,6 +330,7 @@ export function WorkflowDefaultLayout(props: WorkflowDefaultLayoutProps) {
                                         publicAccount={publicAccount}
                                         createMetaProperty={createMetaProperty}
                                         jobProperties={jobProperties}
+                                        jupyterUrlsByUnitFlowchartId={jupyterUrlsByUnitFlowchartId}
                                     />
                                 ) : null}
                             </>
@@ -357,6 +361,8 @@ export function WorkflowDefaultLayout(props: WorkflowDefaultLayoutProps) {
                                     templates={templates}
                                     isDescriptionEditable={isDescriptionEditable}
                                     metaProperties={metaProperties}
+                                    jobProperties={jobProperties}
+                                    jupyterUrlsByUnitFlowchartId={jupyterUrlsByUnitFlowchartId}
                                 />
                             </React.Suspense>
                         )}
