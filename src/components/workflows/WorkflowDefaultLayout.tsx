@@ -25,7 +25,7 @@ import type {
     WorkflowDesignerCluster,
     WorkflowDesignerCreateMetaPropertyConfig,
     WorkflowDesignerHistory,
-    WorkflowDesignerJupyterUrlsByUnit,
+    WorkflowDesignerExtraTabsByUnit,
     WorkflowDesignerMetaProperty,
     WorkflowDesignerMetaPropertySchema,
     WorkflowDesignerProfile,
@@ -123,7 +123,7 @@ export type WorkflowDefaultLayoutProps = {
         property: WorkflowDesignerCreateMetaPropertyConfig,
     ) => Promise<WorkflowDesignerMetaPropertySchema | undefined>;
     jobProperties?: WorkflowDesignerProperty[];
-    jupyterUrlsByUnitFlowchartId?: WorkflowDesignerJupyterUrlsByUnit;
+    extraTabsByUnitFlowchartId?: WorkflowDesignerExtraTabsByUnit;
     /** Subworkflow inner tabs (Overview, Important settings, …); owned by {@link Workflow} so remounts of {@link Subworkflow} do not reset them. */
     subworkflowActiveTabIndexById: Record<string, number>;
     onSubworkflowActiveTabIndexChange: (subworkflowId: string, tabIndex: number) => void;
@@ -181,7 +181,7 @@ export function WorkflowDefaultLayout(props: WorkflowDefaultLayoutProps) {
         templates,
         createMetaProperty,
         jobProperties,
-        jupyterUrlsByUnitFlowchartId,
+        extraTabsByUnitFlowchartId,
         subworkflowActiveTabIndexById,
         onSubworkflowActiveTabIndexChange,
     } = props;
@@ -330,7 +330,7 @@ export function WorkflowDefaultLayout(props: WorkflowDefaultLayoutProps) {
                                         publicAccount={publicAccount}
                                         createMetaProperty={createMetaProperty}
                                         jobProperties={jobProperties}
-                                        jupyterUrlsByUnitFlowchartId={jupyterUrlsByUnitFlowchartId}
+                                        extraTabsByUnitFlowchartId={extraTabsByUnitFlowchartId}
                                     />
                                 ) : null}
                             </>
@@ -362,7 +362,7 @@ export function WorkflowDefaultLayout(props: WorkflowDefaultLayoutProps) {
                                     isDescriptionEditable={isDescriptionEditable}
                                     metaProperties={metaProperties}
                                     jobProperties={jobProperties}
-                                    jupyterUrlsByUnitFlowchartId={jupyterUrlsByUnitFlowchartId}
+                                    extraTabsByUnitFlowchartId={extraTabsByUnitFlowchartId}
                                 />
                             </React.Suspense>
                         )}

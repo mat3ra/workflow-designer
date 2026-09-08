@@ -19,7 +19,7 @@ import React from "react";
 
 import type {
     WorkflowDesignerAccount,
-    WorkflowDesignerJupyterUrlsByUnit,
+    WorkflowDesignerExtraTabsByUnit,
     WorkflowDesignerProperty,
 } from "../../types/context";
 import { useWorkflowComponents } from "../../WorkflowComponentsContext";
@@ -42,7 +42,7 @@ export interface UnitModalProps {
     onMaterialSwitch: (index: number) => void;
     publicAccount: WorkflowDesignerAccount;
     jobProperties?: WorkflowDesignerProperty[];
-    jupyterUrlsByUnitFlowchartId?: WorkflowDesignerJupyterUrlsByUnit;
+    extraTabsByUnitFlowchartId?: WorkflowDesignerExtraTabsByUnit;
 }
 
 export default function UnitModal({
@@ -62,7 +62,7 @@ export default function UnitModal({
     onMaterialSwitch,
     publicAccount,
     jobProperties,
-    jupyterUrlsByUnitFlowchartId,
+    extraTabsByUnitFlowchartId,
 }: UnitModalProps) {
     const { EntityNameComponent, MetadataComponent } = useWorkflowComponents();
     const onNameUpdate = (name: string) => {
@@ -133,7 +133,7 @@ export default function UnitModal({
                 materialsIndex={materialsIndex}
                 onMaterialSwitch={onMaterialSwitch}
                 jobProperties={jobProperties}
-                jupyterUrlsByUnitFlowchartId={jupyterUrlsByUnitFlowchartId}
+                extraTabsByUnitFlowchartId={extraTabsByUnitFlowchartId}
             />
             <MetadataComponent
                 tags={lodash.get(unit, "tags", [])}

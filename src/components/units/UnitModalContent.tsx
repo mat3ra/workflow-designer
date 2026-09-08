@@ -1,6 +1,6 @@
 import { ExecutionUnit, ExecutionUnitViewer } from "@mat3ra/ave";
 import { ErrorUnit, ExecutionUnit as WodeExecutionUnit } from "@mat3ra/wode";
-import { UnitType } from "@mat3ra/wode/dist/js/enums";
+import { UnitStatus, UnitType } from "@mat3ra/wode/dist/js/enums";
 import type {
     AnySubworkflowUnit,
     AnySubworkflowUnitSchema,
@@ -9,7 +9,7 @@ import { ErrorUnitContent } from "@mat3ra/wove";
 import React from "react";
 
 import type {
-    WorkflowDesignerJupyterUrlsByUnit,
+    WorkflowDesignerExtraTabsByUnit,
     WorkflowDesignerProperty,
 } from "../../types/context";
 import UnitDetails from "../subworkflows/UnitDetails";
@@ -37,7 +37,7 @@ export interface UnitModalContentProps {
     onMaterialSwitch: (index: number) => void;
     /** Job designer passes refined properties for execution-unit monitors; elsewhere defaults to []. */
     jobProperties?: WorkflowDesignerProperty[];
-    jupyterUrlsByUnitFlowchartId?: WorkflowDesignerJupyterUrlsByUnit;
+    extraTabsByUnitFlowchartId?: WorkflowDesignerExtraTabsByUnit;
 }
 
 export function UnitModalContent({
@@ -52,7 +52,7 @@ export function UnitModalContent({
     materialsIndex,
     onMaterialSwitch,
     jobProperties = [],
-    jupyterUrlsByUnitFlowchartId,
+    extraTabsByUnitFlowchartId,
 }: UnitModalContentProps) {
     const isViewMode = !editable && !adjustable;
 
@@ -63,16 +63,26 @@ export function UnitModalContent({
     if (unit.type === UnitType.execution) {
         const executionUnit = unit as WodeExecutionUnit;
         if (isViewMode) {
-            const jupyterUrls =
-                jupyterUrlsByUnitFlowchartId?.[executionUnit.flowchartId]?.[
-                    executionUnit.repetition
-                ];
+            // A finished unit keeps its endpoint property, and offering that dead link is what
+            // the viewer used to do; gate on status instead — the unit's status, not which
+            // application it ran. Note `status` is per unit, not per repetition (it is
+            // last-write-wins across branches; per-branch history lives in `statusTrack`), so a
+            // mapped unit with one branch still running can pass this gate while the branch
+            // being viewed has finished. Pre-existing — ave's own gate was equally blind — and
+            // tracked in PLAN.md rather than fixed here, since the per-repetition status helper
+            // belongs in wode.
+            const extraTabs =
+                executionUnit.status === UnitStatus.active
+                    ? extraTabsByUnitFlowchartId?.[executionUnit.flowchartId]?.[
+                          executionUnit.repetition
+                      ]
+                    : undefined;
             return (
                 <ExecutionUnitViewer
                     unit={executionUnit}
                     onOutputUpdateRequest={onOutputUpdateRequest}
                     jobProperties={jobProperties}
-                    jupyterUrls={jupyterUrls}
+                    extraTabs={extraTabs}
                 />
             );
         }

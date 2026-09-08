@@ -12,7 +12,7 @@ import type {
     WorkflowDesignerAccount,
     WorkflowDesignerCluster,
     WorkflowDesignerCoreUser,
-    WorkflowDesignerJupyterUrlsByUnit,
+    WorkflowDesignerExtraTabsByUnit,
     WorkflowDesignerMetaProperty,
     WorkflowDesignerProfile,
     WorkflowDesignerProperty,
@@ -75,7 +75,7 @@ export type MapProps = {
     isDescriptionEditable: boolean;
     metaProperties?: WorkflowDesignerMetaProperty[];
     jobProperties?: WorkflowDesignerProperty[];
-    jupyterUrlsByUnitFlowchartId?: WorkflowDesignerJupyterUrlsByUnit;
+    extraTabsByUnitFlowchartId?: WorkflowDesignerExtraTabsByUnit;
 };
 
 const workflowRenderNoop = (): undefined => undefined;
@@ -108,7 +108,7 @@ function MapWorkflowDesigner(props: MapProps) {
         isDescriptionEditable,
         metaProperties,
         jobProperties,
-        jupyterUrlsByUnitFlowchartId,
+        extraTabsByUnitFlowchartId,
     } = props;
     const { getDefaultComputeConfig } = useWorkflowComponents();
     const [entity, setEntity] = useState<WodeWorkflow>(() => workflowProp);
@@ -328,7 +328,7 @@ function MapWorkflowDesigner(props: MapProps) {
                         isDescriptionEditable={isDescriptionEditable}
                         metaProperties={metaProperties}
                         jobProperties={jobProperties}
-                        jupyterUrlsByUnitFlowchartId={jupyterUrlsByUnitFlowchartId}
+                        extraTabsByUnitFlowchartId={extraTabsByUnitFlowchartId}
                     />
                 </TabPanel>
                 <TabPanel value="1" sx={{ p: 0, pt: 2 }} id="map-data">
