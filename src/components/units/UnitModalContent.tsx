@@ -9,7 +9,7 @@ import { ErrorUnitContent } from "@mat3ra/wove";
 import React from "react";
 
 import type {
-    WorkflowDesignerExtraTabsByUnit,
+    WorkflowDesignerUnitEndpointsByUnit,
     WorkflowDesignerProperty,
 } from "../../types/context";
 import UnitDetails from "../subworkflows/UnitDetails";
@@ -37,7 +37,7 @@ export interface UnitModalContentProps {
     onMaterialSwitch: (index: number) => void;
     /** Job designer passes refined properties for execution-unit monitors; elsewhere defaults to []. */
     jobProperties?: WorkflowDesignerProperty[];
-    extraTabsByUnitFlowchartId?: WorkflowDesignerExtraTabsByUnit;
+    unitEndpointsByFlowchartId?: WorkflowDesignerUnitEndpointsByUnit;
 }
 
 export function UnitModalContent({
@@ -52,7 +52,7 @@ export function UnitModalContent({
     materialsIndex,
     onMaterialSwitch,
     jobProperties = [],
-    extraTabsByUnitFlowchartId,
+    unitEndpointsByFlowchartId,
 }: UnitModalContentProps) {
     const isViewMode = !editable && !adjustable;
 
@@ -71,9 +71,9 @@ export function UnitModalContent({
             // being viewed has finished. Pre-existing — ave's own gate was equally blind — and
             // tracked in PLAN.md rather than fixed here, since the per-repetition status helper
             // belongs in wode.
-            const extraTabs =
+            const unitEndpoints =
                 executionUnit.status === UnitStatus.active
-                    ? extraTabsByUnitFlowchartId?.[executionUnit.flowchartId]?.[
+                    ? unitEndpointsByFlowchartId?.[executionUnit.flowchartId]?.[
                           executionUnit.repetition
                       ]
                     : undefined;
@@ -82,7 +82,7 @@ export function UnitModalContent({
                     unit={executionUnit}
                     onOutputUpdateRequest={onOutputUpdateRequest}
                     jobProperties={jobProperties}
-                    extraTabs={extraTabs}
+                    unitEndpoints={unitEndpoints}
                 />
             );
         }

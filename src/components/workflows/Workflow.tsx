@@ -16,7 +16,7 @@ import type {
     WorkflowDesignerCreateMetaPropertyConfig,
     WorkflowDesignerDialogs,
     WorkflowDesignerHistory,
-    WorkflowDesignerExtraTabsByUnit,
+    WorkflowDesignerUnitEndpointsByUnit,
     WorkflowDesignerMetaProperty,
     WorkflowDesignerMetaPropertySchema,
     WorkflowDesignerProfile,
@@ -94,7 +94,7 @@ export type WorkflowProps = {
     isDescriptionEditable: boolean;
     /** Refined job properties for unit modals in job designer; optional elsewhere. */
     jobProperties?: WorkflowDesignerProperty[];
-    extraTabsByUnitFlowchartId?: WorkflowDesignerExtraTabsByUnit;
+    unitEndpointsByFlowchartId?: WorkflowDesignerUnitEndpointsByUnit;
 };
 
 const noop = (): undefined => undefined;
@@ -155,7 +155,7 @@ export function Workflow({
     workflowRenderGeneration,
     isDescriptionEditable,
     jobProperties,
-    extraTabsByUnitFlowchartId,
+    unitEndpointsByFlowchartId,
 }: WorkflowProps) {
     const [unitIndex, setUnitIndex] = useState(0);
     const [isRelaxationToggled, setIsRelaxationToggled] = useState(false);
@@ -465,7 +465,7 @@ export function Workflow({
                 templates={templates}
                 createMetaProperty={createMetaProperty}
                 jobProperties={jobProperties}
-                extraTabsByUnitFlowchartId={extraTabsByUnitFlowchartId}
+                unitEndpointsByFlowchartId={unitEndpointsByFlowchartId}
                 subworkflowActiveTabIndexById={subworkflowActiveTabIndexById}
                 onSubworkflowActiveTabIndexChange={onSubworkflowActiveTabIndexChange}
             />

@@ -7,7 +7,6 @@
  */
 
 /** Replaces FulfilledUserState — only the shape actually used in components. */
-import type { TabItem } from "@mat3ra/cove/dist/mui/components/tabs/types";
 import type { ExecutionUnitSchema } from "@mat3ra/esse/dist/js/types";
 
 export interface WorkflowDesignerUser {
@@ -68,16 +67,17 @@ export type WorkflowDesignerMetaProperty = Record<string, unknown>;
 /** Replaces CorePropertyHolder. */
 export type WorkflowDesignerProperty = Record<string, unknown>;
 
-/**
- * A tab a unit publishes on top of the viewer's built-in ones; threaded through untouched.
- * Derived from cove's `TabItem`, which is what ave ultimately renders these as.
- */
-export type WorkflowDesignerExtraTab = Required<Pick<TabItem, "id" | "itemName" | "href">>;
+/** An endpoint a unit serves while it runs; threaded through untouched. Job-domain shape. */
+export type WorkflowDesignerUnitEndpoint = {
+    id: string;
+    label: string;
+    url: string;
+};
 
-/** Extra viewer tabs per unit flowchart id, then per repetition (mapped units run once per branch). */
-export type WorkflowDesignerExtraTabsByUnit = Record<
+/** Unit endpoints per unit flowchart id, then per repetition (mapped units run once per branch). */
+export type WorkflowDesignerUnitEndpointsByUnit = Record<
     string,
-    Record<number, WorkflowDesignerExtraTab[]>
+    Record<number, WorkflowDesignerUnitEndpoint[]>
 >;
 
 /** Replaces WebappMetaPropertyHolderSchema — the return type of createMetaProperty. */
