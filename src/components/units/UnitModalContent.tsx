@@ -63,14 +63,8 @@ export function UnitModalContent({
     if (unit.type === UnitType.execution) {
         const executionUnit = unit as WodeExecutionUnit;
         if (isViewMode) {
-            // A finished unit keeps its endpoint property, and offering that dead link is what
-            // the viewer used to do; gate on status instead — the unit's status, not which
-            // application it ran. Note `status` is per unit, not per repetition (it is
-            // last-write-wins across branches; per-branch history lives in `statusTrack`), so a
-            // mapped unit with one branch still running can pass this gate while the branch
-            // being viewed has finished. Pre-existing — ave's own gate was equally blind — and
-            // tracked in PLAN.md rather than fixed here, since the per-repetition status helper
-            // belongs in wode.
+            // `status` is per unit, not per repetition, so a mapped unit with another branch
+            // still running passes this gate on a finished branch.
             const unitEndpoints =
                 executionUnit.status === UnitStatus.active
                     ? unitEndpointsByFlowchartId?.[executionUnit.flowchartId]?.[
