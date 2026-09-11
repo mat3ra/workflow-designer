@@ -9,8 +9,8 @@ import { ErrorUnitContent } from "@mat3ra/wove";
 import React from "react";
 
 import type {
-    WorkflowDesignerUnitEndpointsByUnit,
     WorkflowDesignerProperty,
+    WorkflowDesignerUnitEndpointsByUnit,
 } from "../../types/context";
 import UnitDetails from "../subworkflows/UnitDetails";
 import { BaseUnit } from "./BaseUnit";

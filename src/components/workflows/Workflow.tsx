@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
+import type { Template } from "@mat3ra/ade";
 import type { DropdownAction } from "@mat3ra/cove/dist/mui/components/dropdown";
 import IconByName from "@mat3ra/cove/dist/mui/components/icon";
-import type { Template } from "@mat3ra/ade";
 import { type MaterialsSet, type OrderedMaterial, Workflow as WodeWorkflow } from "@mat3ra/wode";
 import { UnitType } from "@mat3ra/wode/dist/js/enums";
 import type { AnyWorkflowUnit } from "@mat3ra/wode/dist/js/units/factory";
@@ -16,11 +16,11 @@ import type {
     WorkflowDesignerCreateMetaPropertyConfig,
     WorkflowDesignerDialogs,
     WorkflowDesignerHistory,
-    WorkflowDesignerUnitEndpointsByUnit,
     WorkflowDesignerMetaProperty,
     WorkflowDesignerMetaPropertySchema,
     WorkflowDesignerProfile,
     WorkflowDesignerProperty,
+    WorkflowDesignerUnitEndpointsByUnit,
     WorkflowDesignerUser,
 } from "../../types/context";
 import type { SubworkflowDesignerUpdate } from "../../utils/subworkflowDesignerUpdate";

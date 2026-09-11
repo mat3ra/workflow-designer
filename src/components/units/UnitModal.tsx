@@ -19,8 +19,8 @@ import React from "react";
 
 import type {
     WorkflowDesignerAccount,
-    WorkflowDesignerUnitEndpointsByUnit,
     WorkflowDesignerProperty,
+    WorkflowDesignerUnitEndpointsByUnit,
 } from "../../types/context";
 import { useWorkflowComponents } from "../../WorkflowComponentsContext";
 import { UnitModalContent } from "./UnitModalContent";
