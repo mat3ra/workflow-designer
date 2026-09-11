@@ -49,9 +49,9 @@ export interface WorkflowDesignerCluster {
 
 /** Replaces ReduxDialogState<T> — a `[open, close, setState]` tuple, not an object. */
 export interface WorkflowDesignerDialogState extends Array<unknown> {
-    0: (props?: unknown) => void;
+    0: (...args: any[]) => void;
     1: () => void;
-    2: (props: unknown) => void;
+    2: (...args: any[]) => void;
 }
 
 /** Replaces the two-entry dialogs object used in Workflow / Subworkflow / SubworkflowMethodPanel. */
