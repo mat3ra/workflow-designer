@@ -64,11 +64,12 @@ export function UnitModalContent({
         const executionUnit = unit as WodeExecutionUnit;
         if (isViewMode) {
             // `status` is per unit, not per repetition, so a mapped unit with another branch
-            // still running passes this gate on a finished branch.
+            // still running passes this gate on a finished branch. `repetition` is unset on a
+            // unit outside a map, where the endpoint is published under repetition 0.
             const unitEndpoints =
                 executionUnit.status === UnitStatus.active
                     ? unitEndpointsByFlowchartId?.[executionUnit.flowchartId]?.[
-                          executionUnit.repetition
+                          executionUnit.repetition ?? 0
                       ]
                     : undefined;
             return (
