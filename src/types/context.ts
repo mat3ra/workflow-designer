@@ -47,12 +47,11 @@ export interface WorkflowDesignerCluster {
     [key: string]: unknown;
 }
 
-/** Replaces ReduxDialogState<T> — open/close/isOpen contract. */
-export interface WorkflowDesignerDialogState {
-    isOpen: boolean;
-    open: (...args: unknown[]) => void;
-    close: () => void;
-    [key: string]: unknown;
+/** Replaces ReduxDialogState<T> — a `[open, close, setState]` tuple, not an object. */
+export interface WorkflowDesignerDialogState extends Array<unknown> {
+    0: (props?: unknown) => void;
+    1: () => void;
+    2: (props: unknown) => void;
 }
 
 /** Replaces the two-entry dialogs object used in Workflow / Subworkflow / SubworkflowMethodPanel. */

@@ -257,9 +257,8 @@ function App() {
                     publicAccount={{ entity: { id: "public" } } as any}
                     clusters={[]}
                     dialogs={{
-                        // ReduxDialogState is a [openFn, closeFn] tuple
-                        pseudoUploadReduxDialog: [() => {}, () => {}] as any,
-                        unitTypeReduxDialog: [() => {}, () => {}] as any,
+                        pseudoUploadReduxDialog: [() => {}, () => {}, () => {}],
+                        unitTypeReduxDialog: [() => {}, () => {}, () => {}],
                     }}
                     templates={[]}
                     isLoading={false}
