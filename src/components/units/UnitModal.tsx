@@ -17,7 +17,11 @@ import Typography from "@mui/material/Typography";
 import lodash from "lodash";
 import React from "react";
 
-import type { WorkflowDesignerAccount, WorkflowDesignerProperty } from "../../types/context";
+import type {
+    WorkflowDesignerAccount,
+    WorkflowDesignerProperty,
+    WorkflowDesignerUnitEndpointsByUnit,
+} from "../../types/context";
 import { useWorkflowComponents } from "../../WorkflowComponentsContext";
 import { UnitModalContent } from "./UnitModalContent";
 
@@ -38,6 +42,7 @@ export interface UnitModalProps {
     onMaterialSwitch: (index: number) => void;
     publicAccount: WorkflowDesignerAccount;
     jobProperties?: WorkflowDesignerProperty[];
+    unitEndpointsByFlowchartId?: WorkflowDesignerUnitEndpointsByUnit;
 }
 
 export default function UnitModal({
@@ -57,6 +62,7 @@ export default function UnitModal({
     onMaterialSwitch,
     publicAccount,
     jobProperties,
+    unitEndpointsByFlowchartId,
 }: UnitModalProps) {
     const { EntityNameComponent, MetadataComponent } = useWorkflowComponents();
     const onNameUpdate = (name: string) => {
@@ -127,6 +133,7 @@ export default function UnitModal({
                 materialsIndex={materialsIndex}
                 onMaterialSwitch={onMaterialSwitch}
                 jobProperties={jobProperties}
+                unitEndpointsByFlowchartId={unitEndpointsByFlowchartId}
             />
             <MetadataComponent
                 tags={lodash.get(unit, "tags", [])}

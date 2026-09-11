@@ -67,6 +67,19 @@ export type WorkflowDesignerMetaProperty = Record<string, unknown>;
 /** Replaces CorePropertyHolder. */
 export type WorkflowDesignerProperty = Record<string, unknown>;
 
+/** An endpoint a unit serves while it runs; threaded through untouched. Job-domain shape. */
+export type WorkflowDesignerUnitEndpoint = {
+    id: string;
+    label: string;
+    url: string;
+};
+
+/** Unit endpoints per unit flowchart id, then per repetition (mapped units run once per branch). */
+export type WorkflowDesignerUnitEndpointsByUnit = Record<
+    string,
+    Record<number, WorkflowDesignerUnitEndpoint[]>
+>;
+
 /** Replaces WebappMetaPropertyHolderSchema — the return type of createMetaProperty. */
 export type WorkflowDesignerMetaPropertySchema = Record<string, unknown>;
 
