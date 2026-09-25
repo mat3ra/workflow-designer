@@ -1,5 +1,5 @@
-import TabsMenu from "@mat3ra/cove/dist/mui/components/tabs/TabsMenu";
 import type { Template } from "@mat3ra/ade";
+import TabsMenu from "@mat3ra/cove/dist/mui/components/tabs/TabsMenu";
 import type { SubworkflowSchema } from "@mat3ra/esse/dist/js/types";
 import { type OrderedMaterial, type Workflow as WodeWorkflow } from "@mat3ra/wode";
 import { UnitType } from "@mat3ra/wode/dist/js/enums";
@@ -14,7 +14,9 @@ import type {
     WorkflowDesignerCoreUser,
     WorkflowDesignerMetaProperty,
     WorkflowDesignerProfile,
+    WorkflowDesignerProperty,
     WorkflowDesignerTabItem,
+    WorkflowDesignerUnitEndpointsByUnit,
     WorkflowDesignerUser,
 } from "../../types/context";
 import { useWorkflowComponents } from "../../WorkflowComponentsContext";
@@ -72,6 +74,8 @@ export type MapProps = {
     isLoading?: boolean;
     isDescriptionEditable: boolean;
     metaProperties?: WorkflowDesignerMetaProperty[];
+    jobProperties?: WorkflowDesignerProperty[];
+    unitEndpointsByFlowchartId?: WorkflowDesignerUnitEndpointsByUnit;
 };
 
 const workflowRenderNoop = (): undefined => undefined;
@@ -103,6 +107,8 @@ function MapWorkflowDesigner(props: MapProps) {
         isLoading,
         isDescriptionEditable,
         metaProperties,
+        jobProperties,
+        unitEndpointsByFlowchartId,
     } = props;
     const { getDefaultComputeConfig } = useWorkflowComponents();
     const [entity, setEntity] = useState<WodeWorkflow>(() => workflowProp);
@@ -321,6 +327,8 @@ function MapWorkflowDesigner(props: MapProps) {
                         onRender={workflowRenderNoop}
                         isDescriptionEditable={isDescriptionEditable}
                         metaProperties={metaProperties}
+                        jobProperties={jobProperties}
+                        unitEndpointsByFlowchartId={unitEndpointsByFlowchartId}
                     />
                 </TabPanel>
                 <TabPanel value="1" sx={{ p: 0, pt: 2 }} id="map-data">
