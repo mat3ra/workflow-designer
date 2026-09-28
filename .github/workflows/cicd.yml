@@ -11,12 +11,22 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with: { lfs: true }
+        with:
+          lfs: true
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with: { repository: Exabyte-io/actions, token: "${{ secrets.BOT_GITHUB_TOKEN }}", path: actions }
+        with:
+          repository: mat3ra/actions
+          token: "${{ secrets.BOT_GITHUB_TOKEN }}"
+          path: actions
       - name: Validate JS package
         uses: ./actions/js/validate
-        with: { node-version: 20.x, use-legacy-peer-deps: true }
+        with:
+          node-version: 20.x
+          use-legacy-peer-deps: true
+      - name: Run JS tests
+        uses: ./actions/js/test
+        with:
+          node-version: 20.x
 
   publish:
     needs: run-tests
@@ -24,9 +34,13 @@ jobs:
     if: github.ref_name == 'main'
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with: { lfs: true }
+        with:
+          lfs: true
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with: { repository: Exabyte-io/actions, token: "${{ secrets.BOT_GITHUB_TOKEN }}", path: actions }
+        with:
+          repository: mat3ra/actions
+          token: "${{ secrets.BOT_GITHUB_TOKEN }}"
+          path: actions
       - name: Publish the application package
         uses: ./actions/js/publish
         with:
