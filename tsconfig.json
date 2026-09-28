@@ -106,6 +106,9 @@
             "@mat3ra/cove/*": [
                 "node_modules/@mat3ra/cove/dist/*"
             ],
+            "@mat3ra/workflow-designer/*": [
+                "./*"
+            ],
             "@mat3ra/*": [
                 "src/typings.d.ts"
             ],

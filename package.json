@@ -57,7 +57,7 @@
         "@mat3ra/ade": "2026.8.18-0",
         "@mat3ra/code": "2026.8.18-0",
         "@mat3ra/esse": "2026.8.18-2",
-        "@mat3ra/mode": "2026.8.18-0",
+        "@mat3ra/mode": "https://github.com/mat3ra/mode/releases/download/wip-19d4558/mode.tgz",
         "@mat3ra/standata": "2026.8.18-0",
         "@mat3ra/tsconfig": "^2024.6.3-0",
         "@mat3ra/wode": "2026.8.18-0",
