@@ -15,9 +15,10 @@ import { nodePolyfills } from "vite-plugin-node-polyfills";
  * already maps unknown /imports/* to typings.d.ts stubs.
  */
 export default defineConfig({
-    // Matches the repo name so assets resolve under the GitHub Pages
-    // subpath (mat3ra.github.io/workflow-designer/). Harmless for `npm run dev`.
-    base: "/workflow-designer/",
+    // GitHub Pages serves the repo under /workflow-designer/. Netlify serves
+    // the site at the domain root and sets NETLIFY=true during the build, so
+    // the same prefix 404s there (main.js, hashed CSS).
+    base: process.env.NETLIFY === "true" ? "/" : "/workflow-designer/",
     plugins: [
         react({
             jsxImportSource: "@emotion/react",

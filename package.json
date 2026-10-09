@@ -57,7 +57,7 @@
         "@mat3ra/ade": "2026.8.18-0",
         "@mat3ra/code": "2026.8.18-0",
         "@mat3ra/esse": "2026.8.18-2",
-        "@mat3ra/mode": "2026.8.18-0",
+        "@mat3ra/mode": "^2026.10.9-1",
         "@mat3ra/standata": "2026.8.18-0",
         "@mat3ra/tsconfig": "^2024.6.3-0",
         "@mat3ra/wode": "2026.8.18-0",
