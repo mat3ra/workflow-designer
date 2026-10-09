@@ -42,7 +42,10 @@ export function SubworkflowMethodPanel({
     createMetaProperty,
 }: SubworkflowMethodPanelProps) {
     const { PseudoFormComponent } = useWorkflowComponents();
-    if (!(!subworkflow.modelInstance.isUnknown || editable)) {
+    // The model selector is hidden for an unknown model. Keep the method panel hidden with it:
+    // there is no method to configure, and the default method would otherwise render an empty
+    // pseudopotential picker.
+    if (subworkflow.modelInstance.isUnknown) {
         return null;
     }
 
