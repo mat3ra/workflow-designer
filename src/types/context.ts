@@ -79,9 +79,6 @@ export type WorkflowDesignerUnitEndpointsByUnit = Record<
     Record<number, WorkflowDesignerUnitEndpoint[]>
 >;
 
-/** Stdout per unit flowchart id, then per repetition (mapped units run once per branch). */
-export type WorkflowDesignerUnitOutputsByUnit = Record<string, Record<number, string>>;
-
 /** Replaces WebappMetaPropertyHolderSchema — the return type of createMetaProperty. */
 export type WorkflowDesignerMetaPropertySchema = Record<string, unknown>;
 

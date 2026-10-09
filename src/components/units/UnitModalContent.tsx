@@ -11,8 +11,8 @@ import React from "react";
 import type {
     WorkflowDesignerProperty,
     WorkflowDesignerUnitEndpointsByUnit,
-    WorkflowDesignerUnitOutputsByUnit,
 } from "../../types/context";
+import { useUnitOutput } from "../../utils/useUnitOutput";
 import UnitDetails from "../subworkflows/UnitDetails";
 import { BaseUnit } from "./BaseUnit";
 import UnitPointerField from "./components/UnitPointerField";
@@ -39,7 +39,43 @@ export interface UnitModalContentProps {
     /** Job designer passes refined properties for execution-unit monitors; elsewhere defaults to []. */
     jobProperties?: WorkflowDesignerProperty[];
     unitEndpointsByFlowchartId?: WorkflowDesignerUnitEndpointsByUnit;
-    unitOutputsByFlowchartId?: WorkflowDesignerUnitOutputsByUnit;
+}
+
+type ExecutionUnitOutputViewerProps = {
+    unit: WodeExecutionUnit;
+    onOutputUpdateRequest: (unit: any) => void;
+    jobProperties: WorkflowDesignerProperty[];
+    unitEndpointsByFlowchartId?: WorkflowDesignerUnitEndpointsByUnit;
+};
+
+// Its own component so the output hook runs only while a unit is open in view mode, and stops
+// when the modal closes.
+function ExecutionUnitOutputViewer({
+    unit,
+    onOutputUpdateRequest,
+    jobProperties,
+    unitEndpointsByFlowchartId,
+}: ExecutionUnitOutputViewerProps) {
+    // `repetition` is unset on a unit outside a map, where output and endpoints are published
+    // under repetition 0.
+    const repetition = unit.repetition ?? 0;
+    const output = useUnitOutput(unit.flowchartId, repetition);
+    // `status` is per unit, not per repetition, so a mapped unit with another branch still
+    // running passes this gate on a finished branch.
+    const unitEndpoints =
+        unit.status === UnitStatus.active
+            ? unitEndpointsByFlowchartId?.[unit.flowchartId]?.[repetition]
+            : undefined;
+
+    return (
+        <ExecutionUnitViewer
+            unit={unit}
+            onOutputUpdateRequest={onOutputUpdateRequest}
+            jobProperties={jobProperties}
+            unitEndpoints={unitEndpoints}
+            output={output}
+        />
+    );
 }
 
 export function UnitModalContent({
@@ -55,7 +91,6 @@ export function UnitModalContent({
     onMaterialSwitch,
     jobProperties = [],
     unitEndpointsByFlowchartId,
-    unitOutputsByFlowchartId,
 }: UnitModalContentProps) {
     const isViewMode = !editable && !adjustable;
 
@@ -66,26 +101,12 @@ export function UnitModalContent({
     if (unit.type === UnitType.execution) {
         const executionUnit = unit as WodeExecutionUnit;
         if (isViewMode) {
-            // `status` is per unit, not per repetition, so a mapped unit with another branch
-            // still running passes this gate on a finished branch. `repetition` is unset on a
-            // unit outside a map, where the endpoint is published under repetition 0.
-            const unitEndpoints =
-                executionUnit.status === UnitStatus.active
-                    ? unitEndpointsByFlowchartId?.[executionUnit.flowchartId]?.[
-                          executionUnit.repetition ?? 0
-                      ]
-                    : undefined;
-            const output =
-                unitOutputsByFlowchartId?.[executionUnit.flowchartId]?.[
-                    executionUnit.repetition ?? 0
-                ];
             return (
-                <ExecutionUnitViewer
+                <ExecutionUnitOutputViewer
                     unit={executionUnit}
                     onOutputUpdateRequest={onOutputUpdateRequest}
                     jobProperties={jobProperties}
-                    unitEndpoints={unitEndpoints}
-                    output={output}
+                    unitEndpointsByFlowchartId={unitEndpointsByFlowchartId}
                 />
             );
         }

@@ -17,7 +17,6 @@ import type {
     WorkflowDesignerProperty,
     WorkflowDesignerTabItem,
     WorkflowDesignerUnitEndpointsByUnit,
-    WorkflowDesignerUnitOutputsByUnit,
     WorkflowDesignerUser,
 } from "../../types/context";
 import { useWorkflowComponents } from "../../WorkflowComponentsContext";
@@ -77,7 +76,6 @@ export type MapProps = {
     metaProperties?: WorkflowDesignerMetaProperty[];
     jobProperties?: WorkflowDesignerProperty[];
     unitEndpointsByFlowchartId?: WorkflowDesignerUnitEndpointsByUnit;
-    unitOutputsByFlowchartId?: WorkflowDesignerUnitOutputsByUnit;
 };
 
 const workflowRenderNoop = (): undefined => undefined;
@@ -111,7 +109,6 @@ function MapWorkflowDesigner(props: MapProps) {
         metaProperties,
         jobProperties,
         unitEndpointsByFlowchartId,
-        unitOutputsByFlowchartId,
     } = props;
     const { getDefaultComputeConfig } = useWorkflowComponents();
     const [entity, setEntity] = useState<WodeWorkflow>(() => workflowProp);
@@ -332,7 +329,6 @@ function MapWorkflowDesigner(props: MapProps) {
                         metaProperties={metaProperties}
                         jobProperties={jobProperties}
                         unitEndpointsByFlowchartId={unitEndpointsByFlowchartId}
-                        unitOutputsByFlowchartId={unitOutputsByFlowchartId}
                     />
                 </TabPanel>
                 <TabPanel value="1" sx={{ p: 0, pt: 2 }} id="map-data">

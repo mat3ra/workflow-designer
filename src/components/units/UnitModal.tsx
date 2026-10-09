@@ -21,7 +21,6 @@ import type {
     WorkflowDesignerAccount,
     WorkflowDesignerProperty,
     WorkflowDesignerUnitEndpointsByUnit,
-    WorkflowDesignerUnitOutputsByUnit,
 } from "../../types/context";
 import { useWorkflowComponents } from "../../WorkflowComponentsContext";
 import { UnitModalContent } from "./UnitModalContent";
@@ -44,7 +43,6 @@ export interface UnitModalProps {
     publicAccount: WorkflowDesignerAccount;
     jobProperties?: WorkflowDesignerProperty[];
     unitEndpointsByFlowchartId?: WorkflowDesignerUnitEndpointsByUnit;
-    unitOutputsByFlowchartId?: WorkflowDesignerUnitOutputsByUnit;
 }
 
 export default function UnitModal({
@@ -65,7 +63,6 @@ export default function UnitModal({
     publicAccount,
     jobProperties,
     unitEndpointsByFlowchartId,
-    unitOutputsByFlowchartId,
 }: UnitModalProps) {
     const { EntityNameComponent, MetadataComponent } = useWorkflowComponents();
     const onNameUpdate = (name: string) => {
@@ -137,7 +134,6 @@ export default function UnitModal({
                 onMaterialSwitch={onMaterialSwitch}
                 jobProperties={jobProperties}
                 unitEndpointsByFlowchartId={unitEndpointsByFlowchartId}
-                unitOutputsByFlowchartId={unitOutputsByFlowchartId}
             />
             <MetadataComponent
                 tags={lodash.get(unit, "tags", [])}
