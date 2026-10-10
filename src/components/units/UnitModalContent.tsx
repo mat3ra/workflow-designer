@@ -11,6 +11,7 @@ import React from "react";
 import type {
     WorkflowDesignerProperty,
     WorkflowDesignerUnitEndpointsByUnit,
+    WorkflowDesignerUnitOutputsByUnit,
 } from "../../types/context";
 import UnitDetails from "../subworkflows/UnitDetails";
 import { BaseUnit } from "./BaseUnit";
@@ -38,6 +39,7 @@ export interface UnitModalContentProps {
     /** Job designer passes refined properties for execution-unit monitors; elsewhere defaults to []. */
     jobProperties?: WorkflowDesignerProperty[];
     unitEndpointsByFlowchartId?: WorkflowDesignerUnitEndpointsByUnit;
+    unitOutputsByFlowchartId?: WorkflowDesignerUnitOutputsByUnit;
 }
 
 export function UnitModalContent({
@@ -53,6 +55,7 @@ export function UnitModalContent({
     onMaterialSwitch,
     jobProperties = [],
     unitEndpointsByFlowchartId,
+    unitOutputsByFlowchartId,
 }: UnitModalContentProps) {
     const isViewMode = !editable && !adjustable;
 
@@ -72,12 +75,17 @@ export function UnitModalContent({
                           executionUnit.repetition ?? 0
                       ]
                     : undefined;
+            const output =
+                unitOutputsByFlowchartId?.[executionUnit.flowchartId]?.[
+                    executionUnit.repetition ?? 0
+                ];
             return (
                 <ExecutionUnitViewer
                     unit={executionUnit}
                     onOutputUpdateRequest={onOutputUpdateRequest}
                     jobProperties={jobProperties}
                     unitEndpoints={unitEndpoints}
+                    output={output}
                 />
             );
         }
