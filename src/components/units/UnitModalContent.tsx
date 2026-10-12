@@ -12,7 +12,7 @@ import type {
     WorkflowDesignerProperty,
     WorkflowDesignerUnitEndpointsByUnit,
 } from "../../types/context";
-import { useUnitOutput } from "../../utils/useUnitOutput";
+import { UnitOutputContext } from "../../UnitOutputContext";
 import UnitDetails from "../subworkflows/UnitDetails";
 import { BaseUnit } from "./BaseUnit";
 import UnitPointerField from "./components/UnitPointerField";
@@ -59,6 +59,7 @@ function ExecutionUnitOutputViewer({
     // `repetition` is unset on a unit outside a map, where output and endpoints are published
     // under repetition 0.
     const repetition = unit.repetition ?? 0;
+    const useUnitOutput = React.useContext(UnitOutputContext);
     const output = useUnitOutput(unit.flowchartId, repetition);
     // `status` is per unit, not per repetition, so a mapped unit with another branch still
     // running passes this gate on a finished branch.

@@ -31,9 +31,5 @@ export { WORKFLOW_STATUS_COLOR, WORKFLOW_STATUS_TEXT } from "@mat3ra/wove";
 export { WorkflowComponentsContext, useWorkflowComponents } from "./WorkflowComponentsContext";
 export type { WorkflowComponents } from "./WorkflowComponentsContext";
 export type { WorkflowDesignerDialogs, WorkflowDesignerDialogState } from "./types/context";
-export { UnitOutputContext, useUnitOutputSource } from "./UnitOutputContext";
-export type {
-    LoadUnitOutputChunksParams,
-    UnitOutputChunk,
-    UnitOutputSource,
-} from "./UnitOutputContext";
+export { UnitOutputContext } from "./UnitOutputContext";
+export type { UseUnitOutput } from "./UnitOutputContext";
