@@ -6,12 +6,13 @@ import type {
     AnySubworkflowUnitSchema,
 } from "@mat3ra/wode/dist/js/units/factory";
 import { ErrorUnitContent } from "@mat3ra/wove";
-import React from "react";
+import LinearProgress from "@mui/material/LinearProgress";
+import React, { useEffect } from "react";
 
 import type {
     WorkflowDesignerProperty,
     WorkflowDesignerUnitEndpointsByUnit,
-    WorkflowDesignerUnitOutputsByUnit,
+    WorkflowDesignerUnitOutput,
 } from "../../types/context";
 import UnitDetails from "../subworkflows/UnitDetails";
 import { BaseUnit } from "./BaseUnit";
@@ -39,7 +40,60 @@ export interface UnitModalContentProps {
     /** Job designer passes refined properties for execution-unit monitors; elsewhere defaults to []. */
     jobProperties?: WorkflowDesignerProperty[];
     unitEndpointsByFlowchartId?: WorkflowDesignerUnitEndpointsByUnit;
-    unitOutputsByFlowchartId?: WorkflowDesignerUnitOutputsByUnit;
+    unitOutput?: WorkflowDesignerUnitOutput;
+}
+
+type ExecutionUnitOutputViewerProps = {
+    unit: WodeExecutionUnit;
+    onOutputUpdateRequest: (unit: any) => void;
+    jobProperties: WorkflowDesignerProperty[];
+    unitEndpointsByFlowchartId?: WorkflowDesignerUnitEndpointsByUnit;
+    unitOutput?: WorkflowDesignerUnitOutput;
+};
+
+// Its own component so mounting it (a unit opened in view mode) opens the unit's output and
+// unmounting it closes it.
+function ExecutionUnitOutputViewer({
+    unit,
+    onOutputUpdateRequest,
+    jobProperties,
+    unitEndpointsByFlowchartId,
+    unitOutput,
+}: ExecutionUnitOutputViewerProps) {
+    // `repetition` is unset on a unit outside a map, where output and endpoints are published
+    // under repetition 0.
+    const repetition = unit.repetition ?? 0;
+    const onOpen = unitOutput?.onOpen;
+    const onClose = unitOutput?.onClose;
+    const output = unitOutput?.data[unit.flowchartId]?.[repetition];
+
+    useEffect(() => {
+        onOpen?.(unit.flowchartId, repetition);
+
+        return () => onClose?.(unit.flowchartId, repetition);
+    }, [onOpen, onClose, unit.flowchartId, repetition]);
+
+    // `status` is per unit, not per repetition, so a mapped unit with another branch still
+    // running passes this gate on a finished branch.
+    const unitEndpoints =
+        unit.status === UnitStatus.active
+            ? unitEndpointsByFlowchartId?.[unit.flowchartId]?.[repetition]
+            : undefined;
+
+    return (
+        <>
+            {unitOutput && (
+                <LinearProgress sx={{ visibility: unitOutput.isLoading ? "visible" : "hidden" }} />
+            )}
+            <ExecutionUnitViewer
+                unit={unit}
+                onOutputUpdateRequest={onOutputUpdateRequest}
+                jobProperties={jobProperties}
+                unitEndpoints={unitEndpoints}
+                output={output}
+            />
+        </>
+    );
 }
 
 export function UnitModalContent({
@@ -55,7 +109,7 @@ export function UnitModalContent({
     onMaterialSwitch,
     jobProperties = [],
     unitEndpointsByFlowchartId,
-    unitOutputsByFlowchartId,
+    unitOutput,
 }: UnitModalContentProps) {
     const isViewMode = !editable && !adjustable;
 
@@ -66,26 +120,13 @@ export function UnitModalContent({
     if (unit.type === UnitType.execution) {
         const executionUnit = unit as WodeExecutionUnit;
         if (isViewMode) {
-            // `status` is per unit, not per repetition, so a mapped unit with another branch
-            // still running passes this gate on a finished branch. `repetition` is unset on a
-            // unit outside a map, where the endpoint is published under repetition 0.
-            const unitEndpoints =
-                executionUnit.status === UnitStatus.active
-                    ? unitEndpointsByFlowchartId?.[executionUnit.flowchartId]?.[
-                          executionUnit.repetition ?? 0
-                      ]
-                    : undefined;
-            const output =
-                unitOutputsByFlowchartId?.[executionUnit.flowchartId]?.[
-                    executionUnit.repetition ?? 0
-                ];
             return (
-                <ExecutionUnitViewer
+                <ExecutionUnitOutputViewer
                     unit={executionUnit}
                     onOutputUpdateRequest={onOutputUpdateRequest}
                     jobProperties={jobProperties}
-                    unitEndpoints={unitEndpoints}
-                    output={output}
+                    unitEndpointsByFlowchartId={unitEndpointsByFlowchartId}
+                    unitOutput={unitOutput}
                 />
             );
         }

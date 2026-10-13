@@ -30,7 +30,7 @@ import type {
     WorkflowDesignerProfile,
     WorkflowDesignerProperty,
     WorkflowDesignerUnitEndpointsByUnit,
-    WorkflowDesignerUnitOutputsByUnit,
+    WorkflowDesignerUnitOutput,
     WorkflowDesignerUser,
 } from "../../types/context";
 import type { SubworkflowDesignerUpdate } from "../../utils/subworkflowDesignerUpdate";
@@ -125,7 +125,7 @@ export type WorkflowDefaultLayoutProps = {
     ) => Promise<WorkflowDesignerMetaPropertySchema | undefined>;
     jobProperties?: WorkflowDesignerProperty[];
     unitEndpointsByFlowchartId?: WorkflowDesignerUnitEndpointsByUnit;
-    unitOutputsByFlowchartId?: WorkflowDesignerUnitOutputsByUnit;
+    unitOutput?: WorkflowDesignerUnitOutput;
     /** Subworkflow inner tabs (Overview, Important settings, …); owned by {@link Workflow} so remounts of {@link Subworkflow} do not reset them. */
     subworkflowActiveTabIndexById: Record<string, number>;
     onSubworkflowActiveTabIndexChange: (subworkflowId: string, tabIndex: number) => void;
@@ -184,7 +184,7 @@ export function WorkflowDefaultLayout(props: WorkflowDefaultLayoutProps) {
         createMetaProperty,
         jobProperties,
         unitEndpointsByFlowchartId,
-        unitOutputsByFlowchartId,
+        unitOutput,
         subworkflowActiveTabIndexById,
         onSubworkflowActiveTabIndexChange,
     } = props;
@@ -334,7 +334,7 @@ export function WorkflowDefaultLayout(props: WorkflowDefaultLayoutProps) {
                                         createMetaProperty={createMetaProperty}
                                         jobProperties={jobProperties}
                                         unitEndpointsByFlowchartId={unitEndpointsByFlowchartId}
-                                        unitOutputsByFlowchartId={unitOutputsByFlowchartId}
+                                        unitOutput={unitOutput}
                                     />
                                 ) : null}
                             </>
@@ -367,7 +367,7 @@ export function WorkflowDefaultLayout(props: WorkflowDefaultLayoutProps) {
                                     metaProperties={metaProperties}
                                     jobProperties={jobProperties}
                                     unitEndpointsByFlowchartId={unitEndpointsByFlowchartId}
-                                    unitOutputsByFlowchartId={unitOutputsByFlowchartId}
+                                    unitOutput={unitOutput}
                                 />
                             </React.Suspense>
                         )}

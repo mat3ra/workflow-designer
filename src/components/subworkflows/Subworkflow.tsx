@@ -34,7 +34,7 @@ import type {
     WorkflowDesignerProperty,
     WorkflowDesignerTabItem,
     WorkflowDesignerUnitEndpointsByUnit,
-    WorkflowDesignerUnitOutputsByUnit,
+    WorkflowDesignerUnitOutput,
     WorkflowDesignerUser,
 } from "../../types/context";
 import { useWorkflowComponents } from "../../WorkflowComponentsContext";
@@ -72,7 +72,7 @@ export type SubworkflowProps = {
     className?: string;
     jobProperties?: WorkflowDesignerProperty[];
     unitEndpointsByFlowchartId?: WorkflowDesignerUnitEndpointsByUnit;
-    unitOutputsByFlowchartId?: WorkflowDesignerUnitOutputsByUnit;
+    unitOutput?: WorkflowDesignerUnitOutput;
     activeTabIndex: number;
     onActiveTabIndexChange: (tabIndex: number) => void;
 };
@@ -124,7 +124,7 @@ export function Subworkflow({
     className,
     jobProperties,
     unitEndpointsByFlowchartId,
-    unitOutputsByFlowchartId,
+    unitOutput,
     activeTabIndex,
     onActiveTabIndexChange,
 }: SubworkflowProps) {
@@ -404,7 +404,7 @@ export function Subworkflow({
                             unitTypeReduxDialog={unitTypeReduxDialog}
                             jobProperties={jobProperties}
                             unitEndpointsByFlowchartId={unitEndpointsByFlowchartId}
-                            unitOutputsByFlowchartId={unitOutputsByFlowchartId}
+                            unitOutput={unitOutput}
                             UnitModalComponent={UnitModal}
                         />
                     </Stack>
