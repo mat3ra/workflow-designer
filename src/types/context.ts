@@ -79,6 +79,17 @@ export type WorkflowDesignerUnitEndpointsByUnit = Record<
     Record<number, WorkflowDesignerUnitEndpoint[]>
 >;
 
+/**
+ * The output of the open unit, per unit flowchart id then repetition (mapped units run once per
+ * branch), served by the host app. The modal calls `onOpen` when it opens and `onClose` when it
+ * closes, so the host loads and drops the data; both must be referentially stable.
+ */
+export type WorkflowDesignerUnitOutput = {
+    data: Record<string, Record<number, string>>;
+    onOpen: (flowchartId: string, repetition: number) => void;
+    onClose: (flowchartId: string, repetition: number) => void;
+};
+
 /** Replaces WebappMetaPropertyHolderSchema — the return type of createMetaProperty. */
 export type WorkflowDesignerMetaPropertySchema = Record<string, unknown>;
 

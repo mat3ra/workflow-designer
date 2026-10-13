@@ -6,13 +6,13 @@ import type {
     AnySubworkflowUnitSchema,
 } from "@mat3ra/wode/dist/js/units/factory";
 import { ErrorUnitContent } from "@mat3ra/wove";
-import React from "react";
+import React, { useEffect } from "react";
 
 import type {
     WorkflowDesignerProperty,
     WorkflowDesignerUnitEndpointsByUnit,
+    WorkflowDesignerUnitOutput,
 } from "../../types/context";
-import { UnitOutputContext } from "../../UnitOutputContext";
 import UnitDetails from "../subworkflows/UnitDetails";
 import { BaseUnit } from "./BaseUnit";
 import UnitPointerField from "./components/UnitPointerField";
@@ -39,6 +39,7 @@ export interface UnitModalContentProps {
     /** Job designer passes refined properties for execution-unit monitors; elsewhere defaults to []. */
     jobProperties?: WorkflowDesignerProperty[];
     unitEndpointsByFlowchartId?: WorkflowDesignerUnitEndpointsByUnit;
+    unitOutput?: WorkflowDesignerUnitOutput;
 }
 
 type ExecutionUnitOutputViewerProps = {
@@ -46,21 +47,31 @@ type ExecutionUnitOutputViewerProps = {
     onOutputUpdateRequest: (unit: any) => void;
     jobProperties: WorkflowDesignerProperty[];
     unitEndpointsByFlowchartId?: WorkflowDesignerUnitEndpointsByUnit;
+    unitOutput?: WorkflowDesignerUnitOutput;
 };
 
-// Its own component so the output hook runs only while a unit is open in view mode, and stops
-// when the modal closes.
+// Its own component so mounting it (a unit opened in view mode) opens the unit's output and
+// unmounting it closes it.
 function ExecutionUnitOutputViewer({
     unit,
     onOutputUpdateRequest,
     jobProperties,
     unitEndpointsByFlowchartId,
+    unitOutput,
 }: ExecutionUnitOutputViewerProps) {
     // `repetition` is unset on a unit outside a map, where output and endpoints are published
     // under repetition 0.
     const repetition = unit.repetition ?? 0;
-    const useUnitOutput = React.useContext(UnitOutputContext);
-    const output = useUnitOutput(unit.flowchartId, repetition);
+    const onOpen = unitOutput?.onOpen;
+    const onClose = unitOutput?.onClose;
+    const output = unitOutput?.data[unit.flowchartId]?.[repetition];
+
+    useEffect(() => {
+        onOpen?.(unit.flowchartId, repetition);
+
+        return () => onClose?.(unit.flowchartId, repetition);
+    }, [onOpen, onClose, unit.flowchartId, repetition]);
+
     // `status` is per unit, not per repetition, so a mapped unit with another branch still
     // running passes this gate on a finished branch.
     const unitEndpoints =
@@ -92,6 +103,7 @@ export function UnitModalContent({
     onMaterialSwitch,
     jobProperties = [],
     unitEndpointsByFlowchartId,
+    unitOutput,
 }: UnitModalContentProps) {
     const isViewMode = !editable && !adjustable;
 
@@ -108,6 +120,7 @@ export function UnitModalContent({
                     onOutputUpdateRequest={onOutputUpdateRequest}
                     jobProperties={jobProperties}
                     unitEndpointsByFlowchartId={unitEndpointsByFlowchartId}
+                    unitOutput={unitOutput}
                 />
             );
         }

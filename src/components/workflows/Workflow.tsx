@@ -21,6 +21,7 @@ import type {
     WorkflowDesignerProfile,
     WorkflowDesignerProperty,
     WorkflowDesignerUnitEndpointsByUnit,
+    WorkflowDesignerUnitOutput,
     WorkflowDesignerUser,
 } from "../../types/context";
 import type { SubworkflowDesignerUpdate } from "../../utils/subworkflowDesignerUpdate";
@@ -95,6 +96,7 @@ export type WorkflowProps = {
     /** Refined job properties for unit modals in job designer; optional elsewhere. */
     jobProperties?: WorkflowDesignerProperty[];
     unitEndpointsByFlowchartId?: WorkflowDesignerUnitEndpointsByUnit;
+    unitOutput?: WorkflowDesignerUnitOutput;
 };
 
 const noop = (): undefined => undefined;
@@ -156,6 +158,7 @@ export function Workflow({
     isDescriptionEditable,
     jobProperties,
     unitEndpointsByFlowchartId,
+    unitOutput,
 }: WorkflowProps) {
     const [unitIndex, setUnitIndex] = useState(0);
     const [isRelaxationToggled, setIsRelaxationToggled] = useState(false);
@@ -466,6 +469,7 @@ export function Workflow({
                 createMetaProperty={createMetaProperty}
                 jobProperties={jobProperties}
                 unitEndpointsByFlowchartId={unitEndpointsByFlowchartId}
+                unitOutput={unitOutput}
                 subworkflowActiveTabIndexById={subworkflowActiveTabIndexById}
                 onSubworkflowActiveTabIndexChange={onSubworkflowActiveTabIndexChange}
             />
