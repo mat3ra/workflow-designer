@@ -1,4 +1,5 @@
 import { ExecutionUnit, ExecutionUnitViewer } from "@mat3ra/ave";
+import { ConvergencesList } from "@mat3ra/prove";
 import { ErrorUnit, ExecutionUnit as WodeExecutionUnit } from "@mat3ra/wode";
 import { UnitStatus, UnitType } from "@mat3ra/wode/dist/js/enums";
 import type {
@@ -91,6 +92,7 @@ function ExecutionUnitOutputViewer({
                 jobProperties={jobProperties}
                 unitEndpoints={unitEndpoints}
                 output={output}
+                ConvergencesListComponent={ConvergencesList}
             />
         </>
     );
