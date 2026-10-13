@@ -86,6 +86,8 @@ export type WorkflowDesignerUnitEndpointsByUnit = Record<
  */
 export type WorkflowDesignerUnitOutput = {
     data: Record<string, Record<number, string>>;
+    /** The unit's existing output is still being read. */
+    isLoading: boolean;
     onOpen: (flowchartId: string, repetition: number) => void;
     onClose: (flowchartId: string, repetition: number) => void;
 };

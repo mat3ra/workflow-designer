@@ -6,6 +6,7 @@ import type {
     AnySubworkflowUnitSchema,
 } from "@mat3ra/wode/dist/js/units/factory";
 import { ErrorUnitContent } from "@mat3ra/wove";
+import LinearProgress from "@mui/material/LinearProgress";
 import React, { useEffect } from "react";
 
 import type {
@@ -80,13 +81,18 @@ function ExecutionUnitOutputViewer({
             : undefined;
 
     return (
-        <ExecutionUnitViewer
-            unit={unit}
-            onOutputUpdateRequest={onOutputUpdateRequest}
-            jobProperties={jobProperties}
-            unitEndpoints={unitEndpoints}
-            output={output}
-        />
+        <>
+            {unitOutput && (
+                <LinearProgress sx={{ visibility: unitOutput.isLoading ? "visible" : "hidden" }} />
+            )}
+            <ExecutionUnitViewer
+                unit={unit}
+                onOutputUpdateRequest={onOutputUpdateRequest}
+                jobProperties={jobProperties}
+                unitEndpoints={unitEndpoints}
+                output={output}
+            />
+        </>
     );
 }
 
