@@ -430,12 +430,6 @@ declare module "@mat3ra/prode" {
     export const PropertyName: any;
 }
 
-declare module "@mat3ra/prove" {
-    const DefaultExport: any;
-    export default DefaultExport;
-    export const ResultsView: any;
-}
-
 // Stub declarations for cove.js sub-paths that the installed dist doesn't ship type files for.
 // TypeScript uses these; the bundler resolves them at build/runtime.
 declare module "@mat3ra/cove/dist/mui/components/tabs/TabsMenu" {
