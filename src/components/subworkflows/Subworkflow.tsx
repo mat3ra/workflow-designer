@@ -4,7 +4,12 @@ import { Application as ApplicationAve } from "@mat3ra/ave";
 import { type NameResultSchema, safeMakeObject } from "@mat3ra/code/dist/js/utils/object";
 import Accordion from "@mat3ra/cove/dist/mui/components/accordion/Accordion";
 import TabsMenu from "@mat3ra/cove/dist/mui/components/tabs/TabsMenu";
-import type { ApplicationSchema, SubworkflowSchema } from "@mat3ra/esse/dist/js/types";
+import type {
+    ApplicationSchema,
+    ComputeArgumentsSchema,
+    SubworkflowSchema,
+} from "@mat3ra/esse/dist/js/types";
+import { getDefaultComputeConfig } from "@mat3ra/ide";
 import type { Model as ModeModel } from "@mat3ra/mode";
 import { Model } from "@mat3ra/move";
 import { ApplicationModelStandata, ModelStandata } from "@mat3ra/standata";
@@ -37,7 +42,6 @@ import type {
     WorkflowDesignerUnitOutput,
     WorkflowDesignerUser,
 } from "../../types/context";
-import { useWorkflowComponents } from "../../WorkflowComponentsContext";
 import UnitModal from "../units/UnitModal";
 import { ImportantSettings } from "./ImportantSettings";
 import { SubworkflowExecutionUnitDetailsRow } from "./SubworkflowExecutionUnitDetailsRow";
@@ -128,7 +132,6 @@ export function Subworkflow({
     activeTabIndex,
     onActiveTabIndexChange,
 }: SubworkflowProps) {
-    const { getDefaultComputeConfig } = useWorkflowComponents();
     const [unitIndex, setUnitIndex] = useState(0);
 
     const applyToSubworkflow = useCallback(
@@ -157,7 +160,7 @@ export function Subworkflow({
     }, [subworkflow, onUpdate]);
 
     const onComputeUpdate = useCallback(
-        (compute: unknown) => {
+        (compute: ComputeArgumentsSchema) => {
             applyToSubworkflow((sw) => {
                 sw.setCompute(compute);
             });

@@ -1,4 +1,5 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
+import type { ComputeArgumentsSchema } from "@mat3ra/esse/dist/js/types";
 import { ComputeForm } from "@mat3ra/ive";
 import Box from "@mui/material/Box";
 import Checkbox from "@mui/material/Checkbox";
@@ -14,7 +15,7 @@ import type {
 export type WorkflowComputeProps = {
     compute: object | null | undefined;
     onToggle: (checked: boolean) => void;
-    onUpdate: (compute: unknown) => void;
+    onUpdate: (compute: ComputeArgumentsSchema) => void;
     showAdvancedOptions?: boolean;
     accountUsers: WorkflowDesignerUser[];
     accountUsersIsLoading: boolean;

@@ -13,7 +13,6 @@ export type WorkflowComponents = {
     SubworkflowFormTitleComponent: React.ComponentType<{ title: string }>;
     PseudoFormComponent: React.ComponentType<Record<string, unknown>>;
     DataGridComponent: React.ComponentType<Record<string, unknown>>;
-    getDefaultComputeConfig: (cluster?: unknown) => Record<string, unknown>;
     generateEntityId: () => string;
     /**
      * Optional rich Brillouin-zone image renderer (e.g. @mat3ra/move's BrillouinZoneImage).
@@ -29,7 +28,6 @@ export type WorkflowComponents = {
 };
 
 const defaultNoop = () => null;
-const defaultNoopFn = () => ({});
 
 const defaultComponents: WorkflowComponents = {
     EntityHeaderComponent: defaultNoop,
@@ -39,7 +37,6 @@ const defaultComponents: WorkflowComponents = {
     SubworkflowFormTitleComponent: defaultNoop,
     PseudoFormComponent: defaultNoop,
     DataGridComponent: defaultNoop,
-    getDefaultComputeConfig: defaultNoopFn,
     generateEntityId: () => crypto.randomUUID(),
 };
 

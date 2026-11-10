@@ -61,6 +61,12 @@
             "@mat3ra/utils/*": [
                 "node_modules/@mat3ra/utils/*"
             ],
+            "@mat3ra/ide": [
+                "node_modules/@mat3ra/ide"
+            ],
+            "@mat3ra/ide/*": [
+                "node_modules/@mat3ra/ide/*"
+            ],
             "@mat3ra/wove": [
                 "node_modules/@mat3ra/wove/dist/exports"
             ],

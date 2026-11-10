@@ -1,6 +1,7 @@
 import type { Template } from "@mat3ra/ade";
 import TabsMenu from "@mat3ra/cove/dist/mui/components/tabs/TabsMenu";
 import type { SubworkflowSchema } from "@mat3ra/esse/dist/js/types";
+import { getDefaultComputeConfig } from "@mat3ra/ide";
 import { type OrderedMaterial, type Workflow as WodeWorkflow } from "@mat3ra/wode";
 import { UnitType } from "@mat3ra/wode/dist/js/enums";
 import type { AnyWorkflowUnit } from "@mat3ra/wode/dist/js/units/factory";
@@ -20,7 +21,6 @@ import type {
     WorkflowDesignerUnitOutput,
     WorkflowDesignerUser,
 } from "../../types/context";
-import { useWorkflowComponents } from "../../WorkflowComponentsContext";
 import WorkflowCompute from "../subworkflows/WorkflowCompute";
 import MapDataForm from "./MapDataForm";
 import type { WorkflowProps } from "./Workflow";
@@ -113,7 +113,6 @@ function MapWorkflowDesigner(props: MapProps) {
         unitEndpointsByFlowchartId,
         unitOutput,
     } = props;
-    const { getDefaultComputeConfig } = useWorkflowComponents();
     const [entity, setEntity] = useState<WodeWorkflow>(() => workflowProp);
     const [repetition, setRepetition] = useState(0);
     const [activeTabIndex, setActiveTabIndex] = useState(0);
