@@ -271,12 +271,6 @@ function App() {
                     SubworkflowFormTitleComponent={SubworkflowFormTitleStub}
                     PseudoFormComponent={PseudoFormStub}
                     DataGridComponent={DataGridStub}
-                    getDefaultComputeConfig={() => ({
-                        ppn: 1,
-                        nodes: 1,
-                        queue: "D",
-                        timeLimit: "01:00:00",
-                    })}
                     generateEntityId={() => crypto.randomUUID()}
                     openDocumentationDialog={undefined}
                 />

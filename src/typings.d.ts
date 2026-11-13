@@ -151,7 +151,6 @@ declare module "/imports/*" {
     export const CardFooter: any;
     export const CardHeader: any;
     export const InfoPopoverWithDocumentationDialog: any;
-    export const getDefaultComputeConfig: any;
     export const SelectFieldComponent: any;
     export const TextFieldComponent: any;
     export const resolveSimpleSchema: any;
@@ -417,11 +416,6 @@ declare module "@mat3ra/made" {
     export type Made = any;
     export const Material: any;
     export type Material = any;
-}
-
-declare module "@mat3ra/ide" {
-    const DefaultExport: any;
-    export default DefaultExport;
 }
 
 declare module "@mat3ra/prode" {
