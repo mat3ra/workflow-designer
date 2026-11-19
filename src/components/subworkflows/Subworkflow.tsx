@@ -149,13 +149,7 @@ export function Subworkflow({
         [onUpdate],
     );
 
-    /**
-     * Important settings call `unit.savePersistentContext()` on `unitsInstances` only. Sync into
-     * serialized `units` before `onUpdate()` — otherwise job Redux loses edited `context`.
-     * Parent `onSubworkflowUnitUpdate` → root render callback (`Job.renderJob` / `WorkflowDesignerContainer.renderWorkflow`).
-     */
     const onImportantSettingsContextChanged = useCallback(() => {
-        subworkflow.units = subworkflow.unitsInstances.map((unit) => unit.toJSON());
         onUpdate(subworkflow.toJSON());
     }, [subworkflow, onUpdate]);
 
