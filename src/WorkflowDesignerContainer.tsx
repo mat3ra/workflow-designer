@@ -22,6 +22,7 @@ import type {
     WorkflowDesignerUser,
 } from "./types/context";
 import type { SaveWorkflowFromDesigner } from "./utils/persistWorkflowDesigner";
+import { applySubworkflowUpdateToWorkflow } from "./utils/subworkflowDesignerUpdate";
 import { type WorkflowComponents, WorkflowComponentsContext } from "./WorkflowComponentsContext";
 
 type WorkflowDesignerContainerBaseProps = {
@@ -292,20 +293,13 @@ export default function WorkflowDesignerContainer(containerProps: WorkflowDesign
     const onSubworkflowUnitUpdate = useCallback(
         (subworkflowSchema: SubworkflowSchema) => {
             setState((prev) => {
-                const newWorkflow = prev.workflow;
-                const subworkflow = new Subworkflow(subworkflowSchema);
-                const subworkflowIndex = newWorkflow.subworkflowInstances.findIndex(
-                    (sw) => sw.id === subworkflow.id,
+                const isUpdated = applySubworkflowUpdateToWorkflow(
+                    prev.workflow,
+                    new Subworkflow(subworkflowSchema),
+                    prev.materials,
+                    metaProperties,
                 );
-                if (subworkflowIndex < 0) {
-                    return prev;
-                }
-
-                subworkflow.updateMethodData(prev.materials, metaProperties);
-
-                newWorkflow.subworkflows[subworkflowIndex] = subworkflow.toJSON();
-
-                return { ...prev, workflow: newWorkflow };
+                return isUpdated ? { ...prev } : prev;
             });
             renderWorkflow();
         },
