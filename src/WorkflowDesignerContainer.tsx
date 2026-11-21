@@ -303,10 +303,7 @@ export default function WorkflowDesignerContainer(containerProps: WorkflowDesign
 
                 subworkflow.updateMethodData(prev.materials, metaProperties);
 
-                newWorkflow.subworkflows[subworkflowIndex] = subworkflowSchema;
-                newWorkflow.subworkflowInstances[subworkflowIndex] = new Subworkflow(
-                    subworkflow.toJSON(),
-                );
+                newWorkflow.subworkflows[subworkflowIndex] = subworkflow.toJSON();
 
                 return { ...prev, workflow: newWorkflow };
             });

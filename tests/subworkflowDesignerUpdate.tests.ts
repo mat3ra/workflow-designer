@@ -29,13 +29,17 @@ test("applySubworkflowUpdateToWorkflow updates subworkflows JSON by schema _id",
     assert.strictEqual(workflow.subworkflows[0], first);
 });
 
-test("applySubworkflowUpdateToWorkflow replaces subworkflowInstances when given a live entity", () => {
+test("applySubworkflowUpdateToWorkflow stores a live entity with its updated method data", () => {
     const existing = { id: "sw-1", updateMethodData: () => undefined };
+    const updatedMethodData = { pseudo: [{ element: "Si" }] };
+    const method = { data: {} };
     const replacement = {
         id: "sw-1",
         unitsInstances: [{ name: "init parameter" }],
-        toJSON: () => ({ _id: "sw-1", units: [{ name: "init parameter" }] }),
-        updateMethodData: () => undefined,
+        toJSON: () => ({ _id: "sw-1", model: { method: { data: method.data } } }),
+        updateMethodData: () => {
+            method.data = updatedMethodData;
+        },
     };
     const workflow = {
         subworkflowInstances: [existing],
@@ -46,6 +50,8 @@ test("applySubworkflowUpdateToWorkflow replaces subworkflowInstances when given 
         applySubworkflowUpdateToWorkflow(workflow as never, replacement as never, [], []),
         true,
     );
-    assert.strictEqual(workflow.subworkflowInstances[0], replacement);
-    assert.deepStrictEqual(workflow.subworkflows[0], replacement.toJSON());
+    assert.deepStrictEqual(workflow.subworkflows[0], {
+        _id: "sw-1",
+        model: { method: { data: updatedMethodData } },
+    });
 });

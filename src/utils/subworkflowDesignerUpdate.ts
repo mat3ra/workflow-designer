@@ -29,6 +29,7 @@ export function applySubworkflowUpdateToWorkflow(
     const subworkflowEntity = isWodeSubworkflowInstance(subworkflowOrSchema)
         ? subworkflowOrSchema
         : null;
+    subworkflowEntity?.updateMethodData(materials, metaProperties);
     const subworkflowSchema = subworkflowEntity ? subworkflowEntity.toJSON() : subworkflowOrSchema;
 
     const subworkflowIndex = workflow.subworkflowInstances.findIndex(
@@ -36,11 +37,6 @@ export function applySubworkflowUpdateToWorkflow(
     );
     if (subworkflowIndex < 0) {
         return false;
-    }
-
-    if (subworkflowEntity) {
-        subworkflowEntity.updateMethodData(materials, metaProperties);
-        workflow.subworkflowInstances[subworkflowIndex] = subworkflowEntity;
     }
 
     workflow.subworkflows[subworkflowIndex] = subworkflowSchema;
